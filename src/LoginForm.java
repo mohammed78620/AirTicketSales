@@ -59,6 +59,12 @@ public class LoginForm extends JFrame {
                 setVisible(false);
                 OfficeManagerForm officeManagerForm = new OfficeManagerForm();
                 officeManagerForm.setVisible(true);
+
+                SystemAdminForm systemAdminForm = new SystemAdminForm();
+                systemAdminForm.setVisible(true);
+
+                TravelAdvisorForm travelAdvisorForm = new TravelAdvisorForm();
+                travelAdvisorForm.setVisible(true);
             }
         });
 

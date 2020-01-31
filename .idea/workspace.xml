@@ -5,11 +5,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/AirTicketSales/LoginForm$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AirTicketSales/LoginForm$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/AirTicketSales/LoginForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AirTicketSales/LoginForm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AirTicketSales/SystemAdminForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AirTicketSales/SystemAdminForm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/AirTicketSales/TravelAdvisorForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AirTicketSales/TravelAdvisorForm.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/AirTicketSales/OfficeManagerForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/AirTicketSales/OfficeManagerForm.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LoginForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SystemAdminForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SystemAdminForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TravelAdvisorForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TravelAdvisorForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OfficeManagerForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OfficeManagerForm.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,7 +34,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -87,7 +85,7 @@
       <workItem from="1580311793819" duration="416000" />
       <workItem from="1580397228456" duration="8954000" />
       <workItem from="1580464878548" duration="334000" />
-      <workItem from="1580474176641" duration="4405000" />
+      <workItem from="1580474176641" duration="9872000" />
     </task>
     <servers />
   </component>
