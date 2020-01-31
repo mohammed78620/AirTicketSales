@@ -4,8 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginForm extends JFrame {
-    private JLabel usernameLabel;
-    private JLabel passwordLabel;
+    private String username;
+    private String password;
+    private final JLabel usernameLabel;
+    private final JLabel passwordLabel;
     private PlaceholderTextField usernameText;
     private PlaceholderTextField passwordText;
     private JPanel panel1;
@@ -48,6 +50,12 @@ public class LoginForm extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //gets the username and password from JtextField
+                username = usernameText.getText();
+                password = passwordText.getText();
+                System.out.println("the username is: " +username +" the password is: " + password);
+
+                //sets the login page as invisible and opens officemanagerform
                 setVisible(false);
                 OfficeManagerForm officeManagerForm = new OfficeManagerForm();
                 officeManagerForm.setVisible(true);
@@ -57,7 +65,22 @@ public class LoginForm extends JFrame {
 
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(750,750);
+        setSize(350,250);
         setVisible(true);
+    }
+    public void openOfficeManagerForm(){
+
+    }
+    public void openTicketAdvisorForm(){
+
+    }
+    public void openTravelAdvisorForm(){
+
+    }
+    public String getUsername(){
+        return username;
+    }
+    public String getPassword(){
+        return password;
     }
 }
