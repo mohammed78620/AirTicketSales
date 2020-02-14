@@ -7,5 +7,7 @@ public class TravelAdvisorForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,750);
         setVisible(true);
+
+
     }
 }

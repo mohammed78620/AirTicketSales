@@ -7,8 +7,7 @@ public class AirTicketSalesSystem  {
 
     public static void main(String[] args) {
 
-        OfficeManagerForm officeManagerForm = new OfficeManagerForm();
-
+        SystemAdminForm systemAdminForm = new SystemAdminForm();
 
     }
 }

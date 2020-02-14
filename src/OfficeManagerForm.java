@@ -8,7 +8,7 @@ public class OfficeManagerForm extends JFrame {
     private JButton domesticReportButton;
     private JButton interlineReportButton;
     private JButton turnoverReportButton;
-    private JButton viewCustomersButton;
+    private JButton viewReportButton;
     private JButton viewStockButton;
     private JPanel panel1;
     private JPanel panel2;
@@ -20,10 +20,10 @@ public class OfficeManagerForm extends JFrame {
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JList stock;
-    private JList customer;
+    private JList report;
     private JLayeredPane layeredPane;
     private JPanel stockPanel;
-    private JPanel customerPanel;
+    private JPanel reportPanel;
 
 
 
@@ -34,7 +34,7 @@ public class OfficeManagerForm extends JFrame {
         logoutButton = new JButton("Logout");
 
         stockPanel = new JPanel();
-        customerPanel = new JPanel();
+        reportPanel = new JPanel();
         panel2 = new JPanel();
         panel3 = new JPanel();
         panel4 = new JPanel();
@@ -45,7 +45,7 @@ public class OfficeManagerForm extends JFrame {
 
 
         stockPanel.setBackground(Color.RED);
-        customerPanel.setBackground(Color.MAGENTA);
+        reportPanel.setBackground(Color.MAGENTA);
         panel2.setBackground(Color.green);
         panel3.setBackground(Color.cyan);
         panel4.setBackground(Color.ORANGE);
@@ -90,16 +90,16 @@ public class OfficeManagerForm extends JFrame {
         stockPanel.setBounds(0,0,600,600);
 
 
-        String[] s2 = {"customer: 1","customer: 2","customer: 3","customer: 4","customer: 5"};
-        customerPanel.setLayout(new BorderLayout());
-        customer = new JList(s2);
-        jScrollPane2 = new JScrollPane(customer);
-        customerPanel.add(jScrollPane2);
-        customer.setVisibleRowCount(4);
-        customerPanel.setBounds(0,0,600,600);
+        String[] s2 = {"report: 1","report: 2","report: 3","report: 4","report: 5"};
+        reportPanel.setLayout(new BorderLayout());
+        report = new JList(s2);
+        jScrollPane2 = new JScrollPane(report);
+        reportPanel.add(jScrollPane2);
+        report.setVisibleRowCount(4);
+        reportPanel.setBounds(0,0,600,600);
 
         layeredPane.add(stockPanel);
-        layeredPane.add(customerPanel);
+        layeredPane.add(reportPanel);
 
 
 
@@ -109,19 +109,19 @@ public class OfficeManagerForm extends JFrame {
         changeCommissionTextfield.setPreferredSize(new Dimension(200,20));
         changeCommissionTextfield.setMaximumSize(changeCommissionTextfield.getPreferredSize());
         changeCommissionTextfield.setPlaceholder("commission rate");
-        viewCustomersButton = new JButton("viewCustomers");
+        viewReportButton = new JButton("viewReport");
         viewStockButton = new JButton("viewStock");
 
         panel5.setLayout(new BoxLayout(panel5,BoxLayout.Y_AXIS));
         panel5.add(changeCommissionLabel);
         panel5.add(changeCommissionTextfield);
-        panel5.add(viewCustomersButton);
+        panel5.add(viewReportButton);
         panel5.add(viewStockButton);
 
-        viewCustomersButton.addActionListener(new ActionListener() {
+        viewReportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                customerPanel.setVisible(true);
+                reportPanel.setVisible(true);
                 stockPanel.setVisible(false);
 
             }
@@ -130,7 +130,7 @@ public class OfficeManagerForm extends JFrame {
         viewStockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                customerPanel.setVisible(false);
+                reportPanel.setVisible(false);
                 stockPanel.setVisible(true);
 
             }
