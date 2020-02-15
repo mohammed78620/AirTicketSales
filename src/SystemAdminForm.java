@@ -77,14 +77,18 @@ public class SystemAdminForm extends JFrame {
         JLabel changeCommissionLabel = new JLabel("change commision rate");
         PlaceholderTextField changeCommissionTextField = new PlaceholderTextField();
         changeCommissionTextField.setPlaceholder("commission rate");
-        changeCommissionTextField.setPreferredSize(new Dimension(200,30));
-        changeCommissionTextField.setMaximumSize(changeCommissionTextField.getPreferredSize());
         rightPanel.add(backupDatabaseButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(restoreDatabaseButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(changeCommissionLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(changeCommissionTextField);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,180)));
         rightPanel.add(removeTravelAdvisorButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(viewTravelAdvisorButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(viewStockButton);
 
         //sets up left of borderLayout
@@ -110,7 +114,7 @@ public class SystemAdminForm extends JFrame {
 
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(750,750);
+        setSize(750,500);
         setVisible(true);
     }
 }

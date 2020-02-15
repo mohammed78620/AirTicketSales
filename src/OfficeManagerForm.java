@@ -33,24 +33,13 @@ public class OfficeManagerForm extends JFrame {
         super("Office manager page");
         logoutButton = new JButton("Logout");
 
-        stockPanel = new JPanel();
-        reportPanel = new JPanel();
+        stockPanel = new JPanel(new BorderLayout());
+        reportPanel = new JPanel(new BorderLayout());
         panel2 = new JPanel();
         panel3 = new JPanel();
         panel4 = new JPanel();
         panel5 = new JPanel();
         layeredPane = new JLayeredPane();
-
-
-
-
-        stockPanel.setBackground(Color.RED);
-        reportPanel.setBackground(Color.MAGENTA);
-        panel2.setBackground(Color.green);
-        panel3.setBackground(Color.cyan);
-        panel4.setBackground(Color.ORANGE);
-        panel5.setBackground(Color.pink);
-
 
 
         //sets the layout as BorderLayout
@@ -79,13 +68,13 @@ public class OfficeManagerForm extends JFrame {
 
         //sets the center part of the layout
         panel2.add(layeredPane);
-        layeredPane.setPreferredSize(new Dimension(400,350));
+        layeredPane.setPreferredSize(new Dimension(600,600));
 
         String[] s1 = {"item: 1","item: 2","item: 3","item: 4","item: 5","item: 1","item: 2","item: 3","item: 4","item: 5"};
         stockPanel.setLayout(new BorderLayout());
         stock = new JList(s1);
         jScrollPane1 = new JScrollPane(stock);
-        stockPanel.add(jScrollPane1);
+        stockPanel.add(jScrollPane1,BorderLayout.CENTER);
         stock.setVisibleRowCount(4);
         stockPanel.setBounds(0,0,600,600);
 
@@ -94,7 +83,7 @@ public class OfficeManagerForm extends JFrame {
         reportPanel.setLayout(new BorderLayout());
         report = new JList(s2);
         jScrollPane2 = new JScrollPane(report);
-        reportPanel.add(jScrollPane2);
+        reportPanel.add(jScrollPane2,BorderLayout.CENTER);
         report.setVisibleRowCount(4);
         reportPanel.setBounds(0,0,600,600);
 
@@ -106,16 +95,17 @@ public class OfficeManagerForm extends JFrame {
         //sets the right part of the layout
         changeCommissionLabel = new JLabel("Change Commission Rate");
         changeCommissionTextfield = new PlaceholderTextField();
-        changeCommissionTextfield.setPreferredSize(new Dimension(200,20));
-        changeCommissionTextfield.setMaximumSize(changeCommissionTextfield.getPreferredSize());
         changeCommissionTextfield.setPlaceholder("commission rate");
         viewReportButton = new JButton("viewReport");
         viewStockButton = new JButton("viewStock");
 
         panel5.setLayout(new BoxLayout(panel5,BoxLayout.Y_AXIS));
         panel5.add(changeCommissionLabel);
+        panel5.add(Box.createRigidArea(new Dimension(0,15)));
         panel5.add(changeCommissionTextfield);
+        panel5.add(Box.createRigidArea(new Dimension(0,240)));
         panel5.add(viewReportButton);
+        panel5.add(Box.createRigidArea(new Dimension(0,15)));
         panel5.add(viewStockButton);
 
         viewReportButton.addActionListener(new ActionListener() {
