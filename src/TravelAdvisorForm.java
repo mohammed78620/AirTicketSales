@@ -22,7 +22,7 @@ public class TravelAdvisorForm extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setBackground(Color.RED);
         JPanel customerPanel = new JPanel(new BorderLayout());
-        JPanel transactionPanel = new JPanel(new GridLayout(7,7,5,30));
+        JPanel transactionPanel = new JPanel(new GridLayout(2,2,5,200));
         add(panel1);
 
         //sets Panel Layout
@@ -43,11 +43,22 @@ public class TravelAdvisorForm extends JFrame {
         JScrollPane scrollPane1 = new JScrollPane(customers);
         customerPanel.add(scrollPane1,BorderLayout.CENTER);
         customerPanel.setBounds(0,0,600,600);
+        
+        
 
 
-        JLabel sellTicketLabel = new JLabel("selling ticket");
-        transactionPanel.add(sellTicketLabel);
-        transactionPanel.setBounds(0,0,600,400);
+        JLabel amountLabel = new JLabel("amount");
+        PlaceholderTextField amountTextfield = new PlaceholderTextField();
+        JLabel paymentTypeLabel = new JLabel("payment type");
+        PlaceholderTextField paymentTypeTextfield = new PlaceholderTextField();
+        paymentTypeTextfield.setPlaceholder("payment type");
+        amountTextfield.setPlaceholder("amount");
+        transactionPanel.add(amountLabel);
+        transactionPanel.add(amountTextfield);
+        transactionPanel.add(paymentTypeLabel);
+        transactionPanel.add(paymentTypeTextfield);
+
+        transactionPanel.setBounds(0,0,400,400);
 
 
         layeredPane.add(customerPanel);
