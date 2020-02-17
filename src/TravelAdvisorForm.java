@@ -11,7 +11,6 @@ public class TravelAdvisorForm extends JFrame {
         JPanel panel1 = new JPanel(new BorderLayout());
 
         JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setBackground(Color.MAGENTA);
 
         JPanel rightPanel = new JPanel();
 
@@ -22,7 +21,9 @@ public class TravelAdvisorForm extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setBackground(Color.RED);
         JPanel customerPanel = new JPanel(new BorderLayout());
-        JPanel transactionPanel = new JPanel(new GridLayout(2,2,5,200));
+        JPanel reportPanel = new JPanel(new BorderLayout());
+        JPanel transactionPanel = new JPanel();
+        transactionPanel.setLayout(new BoxLayout(transactionPanel,BoxLayout.Y_AXIS));
         add(panel1);
 
         //sets Panel Layout
@@ -38,12 +39,17 @@ public class TravelAdvisorForm extends JFrame {
 
 
         //sets up center BorderLayout
-        String[] s1 = {"advisor: 1","advisor: 2","advisor: 3","advisor: 4","advisor: 5"};
+        String[] s1 = {"customer: 1","customer: 2","customer: 3","customer: 4","customer: 5"};
         JList customers = new JList(s1);
         JScrollPane scrollPane1 = new JScrollPane(customers);
         customerPanel.add(scrollPane1,BorderLayout.CENTER);
         customerPanel.setBounds(0,0,600,600);
-        
+
+        String[] s2 = {"report: 1","report: 2","report: 3","report: 4","report: 5"};
+        JList reports = new JList(s2);
+        JScrollPane scrollPane12 = new JScrollPane(reports);
+        reportPanel.add(scrollPane12,BorderLayout.CENTER);
+        reportPanel.setBounds(0,0,600,600);
         
 
 
@@ -54,27 +60,39 @@ public class TravelAdvisorForm extends JFrame {
         paymentTypeTextfield.setPlaceholder("payment type");
         amountTextfield.setPlaceholder("amount");
         transactionPanel.add(amountLabel);
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
         transactionPanel.add(amountTextfield);
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+
+
         transactionPanel.add(paymentTypeLabel);
+
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
         transactionPanel.add(paymentTypeTextfield);
 
         transactionPanel.setBounds(0,0,400,400);
 
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,260)));
+
 
         layeredPane.add(customerPanel);
+        layeredPane.add(reportPanel);
         layeredPane.add(transactionPanel);
 
 
 
 
         //sets up bottom BorderLayout
+        JButton generateIndividualReport = new JButton("generate report");
         JButton logoutButton = new JButton("Logout");
         bottomPanel.add(logoutButton);
+        bottomPanel.add(generateIndividualReport);
         //sets up right BorderLayout
-        JButton viewCustomers = new JButton("viewCustomer");
-        JButton sellTicketButton = new JButton("sellTicket");
+        JButton viewCustomers = new JButton("view customer");
+        JButton sellTicketButton = new JButton("sell ticket");
         JButton createAccountButton = new JButton("create account");
         JButton updateAccountButton = new JButton("update account");
+        JButton viewIndividualReport = new JButton("view reports");
         JLabel cancelTicket = new JLabel("cancel ticket");
         PlaceholderTextField ticketIdTextfield = new PlaceholderTextField();
         ticketIdTextfield.setPlaceholder("ticket ID");
@@ -94,6 +112,8 @@ public class TravelAdvisorForm extends JFrame {
         rightPanel.add(createAccountButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(updateAccountButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        rightPanel.add(viewIndividualReport);
         rightPanel.add(Box.createRigidArea(new Dimension(0,260)));
 
 
@@ -149,6 +169,15 @@ public class TravelAdvisorForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 customerPanel.setVisible(true);
                 transactionPanel.setVisible(false);
+                reportPanel.setVisible(false);
+            }
+        });
+        viewIndividualReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reportPanel.setVisible(true);
+                customerPanel.setVisible(false);
+                transactionPanel.setVisible(false);
             }
         });
         sellTicketButton.addActionListener(new ActionListener() {
@@ -156,14 +185,14 @@ public class TravelAdvisorForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 transactionPanel.setVisible(true);
                 customerPanel.setVisible(false);
-
+                reportPanel.setVisible(false);
             }
         });
+
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
         setVisible(true);
-
 
     }
 }

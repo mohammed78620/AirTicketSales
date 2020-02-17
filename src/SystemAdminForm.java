@@ -34,6 +34,7 @@ public class SystemAdminForm extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         JPanel advisorPanel = new JPanel();
         JPanel stockPanel = new JPanel();
+        JPanel databasePanel = new JPanel();
         centerPanel.add(layeredPane,BorderLayout.CENTER);
         layeredPane.setPreferredSize(new Dimension(600,600));
 
@@ -52,8 +53,18 @@ public class SystemAdminForm extends JFrame {
         stockPanel.add(jScrollPane12,BorderLayout.CENTER);
         stockPanel.setBounds(0,0,600,600);
 
+        String[] s3 = {"database: 1","database: 2","database: 3","database: 4","database: 5"};
+        databasePanel.setLayout(new BorderLayout());
+        JList databases = new JList(s3);
+        JScrollPane jScrollPane13 = new JScrollPane(databases);
+        databasePanel.add(jScrollPane13,BorderLayout.CENTER);
+        databasePanel.setBounds(0,0,600,600);
+
+
+
         layeredPane.add(advisorPanel);
         layeredPane.add(stockPanel);
+        layeredPane.add(databasePanel);
 
         //sets up bottom of borderLayout
         JButton logoutButton = new JButton("Logout");
@@ -65,6 +76,7 @@ public class SystemAdminForm extends JFrame {
 
         //sets up right of borderLayout
         rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
+        JButton viewBackupButton = new JButton("viewBackupDatabase");
         JButton backupDatabaseButton = new JButton("backupDatabase");
         JButton restoreDatabaseButton = new JButton("restoreDatabase");
         JButton addTravelAdvisorButton = new JButton("addTravelAdvisor");
@@ -85,6 +97,8 @@ public class SystemAdminForm extends JFrame {
 
         PlaceholderTextField changeCommissionTextField = new PlaceholderTextField();
         changeCommissionTextField.setPlaceholder("commission rate");
+        rightPanel.add(viewBackupButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(backupDatabaseButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(restoreDatabaseButton);
@@ -113,7 +127,6 @@ public class SystemAdminForm extends JFrame {
 
 
         //sets up left of borderLayout
-        leftPanel.setBackground(Color.pink);
         JLayeredPane leftLayeredPane = new JLayeredPane();
         leftLayeredPane.setPreferredSize(new Dimension(150,150));
         JPanel updateTravelAdvisorPanel = new JPanel(new GridLayout(7,2,0,50));
@@ -168,6 +181,9 @@ public class SystemAdminForm extends JFrame {
         PlaceholderTextField idTextfield3 = new PlaceholderTextField();
         idTextfield3.setPlaceholder("id");
 
+        JButton assignBlankButton = new JButton("assign blank");
+        JButton addBlankButton = new JButton("add blank");
+        JButton removeBlankButton = new JButton("remove blank");
         //adds to update travel advisor panel
 
 
@@ -188,7 +204,7 @@ public class SystemAdminForm extends JFrame {
 
         //adds components to update stock panel
         updateStockPanel.add(assignBlanksLabel);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(idLabel2);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateStockPanel.add(idTextfield2);
@@ -201,6 +217,8 @@ public class SystemAdminForm extends JFrame {
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateStockPanel.add(amountTextfield1);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        updateStockPanel.add(assignBlankButton);
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateStockPanel.add(addBlankLabel);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateStockPanel.add(typeLabel2);
@@ -211,11 +229,15 @@ public class SystemAdminForm extends JFrame {
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateStockPanel.add(amountTextfield2);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        updateStockPanel.add(addBlankButton);
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateStockPanel.add(removeBlankLabel);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateStockPanel.add(idLabel3);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateStockPanel.add(idTextfield3);
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        updateStockPanel.add(removeBlankButton);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,50)));
 
 
@@ -241,7 +263,7 @@ public class SystemAdminForm extends JFrame {
                 stockPanel.setVisible(false);
                 updateTravelAdvisorPanel.setVisible(true);
                 updateStockPanel.setVisible(false);
-
+                databasePanel.setVisible(false);
             }
         });
         viewStockButton.addActionListener(new ActionListener() {
@@ -250,6 +272,17 @@ public class SystemAdminForm extends JFrame {
                 stockPanel.setVisible(true);
                 advisorPanel.setVisible(false);
                 updateStockPanel.setVisible(true);
+                updateTravelAdvisorPanel.setVisible(false);
+                databasePanel.setVisible(false);
+            }
+        });
+        viewBackupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                databasePanel.setVisible(true);
+                stockPanel.setVisible(false);
+                advisorPanel.setVisible(false);
+                updateStockPanel.setVisible(false);
                 updateTravelAdvisorPanel.setVisible(false);
             }
         });

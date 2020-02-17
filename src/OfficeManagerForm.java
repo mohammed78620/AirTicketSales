@@ -35,7 +35,7 @@ public class OfficeManagerForm extends JFrame {
 
         stockPanel = new JPanel(new BorderLayout());
         reportPanel = new JPanel(new BorderLayout());
-        panel2 = new JPanel();
+        panel2 = new JPanel(new BorderLayout());
         panel3 = new JPanel();
         panel4 = new JPanel();
         panel5 = new JPanel();
@@ -43,8 +43,7 @@ public class OfficeManagerForm extends JFrame {
 
 
         //sets the layout as BorderLayout
-        panel1 = new JPanel();
-        panel1.setLayout(new BorderLayout());
+        panel1 = new JPanel(new BorderLayout());
         panel1.add(panel2,BorderLayout.CENTER);
         panel1.add(panel3,BorderLayout.LINE_START);
         panel1.add(panel4,BorderLayout.PAGE_END);
@@ -56,10 +55,9 @@ public class OfficeManagerForm extends JFrame {
         domesticReportButton = new JButton("GenerateDomesticReport");
         interlineReportButton = new JButton("GenerateInterlineReport");
         turnoverReportButton = new JButton("GenerateTurnoverReport");
-        panel4.setLayout(new BoxLayout(panel4,BoxLayout.X_AXIS));
+
 
         panel4.add(logoutButton);
-        panel4.setPreferredSize(new Dimension(500,100));
         panel4.add(domesticReportButton);
         panel4.add(interlineReportButton);
         panel4.add(turnoverReportButton);
@@ -67,7 +65,7 @@ public class OfficeManagerForm extends JFrame {
 
 
         //sets the center part of the layout
-        panel2.add(layeredPane);
+        panel2.add(layeredPane,BorderLayout.CENTER);
         layeredPane.setPreferredSize(new Dimension(600,600));
 
         String[] s1 = {"item: 1","item: 2","item: 3","item: 4","item: 5","item: 1","item: 2","item: 3","item: 4","item: 5"};
@@ -75,7 +73,7 @@ public class OfficeManagerForm extends JFrame {
         stock = new JList(s1);
         jScrollPane1 = new JScrollPane(stock);
         stockPanel.add(jScrollPane1,BorderLayout.CENTER);
-        stock.setVisibleRowCount(4);
+//        stock.setVisibleRowCount(4);
         stockPanel.setBounds(0,0,600,600);
 
 
@@ -84,7 +82,7 @@ public class OfficeManagerForm extends JFrame {
         report = new JList(s2);
         jScrollPane2 = new JScrollPane(report);
         reportPanel.add(jScrollPane2,BorderLayout.CENTER);
-        report.setVisibleRowCount(4);
+//        report.setVisibleRowCount(4);
         reportPanel.setBounds(0,0,600,600);
 
         layeredPane.add(stockPanel);
@@ -103,10 +101,41 @@ public class OfficeManagerForm extends JFrame {
         panel5.add(changeCommissionLabel);
         panel5.add(Box.createRigidArea(new Dimension(0,15)));
         panel5.add(changeCommissionTextfield);
-        panel5.add(Box.createRigidArea(new Dimension(0,240)));
+        panel5.add(Box.createRigidArea(new Dimension(0,15)));
         panel5.add(viewReportButton);
         panel5.add(Box.createRigidArea(new Dimension(0,15)));
         panel5.add(viewStockButton);
+        panel5.add(Box.createRigidArea(new Dimension(0,280)));
+        //sets the left part of the layout
+        panel3.setLayout(new BoxLayout(panel3,BoxLayout.Y_AXIS));
+        JLabel assignBlank = new JLabel("Assign blank");
+        PlaceholderTextField idTextfield = new PlaceholderTextField();
+        idTextfield.setPlaceholder("id");
+        JLabel typeLabel = new JLabel("type");
+        PlaceholderTextField typeTextfield = new PlaceholderTextField();
+        typeTextfield.setPlaceholder("type");
+        JLabel amountLabel = new JLabel("amount");
+        PlaceholderTextField amountTextfield = new PlaceholderTextField();
+        amountTextfield.setPlaceholder("amount");
+        JButton assignBlankButton = new JButton("assign blank");
+
+
+        panel3.add(assignBlank);
+        panel3.add(Box.createRigidArea(new Dimension(0,15)));
+        panel3.add(idTextfield);
+        panel3.add(Box.createRigidArea(new Dimension(0,15)));
+        panel3.add(typeLabel);
+        panel3.add(Box.createRigidArea(new Dimension(0,15)));
+        panel3.add(typeTextfield);
+        panel3.add(Box.createRigidArea(new Dimension(0,15)));
+        panel3.add(amountLabel);
+        panel3.add(Box.createRigidArea(new Dimension(0,15)));
+        panel3.add(amountTextfield);
+        panel3.add(Box.createRigidArea(new Dimension(0,15)));
+        panel3.add(assignBlankButton);
+        panel3.add(Box.createRigidArea(new Dimension(0,260)));
+
+
 
         viewReportButton.addActionListener(new ActionListener() {
             @Override
@@ -120,8 +149,9 @@ public class OfficeManagerForm extends JFrame {
         viewStockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                reportPanel.setVisible(false);
                 stockPanel.setVisible(true);
+                reportPanel.setVisible(false);
+
 
             }
         });
