@@ -63,6 +63,7 @@ public class TravelAdvisorForm extends JFrame {
         transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
         transactionPanel.add(amountTextfield);
         transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        transactionPanel.setVisible(false);
 
 
         transactionPanel.add(paymentTypeLabel);

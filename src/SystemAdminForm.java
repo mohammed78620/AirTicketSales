@@ -129,9 +129,11 @@ public class SystemAdminForm extends JFrame {
         //sets up left of borderLayout
         JLayeredPane leftLayeredPane = new JLayeredPane();
         leftLayeredPane.setPreferredSize(new Dimension(150,150));
-        JPanel updateTravelAdvisorPanel = new JPanel(new GridLayout(7,2,0,50));
+        JPanel updateTravelAdvisorPanel = new JPanel();
+        updateTravelAdvisorPanel.setLayout(new BoxLayout(updateTravelAdvisorPanel,BoxLayout.Y_AXIS));
         updateTravelAdvisorPanel.setBounds(0,0,150,450);
         JPanel updateStockPanel = new JPanel();
+        updateStockPanel.setVisible(false);
         updateStockPanel.setLayout(new BoxLayout(updateStockPanel,BoxLayout.Y_AXIS));
         updateStockPanel.setBounds(0,0,150,450);
 
@@ -188,19 +190,34 @@ public class SystemAdminForm extends JFrame {
 
 
         updateTravelAdvisorPanel.add(idLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(idTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(usernameLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(usernameTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(passwordLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(passwordTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(nameLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(nameTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(addressLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(addressTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(telephoneLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(telephoneTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(emailLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(emailTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,50)));
+
 
         //adds components to update stock panel
         updateStockPanel.add(assignBlanksLabel);
