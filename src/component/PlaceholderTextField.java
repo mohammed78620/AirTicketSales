@@ -1,3 +1,5 @@
+package component;
+
 import javax.swing.*;
 import javax.swing.text.Document;
 import java.awt.*;

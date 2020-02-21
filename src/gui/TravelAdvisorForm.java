@@ -1,8 +1,12 @@
+package gui;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import component.PlaceholderTextField;
+
 
 public class TravelAdvisorForm extends JFrame {
     public TravelAdvisorForm(){
@@ -193,7 +197,7 @@ public class TravelAdvisorForm extends JFrame {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
-        setVisible(true);
+//        setVisible(true);
 
     }
 }

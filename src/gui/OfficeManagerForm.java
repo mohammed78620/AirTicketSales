@@ -1,7 +1,11 @@
+package gui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import component.PlaceholderTextField;
+
 
 public class OfficeManagerForm extends JFrame {
     private JButton logoutButton;
@@ -164,6 +168,6 @@ public class OfficeManagerForm extends JFrame {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
-        setVisible(true);
+//        setVisible(true);
     }
 }
