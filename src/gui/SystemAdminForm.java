@@ -36,19 +36,19 @@ public class SystemAdminForm extends JFrame {
 
         //sets up center of borderLayout
         JLayeredPane layeredPane = new JLayeredPane();
-        JPanel advisorPanel = new JPanel();
+        JPanel user = new JPanel();
         JPanel stockPanel = new JPanel();
         JPanel databasePanel = new JPanel();
         centerPanel.add(layeredPane,BorderLayout.CENTER);
         layeredPane.setPreferredSize(new Dimension(600,600));
 
 
-        String[] s1 = {"advisor: 1","advisor: 2","advisor: 3","advisor: 4","advisor: 5"};
-        advisorPanel.setLayout(new BorderLayout());
+        String[] s1 = {"user: 1","user: 2","user: 3","user: 4","user: 5"};
+        user.setLayout(new BorderLayout());
         JList advisors = new JList(s1);
         JScrollPane jScrollPane11 = new JScrollPane(advisors);
-        advisorPanel.add(jScrollPane11,BorderLayout.CENTER);
-        advisorPanel.setBounds(0,0,600,600);
+        user.add(jScrollPane11,BorderLayout.CENTER);
+        user.setBounds(0,0,600,600);
 
         String[] s2 = {"stock: 1","stock: 2","stock: 3","stock: 4","stock: 5"};
         stockPanel.setLayout(new BorderLayout());
@@ -66,7 +66,7 @@ public class SystemAdminForm extends JFrame {
 
 
 
-        layeredPane.add(advisorPanel);
+        layeredPane.add(user);
         layeredPane.add(stockPanel);
         layeredPane.add(databasePanel);
 
@@ -83,13 +83,13 @@ public class SystemAdminForm extends JFrame {
         JButton viewBackupButton = new JButton("viewBackupDatabase");
         JButton backupDatabaseButton = new JButton("backupDatabase");
         JButton restoreDatabaseButton = new JButton("restoreDatabase");
-        JButton addTravelAdvisorButton = new JButton("addTravelAdvisor");
-        JButton updateTravelAdvisorButton = new JButton("updateTravelAdvisor");
-        JButton removeTravelAdvisorButton = new JButton("removeTravelAdvisor");
-        JButton viewTravelAdvisorButton = new JButton("viewAdvisors");
-        JButton viewStockButton = new JButton("viewStock");
+        JButton addUserButton = new JButton("Add user");
+        JButton updateUserButton = new JButton("Update user");
+        JButton removeUserButton = new JButton("Remove User");
+        JButton viewUserButton = new JButton("View users");
+        JButton viewStockButton = new JButton("View stock");
 
-        JLabel changeCommissionLabel = new JLabel("change commision rate");
+        JLabel changeCommissionLabel = new JLabel("change commission rate");
         JLabel changeCurrencyrate = new JLabel("change rate");
         JComboBox rates = new JComboBox();
         PlaceholderTextField ratesTextfield = new PlaceholderTextField();
@@ -111,13 +111,13 @@ public class SystemAdminForm extends JFrame {
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(changeCommissionTextField);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        rightPanel.add(addTravelAdvisorButton);
+        rightPanel.add(addUserButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        rightPanel.add(updateTravelAdvisorButton);
+        rightPanel.add(updateUserButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        rightPanel.add(removeTravelAdvisorButton);
+        rightPanel.add(removeUserButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        rightPanel.add(viewTravelAdvisorButton);
+        rightPanel.add(viewUserButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(viewStockButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
@@ -148,6 +148,7 @@ public class SystemAdminForm extends JFrame {
         JLabel addressLabel = new JLabel("Address");
         JLabel telephoneLabel = new JLabel("Telephone");
         JLabel emailLabel = new JLabel("Email");
+        JLabel staffTypeLabel = new JLabel("staff type");
 
         PlaceholderTextField idTextfield = new PlaceholderTextField();
         idTextfield.setPlaceholder("ID");
@@ -163,6 +164,9 @@ public class SystemAdminForm extends JFrame {
         telephoneTextfield.setPlaceholder("telephone");
         PlaceholderTextField emailTextfield = new PlaceholderTextField();
         emailTextfield.setPlaceholder("email");
+        PlaceholderTextField staffTypeTextfield = new PlaceholderTextField();
+        staffTypeTextfield.setPlaceholder("stafftype");
+
 
         JLabel assignBlanksLabel = new JLabel("Assign blank");
         JLabel idLabel2 = new JLabel("id");
@@ -220,6 +224,10 @@ public class SystemAdminForm extends JFrame {
         updateTravelAdvisorPanel.add(emailLabel);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(emailTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        updateTravelAdvisorPanel.add(staffTypeLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        updateTravelAdvisorPanel.add(staffTypeTextfield);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,50)));
 
 
@@ -277,10 +285,10 @@ public class SystemAdminForm extends JFrame {
 
         //sets button listeners
 
-        viewTravelAdvisorButton.addActionListener(new ActionListener() {
+        viewUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                advisorPanel.setVisible(true);
+                user.setVisible(true);
                 stockPanel.setVisible(false);
                 updateTravelAdvisorPanel.setVisible(true);
                 updateStockPanel.setVisible(false);
@@ -291,7 +299,7 @@ public class SystemAdminForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 stockPanel.setVisible(true);
-                advisorPanel.setVisible(false);
+                user.setVisible(false);
                 updateStockPanel.setVisible(true);
                 updateTravelAdvisorPanel.setVisible(false);
                 databasePanel.setVisible(false);
@@ -302,7 +310,7 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 databasePanel.setVisible(true);
                 stockPanel.setVisible(false);
-                advisorPanel.setVisible(false);
+                user.setVisible(false);
                 updateStockPanel.setVisible(false);
                 updateTravelAdvisorPanel.setVisible(false);
             }
