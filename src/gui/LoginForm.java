@@ -64,7 +64,7 @@ public class LoginForm extends JFrame {
                 LoginController loginController = new LoginController(username,password);
                 //sets the login page as invisible and opens officemanagerform
                 if(loginController.loginAuthenticated()){
-                    setVisible(false);
+                    dispose();
                 }
 
 
@@ -73,10 +73,10 @@ public class LoginForm extends JFrame {
         });
 
 
-
+        setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(350,250);
-        setVisible(true);
+
     }
     public void openOfficeManagerForm(){
 

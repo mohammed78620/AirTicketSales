@@ -8,7 +8,7 @@ import component.PlaceholderTextField;
 
 
 public class OfficeManagerForm extends JFrame {
-    private JButton logoutButton;
+    public JButton logoutButton;
     private JButton domesticReportButton;
     private JButton interlineReportButton;
     private JButton turnoverReportButton;
@@ -393,6 +393,14 @@ public class OfficeManagerForm extends JFrame {
                 manageDiscountPanel.setVisible(false);
             }
         });
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LoginForm loginForm = new LoginForm();
+                dispose();
+
+            }
+        });
 
 
         add(panel1);
@@ -404,4 +412,5 @@ public class OfficeManagerForm extends JFrame {
         setSize(750,500);
 //        setVisible(true);
     }
+
 }

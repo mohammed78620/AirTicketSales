@@ -315,6 +315,13 @@ public class SystemAdminForm extends JFrame {
                 updateTravelAdvisorPanel.setVisible(false);
             }
         });
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LoginForm loginForm = new LoginForm();
+                dispose();
+            }
+        });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);

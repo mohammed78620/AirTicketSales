@@ -11,13 +11,6 @@ public class AirTicketSalesSystem  {
 
     public static void main(String[] args) {
         LoginForm loginForm = new LoginForm();
-        //remove when finishing updating gui
-        OfficeManagerForm officeManagerForm = new OfficeManagerForm();
-        officeManagerForm.setVisible(true);
-        SystemAdminForm systemAdminForm = new SystemAdminForm();
-        systemAdminForm.setVisible(true);
-        TravelAdvisorForm travelAdvisorForm = new TravelAdvisorForm();
-        travelAdvisorForm.setVisible(true);
 
     }
 }
