@@ -1,0 +1,13 @@
+CREATE TABLE `staff` (
+  `staff_id` int NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `telephone` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  `accessLevel` int DEFAULT NULL,
+  `agency` varchar(45) DEFAULT NULL,
+  `staffType` varchar(45) NOT NULL,
+  PRIMARY KEY (`staff_id`,`staffType`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
