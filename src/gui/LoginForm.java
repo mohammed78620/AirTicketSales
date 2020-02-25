@@ -60,11 +60,14 @@ public class LoginForm extends JFrame {
                 //gets the username and password from JtextField
                 username = usernameText.getText();
                 password = passwordText.getText();
+
+                if(!(username.isEmpty() || password.isEmpty())) {
 //                System.out.println("the username is: " +username +" the password is: " + password);
-                LoginController loginController = new LoginController(username,password);
-                //sets the login page as invisible and opens officemanagerform
-                if(loginController.loginAuthenticated()){
-                    dispose();
+                    LoginController loginController = new LoginController(username, password);
+                    //sets the login page as invisible and opens officemanagerform
+                    if (loginController.loginAuthenticated()) {
+                        dispose();
+                    }
                 }
 
 

@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
+
 import component.PlaceholderTextField;
 
 
@@ -15,6 +17,12 @@ public class SystemAdminForm extends JFrame {
     private JPanel leftPanel;
     private JLabel changeCommissionLabel;
     private PlaceholderTextField changeCommissionTextField;
+    private Connection con;
+    private PreparedStatement stm = null;
+    private ResultSet rs = null;
+    private String url = "jdbc:mysql://localhost:3306/airticketsales";
+    private String name = "akmal";
+    private String password = "]WCgDKEN69Wf>zE.";
 
     public SystemAdminForm(){
         super("System Administrator page");
@@ -164,8 +172,11 @@ public class SystemAdminForm extends JFrame {
         telephoneTextfield.setPlaceholder("telephone");
         PlaceholderTextField emailTextfield = new PlaceholderTextField();
         emailTextfield.setPlaceholder("email");
-        PlaceholderTextField staffTypeTextfield = new PlaceholderTextField();
-        staffTypeTextfield.setPlaceholder("stafftype");
+        JComboBox staffType = new JComboBox();
+        staffType.addItem("sa");
+        staffType.addItem("om");
+        staffType.addItem("ta");
+
 
 
         JLabel assignBlanksLabel = new JLabel("Assign blank");
@@ -227,7 +238,7 @@ public class SystemAdminForm extends JFrame {
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(staffTypeLabel);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
-        updateTravelAdvisorPanel.add(staffTypeTextfield);
+        updateTravelAdvisorPanel.add(staffType);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,50)));
 
 
@@ -320,6 +331,95 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 LoginForm loginForm = new LoginForm();
                 dispose();
+            }
+        });
+        addUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    con = DriverManager.getConnection(url, name, password);
+
+                    //2. create a statement
+                    String sql = "INSERT INTO staff "
+                            + " (name, address, telephone, email, username, password, staffType)"
+                            + "VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+                    stm = con.prepareStatement(sql);
+
+                    stm.setString(1, nameTextfield.getText());
+                    stm.setString(2, addressTextfield.getText());
+                    stm.setInt(3,Integer.parseInt(telephoneTextfield.getText()));
+                    stm.setString(4, emailTextfield.getText());
+                    stm.setString(5, usernameTextfield.getText());
+                    stm.setString(6, passwordTextfield.getText());
+                    stm.setString(7,staffType.getSelectedItem().toString());
+
+                    //3. execute sql query
+                    stm.executeUpdate();
+
+
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        updateUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    con = DriverManager.getConnection(url, name, password);
+
+                    //2. create a statement
+                    String sql = "UPDATE staff "
+                            + " SET name=?, address=?, telephone=?, email=?, username=?, password=?,staffType=?"
+                            + " WHERE staff_id=?";
+
+                    stm = con.prepareStatement(sql);
+
+                    stm.setString(1,usernameTextfield.getText());
+                    stm.setString(2,addressTextfield.getText());
+                    stm.setInt(3,Integer.parseInt(telephoneTextfield.getText()));
+                    stm.setString(4,emailTextfield.getText());
+                    stm.setString(5,usernameTextfield.getText());
+                    stm.setString(6,passwordTextfield.getText());
+                    stm.setString(7,staffType.getSelectedItem().toString());
+                    stm.setInt(8,Integer.parseInt(idTextfield.getText()));
+
+
+
+
+                    //3. execute sql query
+                    stm.executeUpdate();
+
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        removeUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    con = DriverManager.getConnection(url, name, password);
+
+                    //2. create a statement
+
+                    String sql = "DELETE FROM staff WHERE staff_id=?";
+                    stm = con.prepareStatement(sql);
+
+                    stm.setInt(1, Integer.parseInt(idTextfield.getText()));
+
+                    //3. execute sql query
+                    stm.executeUpdate();
+
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         });
 
