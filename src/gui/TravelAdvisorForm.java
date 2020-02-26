@@ -2,13 +2,26 @@ package gui;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+
+
 import component.PlaceholderTextField;
+import database.DatabaseHelper;
 
 
 public class TravelAdvisorForm extends JFrame {
+    private String url = "jdbc:mysql://localhost:3306/airticketsales";
+    private String name = "akmal";
+    private String password = "]WCgDKEN69Wf>zE.";
+
     public TravelAdvisorForm(){
         super("Travel Advisor page");
 
@@ -198,6 +211,69 @@ public class TravelAdvisorForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 LoginForm loginForm = new LoginForm();
                 dispose();
+            }
+        });
+        createAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection con = DriverManager.getConnection(url, name , password);
+
+                    //2. create a statement
+                    String sql = "INSERT INTO customeraccount"
+                            + " (name, dateOfBirth, address, postalCode, telephone, email)"
+                            + "VALUES ( ?, ?, ?, ?, ?, ?)";
+
+
+                    PreparedStatement stm = con.prepareStatement(sql);
+
+                    stm.setString(1, nameTextField.getText());
+                    stm.setDate(2, Date.valueOf(dateOfBirthTextField.getText()));
+                    stm.setString(3, addressTextField.getText());
+                    stm.setString(4, postalCodeTextField.getText());
+                    stm.setInt(5, Integer.parseInt(telephoneTextField.getText()));
+                    stm.setString(6, emailTextField.getText());
+
+
+                    //3. execute sql query
+                    stm.executeUpdate();
+
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        updateAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    // 1. get a connection
+                    Connection con = DriverManager.getConnection(url, name , password);
+
+                    //2. create a statement
+                    String sql = "UPDATE customeraccount "
+                            + "SET name=?,dateOfBirth=?,address=?,postalCode=?,telephone=?,email=?"
+                            + "WHERE customerAccount_id=?";
+
+                    PreparedStatement stm = con.prepareStatement(sql);
+
+                    stm.setString(1, nameTextField.getText());
+                    stm.setDate(2,Date.valueOf(dateOfBirthTextField.getText()));
+                    stm.setString(3, addressTextField.getText());
+                    stm.setString(4, postalCodeTextField.getText());
+                    stm.setInt(5, Integer.parseInt(telephoneTextField.getText()));
+                    stm.setString(6, emailTextField.getText());
+                    stm.setInt(7,Integer.parseInt(IDTextField.getText()));
+
+                    //3. execute sql query
+                    stm.executeUpdate();
+
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         });
 

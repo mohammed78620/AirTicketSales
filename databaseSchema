@@ -11,3 +11,16 @@ CREATE TABLE `staff` (
   `staffType` varchar(45) NOT NULL,
   PRIMARY KEY (`staff_id`,`staffType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `customeraccount` (
+  `customerAccount_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `dateOfBirth` datetime DEFAULT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `postalCode` varchar(45) DEFAULT NULL,
+  `telephone` int DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `customerType` varchar(45) DEFAULT NULL,
+  `discount` int DEFAULT NULL,
+  PRIMARY KEY (`customerAccount_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
