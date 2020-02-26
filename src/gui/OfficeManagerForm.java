@@ -112,8 +112,11 @@ public class OfficeManagerForm extends JFrame {
         JLabel amountLabel = new JLabel("amount");
         PlaceholderTextField amountTextfield = new PlaceholderTextField();
         JLabel paymentTypeLabel = new JLabel("payment type");
-        PlaceholderTextField paymentTypeTextfield = new PlaceholderTextField();
-        paymentTypeTextfield.setPlaceholder("payment type");
+        JComboBox<String> paymentTypeComboBox = new JComboBox<>();
+        paymentTypeComboBox.addItem("creditCard");
+        paymentTypeComboBox.addItem("cash");
+
+
         amountTextfield.setPlaceholder("amount");
         transactionPanel.add(amountLabel);
         transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
@@ -122,7 +125,7 @@ public class OfficeManagerForm extends JFrame {
         transactionPanel.setVisible(false);
         transactionPanel.add(paymentTypeLabel);
         transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        transactionPanel.add(paymentTypeTextfield);
+        transactionPanel.add(paymentTypeComboBox);
         transactionPanel.setBounds(0,0,400,400);
         transactionPanel.add(Box.createRigidArea(new Dimension(0,260)));
 

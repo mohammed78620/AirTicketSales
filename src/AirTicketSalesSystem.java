@@ -15,6 +15,8 @@ public class AirTicketSalesSystem  {
         travelAdvisorForm.setVisible(true);
         OfficeManagerForm officeManagerForm = new OfficeManagerForm();
         officeManagerForm.setVisible(true);
+        SystemAdminForm systemAdminForm = new SystemAdminForm();
+        systemAdminForm.setVisible(true);
 
     }
 }

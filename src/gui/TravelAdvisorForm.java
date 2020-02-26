@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 
 
 import component.PlaceholderTextField;
-import database.DatabaseHelper;
 
 
 public class TravelAdvisorForm extends JFrame {
@@ -73,9 +72,16 @@ public class TravelAdvisorForm extends JFrame {
         JLabel amountLabel = new JLabel("amount");
         PlaceholderTextField amountTextfield = new PlaceholderTextField();
         JLabel paymentTypeLabel = new JLabel("payment type");
-        PlaceholderTextField paymentTypeTextfield = new PlaceholderTextField();
-        paymentTypeTextfield.setPlaceholder("payment type");
+        JComboBox<String> paymentTypeComboBox = new JComboBox();
+        paymentTypeComboBox.addItem("credit card");
+        paymentTypeComboBox.addItem("cash");
         amountTextfield.setPlaceholder("amount");
+        JLabel customerIDLabel = new JLabel("customer id");
+        PlaceholderTextField customerIDTextfield = new PlaceholderTextField();
+        customerIDTextfield.setPlaceholder("customer id");
+        JButton sellButton = new JButton("sell");
+
+
         transactionPanel.add(amountLabel);
         transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
         transactionPanel.add(amountTextfield);
@@ -84,14 +90,17 @@ public class TravelAdvisorForm extends JFrame {
 
 
         transactionPanel.add(paymentTypeLabel);
-
         transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        transactionPanel.add(paymentTypeTextfield);
-
-        transactionPanel.setBounds(0,0,400,400);
+        transactionPanel.add(paymentTypeComboBox);
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        transactionPanel.add(customerIDLabel);
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        transactionPanel.add(customerIDTextfield);
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        transactionPanel.add(sellButton);
 
         transactionPanel.add(Box.createRigidArea(new Dimension(0,260)));
-
+        transactionPanel.setBounds(0,0,400,400);
 
         layeredPane.add(customerPanel);
         layeredPane.add(reportPanel);
@@ -271,8 +280,58 @@ public class TravelAdvisorForm extends JFrame {
                     stm.executeUpdate();
 
 
+
                 }catch (Exception ex){
                     ex.printStackTrace();
+                }
+            }
+        });
+        sellButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                if(customerIDTextfield.getText().trim().isEmpty()){
+                    try{
+                        // 1. get a connection
+                        Connection con = DriverManager.getConnection(url, name, password);
+                        //2. create a statement
+                        String sql = "INSERT INTO payment"
+                                + " (paymentType, amount)"
+                                +"VALUES ( ?,?)";
+
+                        PreparedStatement stm = con.prepareStatement(sql);
+                        stm.setString(1, paymentTypeComboBox.getSelectedItem().toString());
+                        stm.setFloat(2, Float.parseFloat(amountTextfield.getText()));
+
+                        //3. execute sql query
+                        stm.executeUpdate();
+
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }else{
+                    try {
+                        // 1. get a connection
+                        Connection con = DriverManager.getConnection(url, name, password);
+
+                        //2. create a statement
+                        String sql = "INSERT INTO payment "
+                                + " (paymentType, amount, CustomerAccountcustomerAccount_id)"
+                                + "VALUES ( ?,?,?)";
+
+                        PreparedStatement stm = con.prepareStatement(sql);
+
+                        stm.setString(1, paymentTypeComboBox.getSelectedItem().toString());
+                        stm.setFloat(2, Float.parseFloat(amountTextfield.getText()));
+                        stm.setInt(3, Integer.parseInt(customerIDTextfield.getText()));
+
+                        //3. execute sql query
+                        stm.executeUpdate();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+
                 }
             }
         });
