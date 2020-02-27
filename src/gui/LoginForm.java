@@ -96,6 +96,4 @@ public class LoginForm extends JFrame {
     public String getPassword(){
         return password;
     }
-
-
 }

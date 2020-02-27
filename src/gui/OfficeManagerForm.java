@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
 import component.PlaceholderTextField;
 
 
@@ -28,6 +32,9 @@ public class OfficeManagerForm extends JFrame {
     private JLayeredPane layeredPane;
     private JPanel stockPanel;
     private JPanel reportPanel;
+    private String url = "jdbc:mysql://localhost:3306/airticketsales";
+    private String name = "akmal";
+    private String password = "]WCgDKEN69Wf>zE.";
 
 
 
@@ -115,6 +122,10 @@ public class OfficeManagerForm extends JFrame {
         JComboBox<String> paymentTypeComboBox = new JComboBox<>();
         paymentTypeComboBox.addItem("creditCard");
         paymentTypeComboBox.addItem("cash");
+        JLabel customerIDLabel = new JLabel("customer id");
+        PlaceholderTextField customerIDTextfield = new PlaceholderTextField();
+        customerIDTextfield.setPlaceholder("customer id");
+        JButton sellButton = new JButton("sell");
 
 
         amountTextfield.setPlaceholder("amount");
@@ -126,10 +137,15 @@ public class OfficeManagerForm extends JFrame {
         transactionPanel.add(paymentTypeLabel);
         transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
         transactionPanel.add(paymentTypeComboBox);
-        transactionPanel.setBounds(0,0,400,400);
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        transactionPanel.add(customerIDLabel);
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        transactionPanel.add(customerIDTextfield);
+        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        transactionPanel.add(sellButton);
         transactionPanel.add(Box.createRigidArea(new Dimension(0,260)));
 
-
+        transactionPanel.setBounds(0,0,400,400);
 
         layeredPane.add(stockPanel);
         layeredPane.add(reportPanel);
@@ -404,7 +420,53 @@ public class OfficeManagerForm extends JFrame {
 
             }
         });
+        sellButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(customerIDTextfield.getText().trim().isEmpty()){
+                    try{
+                        // 1. get a connection
+                        Connection con = DriverManager.getConnection(url, name, password);
+                        //2. create a statement
+                        String sql = "INSERT INTO payment"
+                                + " (paymentType, amount)"
+                                +"VALUES ( ?,?)";
 
+                        PreparedStatement stm = con.prepareStatement(sql);
+                        stm.setString(1, paymentTypeComboBox.getSelectedItem().toString());
+                        stm.setFloat(2, Float.parseFloat(amountTextfield.getText()));
+
+                        //3. execute sql query
+                        stm.executeUpdate();
+
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }else{
+                    try {
+                        // 1. get a connection
+                        Connection con = DriverManager.getConnection(url, name, password);
+
+                        //2. create a statement
+                        String sql = "INSERT INTO payment "
+                                + " (paymentType, amount, CustomerAccountcustomerAccount_id)"
+                                + "VALUES ( ?,?,?)";
+
+                        PreparedStatement stm = con.prepareStatement(sql);
+
+                        stm.setString(1, paymentTypeComboBox.getSelectedItem().toString());
+                        stm.setFloat(2, Float.parseFloat(amountTextfield.getText()));
+                        stm.setInt(3, Integer.parseInt(customerIDTextfield.getText()));
+
+                        //3. execute sql query
+                        stm.executeUpdate();
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+
+                }
+            }
+        });
 
         add(panel1);
 
