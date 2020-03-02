@@ -6,11 +6,7 @@ import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-
+import java.sql.*;
 
 
 import component.PlaceholderTextField;
@@ -132,6 +128,7 @@ public class TravelAdvisorForm extends JFrame {
         JLabel cancelTicket = new JLabel("cancel ticket");
         PlaceholderTextField ticketIdTextfield = new PlaceholderTextField();
         ticketIdTextfield.setPlaceholder("ticket ID");
+        JButton cancelTicketButton = new JButton("cancel ticket");
 
 
 
@@ -144,6 +141,8 @@ public class TravelAdvisorForm extends JFrame {
         rightPanel.add(cancelTicket);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(ticketIdTextfield);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        rightPanel.add(cancelTicketButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(createAccountButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
@@ -358,6 +357,27 @@ public class TravelAdvisorForm extends JFrame {
                 }
             }
         });
+        cancelTicketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection myConn = DriverManager.getConnection(url, name, password);
+
+                    // 2. create a statement
+
+                    String sql = "DELETE FROM payment WHERE payment_id=?";
+                    PreparedStatement stm = myConn.prepareStatement(sql);
+                    stm.setInt(1,Integer.parseInt(ticketIdTextfield.getText()));
+
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
+            }
+        });
 
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -365,4 +385,5 @@ public class TravelAdvisorForm extends JFrame {
 
 
     }
+
 }
