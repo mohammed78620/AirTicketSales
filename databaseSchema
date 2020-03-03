@@ -18,12 +18,13 @@ CREATE TABLE `customeraccount` (
   `dateOfBirth` datetime DEFAULT NULL,
   `address` varchar(45) DEFAULT NULL,
   `postalCode` varchar(45) DEFAULT NULL,
-  `telephone` int DEFAULT NULL,
+  `telephone` bigint DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `customerType` varchar(45) DEFAULT NULL,
   `discount` int DEFAULT NULL,
   PRIMARY KEY (`customerAccount_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `exchangerate` (
   `exchangeRate_id` int NOT NULL,
