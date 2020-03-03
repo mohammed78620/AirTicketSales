@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
@@ -217,6 +218,7 @@ public class OfficeManagerForm extends JFrame {
         JPanel manageDiscountPanel = new JPanel();
         manageDiscountPanel.setLayout(new BoxLayout(manageDiscountPanel,BoxLayout.Y_AXIS));
         manageDiscountPanel.setBounds(0,0,150,150);
+        manageDiscountPanel.setVisible(false);
         JLabel manageDiscountLabel = new JLabel("Manage discount");
         JLabel customerIDLabel2 = new JLabel("Customer id");
         PlaceholderTextField customerIDTextfield2 = new PlaceholderTextField();
@@ -383,6 +385,7 @@ public class OfficeManagerForm extends JFrame {
                 stockPanel.setVisible(false);
                 assignBlankPanel.setVisible(false);
                 advisorPanel.setVisible(false);
+                manageDiscountPanel.setVisible(false);
 
             }
         });
@@ -396,6 +399,7 @@ public class OfficeManagerForm extends JFrame {
                 reportPanel.setVisible(false);
                 stockPanel.setVisible(false);
                 assignBlankPanel.setVisible(false);
+                manageDiscountPanel.setVisible(false);
             }
         });
         manageDiscountButton.addActionListener(new ActionListener() {
@@ -464,6 +468,72 @@ public class OfficeManagerForm extends JFrame {
                         ex.printStackTrace();
                     }
 
+                }
+            }
+        });
+        createCustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                // 1. get a connection
+                Connection con = DriverManager.getConnection(url, name , password);
+
+                //2. create a statement
+                String sql = "INSERT INTO customeraccount"
+                        + " (name, dateOfBirth, address, postalCode, telephone, email)"
+                        + "VALUES ( ?, ?, ?, ?, ?, ?)";
+
+
+                PreparedStatement stm = con.prepareStatement(sql);
+
+                stm.setString(1, nameTextField.getText());
+                stm.setDate(2, Date.valueOf(dateOfBirthTextField.getText()));
+                stm.setString(3, addressTextField.getText());
+                stm.setString(4, postalCodeTextField.getText());
+                stm.setLong(5, Long.parseLong(telephoneTextField.getText()));
+                stm.setString(6, emailTextField.getText());
+
+
+                //3. execute sql query
+                stm.executeUpdate();
+
+
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+            }
+        });
+
+        updateCustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    // 1. get a connection
+                    Connection con = DriverManager.getConnection(url, name , password);
+
+                    //2. create a statement
+                    String sql = "UPDATE customeraccount "
+                            + "SET name=?,dateOfBirth=?,address=?,postalCode=?,telephone=?,email=?"
+                            + "WHERE customerAccount_id=?";
+
+                    PreparedStatement stm = con.prepareStatement(sql);
+                    stm.setString(1, nameTextField.getText());
+                    stm.setDate(2,Date.valueOf(dateOfBirthTextField.getText()));
+                    stm.setString(3, addressTextField.getText());
+                    stm.setString(4, postalCodeTextField.getText());
+                    stm.setLong(5, Long.parseLong(telephoneTextField.getText()));
+                    stm.setString(6, emailTextField.getText());
+                    stm.setInt(7,Integer.parseInt(IDTextField.getText()));
+
+
+
+                    //3. execute sql query
+                    stm.executeUpdate();
+
+
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
                 }
             }
         });
