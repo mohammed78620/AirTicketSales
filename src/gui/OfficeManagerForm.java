@@ -165,6 +165,7 @@ public class OfficeManagerForm extends JFrame {
         cancelTicketTextfield.setPlaceholder("cancel ticket");
         viewReportButton = new JButton("View report");
         viewStockButton = new JButton("View stock");
+        JButton cancelTicketButton = new JButton("cancel ticket");
         JButton viewCustomerButton = new JButton("View customer");
         JButton viewTravelAdvisorButton = new JButton("View travel advisor");
         JButton createCustomerButton = new JButton("Create customer");
@@ -175,6 +176,8 @@ public class OfficeManagerForm extends JFrame {
         panel5.add(cancelTicketLabel);
         panel5.add(Box.createRigidArea(new Dimension(0,15)));
         panel5.add(cancelTicketTextfield);
+        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(cancelTicketButton);
         panel5.add(Box.createRigidArea(new Dimension(0,15)));
         panel5.add(changeCommissionLabel);
         panel5.add(Box.createRigidArea(new Dimension(0,15)));
@@ -332,6 +335,25 @@ public class OfficeManagerForm extends JFrame {
         panel3.add(leftLayeredPane,BorderLayout.CENTER);
 
 
+        cancelTicketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    // 1. get a connection
+                    Connection con = DriverManager.getConnection(url, name, password);
+
+                    // 2. create a statement
+                    String sql = "DELETE from payment WHERE payment_id=?";
+                    PreparedStatement stm = con.prepareStatement(sql);
+                    stm.setInt(1, Integer.parseInt(cancelTicketTextfield.getText()));
+
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
         viewReportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
