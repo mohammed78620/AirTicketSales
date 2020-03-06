@@ -174,27 +174,27 @@ public class OfficeManagerForm extends JFrame {
 
         panel5.setLayout(new BoxLayout(panel5,BoxLayout.Y_AXIS));
         panel5.add(cancelTicketLabel);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(cancelTicketTextfield);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(cancelTicketButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(changeCommissionLabel);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(changeCommissionTextfield);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(viewReportButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(viewStockButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(viewCustomerButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(viewTravelAdvisorButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(createCustomerButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(updateCustomerButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,15)));
+        panel5.add(Box.createRigidArea(new Dimension(0,10)));
         panel5.add(viewTransactionButton);
         panel5.add(Box.createRigidArea(new Dimension(0,280)));
 

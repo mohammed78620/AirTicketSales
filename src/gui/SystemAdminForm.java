@@ -142,12 +142,17 @@ public class SystemAdminForm extends JFrame {
         JLayeredPane leftLayeredPane = new JLayeredPane();
         leftLayeredPane.setPreferredSize(new Dimension(150,150));
         JPanel updateTravelAdvisorPanel = new JPanel();
+        updateTravelAdvisorPanel.setVisible(false);
         updateTravelAdvisorPanel.setLayout(new BoxLayout(updateTravelAdvisorPanel,BoxLayout.Y_AXIS));
         updateTravelAdvisorPanel.setBounds(0,0,150,450);
         JPanel updateStockPanel = new JPanel();
         updateStockPanel.setVisible(false);
         updateStockPanel.setLayout(new BoxLayout(updateStockPanel,BoxLayout.Y_AXIS));
         updateStockPanel.setBounds(0,0,150,450);
+        JPanel removeBlankPanel = new JPanel();
+        removeBlankPanel.setVisible(false);
+        removeBlankPanel.setLayout(new BoxLayout(removeBlankPanel,BoxLayout.Y_AXIS));
+        removeBlankPanel.setBounds(0,0,150,450);
 
         JLabel idLabel = new JLabel("iD");
         JLabel usernameLabel = new JLabel("Username");
@@ -182,9 +187,11 @@ public class SystemAdminForm extends JFrame {
         JLabel assignBlanksLabel = new JLabel("Assign blank");
         JLabel idLabel2 = new JLabel("id");
         JLabel typeLabel1 = new JLabel("type");
+        JLabel flightTypeLabel1 = new JLabel("flight type");
         JLabel amountLabel = new JLabel("amount");
         JLabel addBlankLabel = new JLabel("Add blank");
         JLabel typeLabel2 = new JLabel("type");
+        JLabel flightTypeLabel2 = new JLabel("flight type");
         JLabel amountLabel2 = new JLabel("amount");
         JLabel removeBlankLabel = new JLabel("Remove blank");
         JLabel idLabel3 = new JLabel("id");
@@ -194,11 +201,17 @@ public class SystemAdminForm extends JFrame {
         JComboBox typeBox1 = new JComboBox();
         typeBox1.addItem("402");
         typeBox1.addItem("401");
+        JComboBox flightTypeBox1 = new JComboBox();
+        flightTypeBox1.addItem("interline");
+        flightTypeBox1.addItem("domestic");
         PlaceholderTextField amountTextfield1 = new PlaceholderTextField();
         amountTextfield1.setPlaceholder("amount");
         JComboBox typeBox2 = new JComboBox();
         typeBox2.addItem("402");
         typeBox2.addItem("401");
+        JComboBox flightTypeBox2 = new JComboBox();
+        flightTypeBox2.addItem("interline");
+        flightTypeBox2.addItem("domestic");
         PlaceholderTextField amountTextfield2 = new PlaceholderTextField();
         amountTextfield2.setPlaceholder("amount");
         PlaceholderTextField idTextfield3 = new PlaceholderTextField();
@@ -206,7 +219,9 @@ public class SystemAdminForm extends JFrame {
 
         JButton assignBlankButton = new JButton("assign blank");
         JButton addBlankButton = new JButton("add blank");
+        JButton viewRemoveBlankButton = new JButton("more");
         JButton removeBlankButton = new JButton("remove blank");
+        JButton backButton = new JButton("back");
         //adds to update travel advisor panel
 
 
@@ -255,6 +270,10 @@ public class SystemAdminForm extends JFrame {
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(typeBox1);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+        updateStockPanel.add(flightTypeLabel1);
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+        updateStockPanel.add(flightTypeBox1);
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(amountLabel);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(amountTextfield1);
@@ -267,36 +286,64 @@ public class SystemAdminForm extends JFrame {
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(typeBox2);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+        updateStockPanel.add(flightTypeLabel2);
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+        updateStockPanel.add(flightTypeBox2);
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(amountLabel2);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(amountTextfield2);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(addBlankButton);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(removeBlankLabel);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(idLabel3);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(idTextfield3);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(removeBlankButton);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,50)));
+        updateStockPanel.add(viewRemoveBlankButton);
+        updateStockPanel.add(Box.createRigidArea(new Dimension(0,45)));
 
 
 
 
+        //adds to removeBlankPanel
+        removeBlankPanel.add(removeBlankLabel);
+        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
+        removeBlankPanel.add(idLabel3);
+        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
+        removeBlankPanel.add(idTextfield3);
+        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
+        removeBlankPanel.add(removeBlankButton);
+        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
+        removeBlankPanel.add(backButton);
+        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,350)));
 
-        //adds to updates stock pane
+
+
+        //adds to leftPanel stock pane
 
 
         leftLayeredPane.add(updateTravelAdvisorPanel);
         leftLayeredPane.add(updateStockPanel);
+        leftLayeredPane.add(removeBlankPanel);
         leftPanel.add(leftLayeredPane,BorderLayout.CENTER);
 
 
 
 
         //sets button listeners
+        viewRemoveBlankButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateStockPanel.setVisible(false);
+                removeBlankPanel.setVisible(true);
+
+            }
+        });
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateStockPanel.setVisible(true);
+                removeBlankPanel.setVisible(false);
+
+            }
+        });
 
         viewUserButton.addActionListener(new ActionListener() {
             @Override
@@ -417,6 +464,37 @@ public class SystemAdminForm extends JFrame {
 
                     //3. execute sql query
                     stm.executeUpdate();
+
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        addBlankButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    con = DriverManager.getConnection(url, name, password);
+
+                    //2. create a statement
+                    String sql = "INSERT INTO blank "
+                            + " (blankType,flightType)"
+                            + "VALUES ( ?, ?)";
+                    stm = con.prepareStatement(sql);
+
+                    int amount = Integer.parseInt(amountTextfield2.getText());
+
+                    for(int i = 0;i<amount;i++) {
+                        stm.setInt(1, Integer.parseInt(typeBox2.getSelectedItem().toString()));
+                        stm.setString(2, flightTypeBox2.getSelectedItem().toString());
+
+
+                        //3. execute sql query
+                        stm.executeUpdate();
+
+                    }
 
 
                 }catch (Exception ex){
