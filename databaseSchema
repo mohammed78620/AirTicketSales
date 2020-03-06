@@ -66,18 +66,15 @@ CREATE TABLE `sale` (
   PRIMARY KEY (`sale_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `blanktype` (
-  `blankType` int NOT NULL AUTO_INCREMENT,
-  `type` int DEFAULT NULL,
-  PRIMARY KEY (`blankType`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `typeofflight` (
-  `type_Of_Flight_ID` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `blank` (
+  `blank_id` int NOT NULL AUTO_INCREMENT,
+  `Staffstaff_id` int DEFAULT NULL,
+  `blankType` int DEFAULT NULL,
   `flightType` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`type_Of_Flight_ID`)
+  PRIMARY KEY (`blank_id`),
+  KEY `Staffstaff_id_idx` (`Staffstaff_id`),
+  CONSTRAINT `Staffstaff_id` FOREIGN KEY (`Staffstaff_id`) REFERENCES `staff` (`staff_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 
 
 
