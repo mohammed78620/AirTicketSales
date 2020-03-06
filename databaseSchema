@@ -1,0 +1,71 @@
+CREATE TABLE `staff` (
+  `staff_id` int NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `telephone` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  `accessLevel` int DEFAULT NULL,
+  `agency` varchar(45) DEFAULT NULL,
+  `staffType` varchar(45) NOT NULL,
+  PRIMARY KEY (`staff_id`,`staffType`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `customeraccount` (
+  `customerAccount_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `dateOfBirth` datetime DEFAULT NULL,
+  `address` varchar(45) DEFAULT NULL,
+  `postalCode` varchar(45) DEFAULT NULL,
+  `telephone` bigint DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `customerType` varchar(45) DEFAULT NULL,
+  `discount` int DEFAULT NULL,
+  PRIMARY KEY (`customerAccount_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `exchangerate` (
+  `exchangeRate_id` int NOT NULL,
+  `currency` varchar(45) NOT NULL,
+  `exchangeRate` float DEFAULT NULL,
+  PRIMARY KEY (`exchangeRate_id`,`currency`),
+  UNIQUE KEY `currency_UNIQUE` (`currency`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `payment` (
+  `payment_id` int NOT NULL AUTO_INCREMENT,
+  `paymentType` varchar(45) DEFAULT NULL,
+  `amount` float DEFAULT NULL,
+  `totalAmountPaid` float DEFAULT NULL,
+  `CustomerAccountcustomerAccount_id` int DEFAULT NULL,
+  `ExchangeRateexchangeRate_id` int DEFAULT NULL,
+  `ExchangeRatecurrency` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`payment_id`),
+  KEY `CustomerAccountcustomerAccount_id_idx` (`CustomerAccountcustomerAccount_id`),
+  KEY `ExchangeRateexchangeRate_id_idx` (`ExchangeRateexchangeRate_id`),
+  KEY `ExchangeRatecurrency_idx` (`ExchangeRatecurrency`),
+  KEY `FKPayment351416` (`ExchangeRateexchangeRate_id`,`ExchangeRatecurrency`),
+  CONSTRAINT `CustomerAccountcustomerAccount_id` FOREIGN KEY (`CustomerAccountcustomerAccount_id`) REFERENCES `customeraccount` (`customerAccount_id`),
+  CONSTRAINT `FKPayment351416` FOREIGN KEY (`ExchangeRateexchangeRate_id`, `ExchangeRatecurrency`) REFERENCES `exchangerate` (`exchangeRate_id`, `currency`),
+  CONSTRAINT `FKPayment660359` FOREIGN KEY (`CustomerAccountcustomerAccount_id`) REFERENCES `customeraccount` (`customerAccount_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `sale` (
+  `sale_id` int NOT NULL,
+  `salesDate` datetime DEFAULT NULL,
+  `tax` int DEFAULT NULL,
+  `subTotal` int DEFAULT NULL,
+  `grandTotal` int DEFAULT NULL,
+  `salesNote` int DEFAULT NULL,
+  `CustomerAccountcustomerAccount_id` int DEFAULT NULL,
+  `Paymentpayment_id` int DEFAULT NULL,
+  `Commisioncommision_id` int DEFAULT NULL,
+  `Staffstaff_id` int DEFAULT NULL,
+  PRIMARY KEY (`sale_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+

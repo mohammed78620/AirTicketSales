@@ -1,3 +1,9 @@
+package gui;
+
+import com.sun.tools.javac.Main;
+import component.PlaceholderTextField;
+import controller.LoginController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +21,7 @@ public class LoginForm extends JFrame {
     private JPanel panel3;
     private JPanel panel4;
     private JButton loginButton;
+    private LoginController loginController;
 
 
     public LoginForm(){
@@ -53,26 +60,26 @@ public class LoginForm extends JFrame {
                 //gets the username and password from JtextField
                 username = usernameText.getText();
                 password = passwordText.getText();
-                System.out.println("the username is: " +username +" the password is: " + password);
 
-                //sets the login page as invisible and opens officemanagerform
-                setVisible(false);
-                OfficeManagerForm officeManagerForm = new OfficeManagerForm();
-                officeManagerForm.setVisible(true);
+                if(!(username.isEmpty() || password.isEmpty())) {
+//                System.out.println("the username is: " +username +" the password is: " + password);
+                    LoginController loginController = new LoginController(username, password);
+                    //sets the login page as invisible and opens officemanagerform
+                    if (loginController.loginAuthenticated()) {
+                        dispose();
+                    }
+                }
 
-                SystemAdminForm systemAdminForm = new SystemAdminForm();
-                systemAdminForm.setVisible(true);
 
-                TravelAdvisorForm travelAdvisorForm = new TravelAdvisorForm();
-                travelAdvisorForm.setVisible(true);
+
             }
         });
 
 
-
+        setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(350,250);
-        setVisible(true);
+
     }
     public void openOfficeManagerForm(){
 
