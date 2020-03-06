@@ -203,6 +203,7 @@ public class OfficeManagerForm extends JFrame {
 
         JPanel assignBlankPanel = new JPanel();
         assignBlankPanel.setLayout(new BoxLayout(assignBlankPanel,BoxLayout.Y_AXIS));
+        assignBlankPanel.setVisible(false);
         assignBlankPanel.setBounds(0,0,150,450);
         JLabel assignBlank = new JLabel("Assign blank");
         PlaceholderTextField idTextfield = new PlaceholderTextField();
