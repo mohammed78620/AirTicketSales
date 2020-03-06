@@ -1,6 +1,5 @@
 package gui;
 
-import com.sun.tools.javac.Main;
 import component.PlaceholderTextField;
 import controller.LoginController;
 
