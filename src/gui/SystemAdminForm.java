@@ -534,9 +534,31 @@ public class SystemAdminForm extends JFrame {
                 }
             }
         });
+        removeBlankButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection myConn = DriverManager.getConnection(url, name, password);
+
+                    // 2. create a statement
+
+                    String sql = "DELETE FROM blank WHERE blank_id=?";
+                    PreparedStatement stm = myConn.prepareStatement(sql);
+                    stm.setInt(1,Integer.parseInt(idTextfield3.getText()));
+
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
 //        setVisible(true);
     }
+
 }
