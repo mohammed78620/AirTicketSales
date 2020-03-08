@@ -74,7 +74,6 @@ CREATE TABLE `blank` (
   PRIMARY KEY (`blank_id`),
   KEY `Staffstaff_id_idx` (`Staffstaff_id`),
   CONSTRAINT `Staffstaff_id` FOREIGN KEY (`Staffstaff_id`) REFERENCES `staff` (`staff_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 

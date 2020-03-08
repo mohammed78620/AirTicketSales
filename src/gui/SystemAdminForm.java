@@ -486,7 +486,7 @@ public class SystemAdminForm extends JFrame {
 
                     int amount = Integer.parseInt(amountTextfield2.getText());
 
-                    for(int i = 0;i<amount;i++) {
+                    for(int i = 0; i < amount; i++) {
                         stm.setInt(1, Integer.parseInt(typeBox2.getSelectedItem().toString()));
                         stm.setString(2, flightTypeBox2.getSelectedItem().toString());
 
@@ -498,6 +498,38 @@ public class SystemAdminForm extends JFrame {
 
 
                 }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        assignBlankButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    con = DriverManager.getConnection(url, name, password);
+
+                    //2. create a statement
+                    String sql = "INSERT INTO blank "
+                            + " (Staffstaff_id,blankType,flightType)"
+                            + "VALUES ((SELECT staff_id FROM staff WHERE staff_id=?) ,?,?)";
+
+                    stm = con.prepareStatement(sql);
+
+                    int amount = Integer.parseInt(amountTextfield1.getText());
+
+                    stm.setInt(1, Integer.parseInt(idTextfield2.getText()));
+                    stm.setInt(2, Integer.parseInt(typeBox1.getSelectedItem().toString()));
+                    stm.setString(3, flightTypeBox1.getSelectedItem().toString());
+
+                    for (int i = 0; i < amount; i++) {
+
+
+                        //3. execute sql query
+                        stm.executeUpdate();
+                    }
+
+                }catch(Exception ex){
                     ex.printStackTrace();
                 }
             }
