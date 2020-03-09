@@ -209,16 +209,13 @@ public class OfficeManagerForm extends JFrame {
         assignBlankPanel.setVisible(false);
         assignBlankPanel.setBounds(0,0,150,450);
         JLabel assignBlank = new JLabel("Assign blank");
+        JLabel idLabel = new JLabel("id");
         PlaceholderTextField idTextfield = new PlaceholderTextField();
-        idTextfield.setPlaceholder("id");
-        JLabel typeLabel = new JLabel("type");
-        PlaceholderTextField typeTextfield = new PlaceholderTextField();
-        typeTextfield.setPlaceholder("type");
-        JLabel amountLabel2 = new JLabel("amount");
-        PlaceholderTextField amountTextfield2 = new PlaceholderTextField();
-        amountTextfield.setPlaceholder("amount");
+        idTextfield.setPlaceholder("blank id");
+        JLabel idLabel2 = new JLabel("staff id");
+        PlaceholderTextField idTextfield2 = new PlaceholderTextField();
+        idTextfield2.setPlaceholder("staff id");
         JButton assignBlankButton = new JButton("assign blank");
-
         JPanel manageDiscountPanel = new JPanel();
         manageDiscountPanel.setLayout(new BoxLayout(manageDiscountPanel,BoxLayout.Y_AXIS));
         manageDiscountPanel.setBounds(0,0,150,150);
@@ -273,15 +270,13 @@ public class OfficeManagerForm extends JFrame {
 
         assignBlankPanel.add(assignBlank);
         assignBlankPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        assignBlankPanel.add(idLabel);
+        assignBlankPanel.add(Box.createRigidArea(new Dimension(0,15)));
         assignBlankPanel.add(idTextfield);
         assignBlankPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        assignBlankPanel.add(typeLabel);
+        assignBlankPanel.add(idLabel2);
         assignBlankPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        assignBlankPanel.add(typeTextfield);
-        assignBlankPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        assignBlankPanel.add(amountLabel2);
-        assignBlankPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        assignBlankPanel.add(amountTextfield2);
+        assignBlankPanel.add(idTextfield2);
         assignBlankPanel.add(Box.createRigidArea(new Dimension(0,15)));
         assignBlankPanel.add(assignBlankButton);
         assignBlankPanel.add(Box.createRigidArea(new Dimension(0,260)));
@@ -556,6 +551,31 @@ public class OfficeManagerForm extends JFrame {
 
 
                 }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        assignBlankButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection con = DriverManager.getConnection(url, name, password);
+
+                    //2. create a statement
+                    String sql = "UPDATE blank "
+                            + " SET Staffstaff_id=?"
+                            + " WHERE blank_id=?";
+
+                    PreparedStatement stm = con.prepareStatement(sql);
+                    stm.setInt(1, Integer.parseInt(idTextfield2.getText()));
+                    stm.setInt(2, Integer.parseInt(idTextfield.getText()));
+
+                    //3. execute sql query
+                    stm.executeUpdate();
+
+
+                }catch(Exception ex){
                     ex.printStackTrace();
                 }
             }

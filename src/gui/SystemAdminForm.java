@@ -194,21 +194,19 @@ public class SystemAdminForm extends JFrame {
         JLabel flightTypeLabel2 = new JLabel("flight type");
         JLabel amountLabel2 = new JLabel("amount");
         JLabel removeBlankLabel = new JLabel("Remove blank");
-        JLabel idLabel3 = new JLabel("id");
+        JLabel idLabel3 = new JLabel("blank id");
 
         PlaceholderTextField idTextfield2 = new PlaceholderTextField();
-        idTextfield2.setPlaceholder("id");
-        JComboBox typeBox1 = new JComboBox();
-        typeBox1.addItem("402");
-        typeBox1.addItem("401");
-        JComboBox flightTypeBox1 = new JComboBox();
-        flightTypeBox1.addItem("interline");
-        flightTypeBox1.addItem("domestic");
-        PlaceholderTextField amountTextfield1 = new PlaceholderTextField();
-        amountTextfield1.setPlaceholder("amount");
+        idTextfield2.setPlaceholder("blank id");
+        JLabel idStaffLabel = new JLabel("staff id");
+        PlaceholderTextField idStaffTextfield = new PlaceholderTextField();
+        idStaffTextfield.setPlaceholder("staff id");
         JComboBox typeBox2 = new JComboBox();
-        typeBox2.addItem("402");
-        typeBox2.addItem("401");
+        typeBox2.addItem("444");
+        typeBox2.addItem("440");
+        typeBox2.addItem("420");
+        typeBox2.addItem("201");
+        typeBox2.addItem("101");
         JComboBox flightTypeBox2 = new JComboBox();
         flightTypeBox2.addItem("interline");
         flightTypeBox2.addItem("domestic");
@@ -268,15 +266,9 @@ public class SystemAdminForm extends JFrame {
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(typeLabel1);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(typeBox1);
+        updateStockPanel.add(idStaffLabel);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(flightTypeLabel1);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(flightTypeBox1);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(amountLabel);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(amountTextfield1);
+        updateStockPanel.add(idStaffTextfield);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
         updateStockPanel.add(assignBlankButton);
         updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
@@ -510,24 +502,19 @@ public class SystemAdminForm extends JFrame {
                     con = DriverManager.getConnection(url, name, password);
 
                     //2. create a statement
-                    String sql = "INSERT INTO blank "
-                            + " (Staffstaff_id,blankType,flightType)"
-                            + "VALUES ((SELECT staff_id FROM staff WHERE staff_id=?) ,?,?)";
+                    String sql = "UPDATE blank "
+                            + " SET Staffstaff_id=?"
+                            + " WHERE blank_id=?";
 
                     stm = con.prepareStatement(sql);
 
-                    int amount = Integer.parseInt(amountTextfield1.getText());
 
-                    stm.setInt(1, Integer.parseInt(idTextfield2.getText()));
-                    stm.setInt(2, Integer.parseInt(typeBox1.getSelectedItem().toString()));
-                    stm.setString(3, flightTypeBox1.getSelectedItem().toString());
-
-                    for (int i = 0; i < amount; i++) {
+                    stm.setInt(1, Integer.parseInt(idStaffTextfield.getText()));
+                    stm.setInt(2, Integer.parseInt(idTextfield2.getText()));
 
 
-                        //3. execute sql query
-                        stm.executeUpdate();
-                    }
+
+                    stm.executeUpdate();
 
                 }catch(Exception ex){
                     ex.printStackTrace();
