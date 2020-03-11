@@ -24,18 +24,18 @@ public class LoginController {
             // create a statement
             Statement stm =  con.createStatement();
             //execute sql query
-            ResultSet rs = stm.executeQuery("SELECT username, password,staffType FROM staff WHERE username='" + username + "'");
+            ResultSet rs = stm.executeQuery("SELECT username, password,staffType,staff_id FROM staff WHERE username='" + username + "'");
             //process the result set
             rs.next();
             if (password.equals(rs.getString("password"))){
                 String staffType = rs.getString("staffType");
                 switch(staffType){
                     case "sa":
-                        SystemAdminForm systemAdminForm = new SystemAdminForm();
+                        SystemAdminForm systemAdminForm = new SystemAdminForm(rs.getInt("staff_id"));
                         systemAdminForm.setVisible(true);
                         break;
                     case "om":
-                        OfficeManagerForm officeManagerForm = new OfficeManagerForm();
+                        OfficeManagerForm officeManagerForm = new OfficeManagerForm(rs.getInt("staff_id"));
                         officeManagerForm.setVisible(true);
                         break;
                     case "ta":

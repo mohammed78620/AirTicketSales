@@ -10,6 +10,7 @@ import component.PlaceholderTextField;
 
 
 public class SystemAdminForm extends JFrame {
+    private int id;
     private JPanel panel1;
     private JPanel centerPanel;
     private JPanel bottomPanel;
@@ -24,8 +25,9 @@ public class SystemAdminForm extends JFrame {
     private String name = "akmal";
     private String password = "]WCgDKEN69Wf>zE.";
 
-    public SystemAdminForm(){
+    public SystemAdminForm(int id){
         super("System Administrator page");
+        this.id = id;
 
         centerPanel = new JPanel(new BorderLayout());
         bottomPanel = new JPanel();
@@ -546,6 +548,10 @@ public class SystemAdminForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
 //        setVisible(true);
+        System.out.println("this user has logged in ->" + getID());
+    }
+    public int getID(){
+        return id;
     }
 
 }

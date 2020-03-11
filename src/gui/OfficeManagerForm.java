@@ -13,6 +13,7 @@ import component.PlaceholderTextField;
 
 
 public class OfficeManagerForm extends JFrame {
+    private int id;
     public JButton logoutButton;
     private JButton domesticReportButton;
     private JButton interlineReportButton;
@@ -40,9 +41,10 @@ public class OfficeManagerForm extends JFrame {
 
 
 
-    public OfficeManagerForm(){
+    public OfficeManagerForm(int id){
         //frame setup
         super("Office manager page");
+        this.id = id;
         logoutButton = new JButton("Logout");
 
         stockPanel = new JPanel(new BorderLayout());
@@ -589,6 +591,11 @@ public class OfficeManagerForm extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
 //        setVisible(true);
+        System.out.println("this user has logged in ->" + getID());
+
+    }
+    public int getID(){
+        return id;
     }
 
 }
