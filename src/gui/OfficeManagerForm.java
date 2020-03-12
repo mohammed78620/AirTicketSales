@@ -439,6 +439,11 @@ public class OfficeManagerForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 LoginForm loginForm = new LoginForm();
                 dispose();
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
 
             }
         });
