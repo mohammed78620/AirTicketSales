@@ -374,6 +374,11 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 LoginForm loginForm = new LoginForm();
                 dispose();
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         addUserButton.addActionListener(new ActionListener() {
@@ -381,7 +386,7 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    con = DriverManager.getConnection(url, name, password);
+                    con = getConnection();
 
                     //2. create a statement
                     String sql = "INSERT INTO staff "
@@ -413,7 +418,7 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    con = DriverManager.getConnection(url, name, password);
+                    con = getConnection();
 
                     //2. create a statement
                     String sql = "UPDATE staff "
@@ -447,7 +452,7 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    con = DriverManager.getConnection(url, name, password);
+                    con = getConnection();
 
                     //2. create a statement
 
@@ -470,7 +475,7 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    con = DriverManager.getConnection(url, name, password);
+                    con = getConnection();
 
                     //2. create a statement
                     String sql = "INSERT INTO blank "
@@ -501,7 +506,7 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    con = DriverManager.getConnection(url, name, password);
+                    con = getConnection();
 
                     //2. create a statement
                     String sql = "UPDATE blank "
@@ -528,12 +533,12 @@ public class SystemAdminForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    Connection myConn = DriverManager.getConnection(url, name, password);
+                    con = getConnection();
 
                     // 2. create a statement
 
                     String sql = "DELETE FROM blank WHERE blank_id=?";
-                    PreparedStatement stm = myConn.prepareStatement(sql);
+                    PreparedStatement stm = con.prepareStatement(sql);
                     stm.setInt(1,Integer.parseInt(idTextfield3.getText()));
 
                     // 3. execute sql statement
@@ -552,6 +557,19 @@ public class SystemAdminForm extends JFrame {
     }
     public int getID(){
         return id;
+    }
+    public Connection getConnection(){
+        try{
+            con = DriverManager.getConnection(url,name,password);
+
+
+        }catch (SQLException s){
+            s.printStackTrace();
+        }
+        finally {
+            return con;
+        }
+
     }
 
 }

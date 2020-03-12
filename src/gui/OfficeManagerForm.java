@@ -4,10 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.*;
 
 import component.PlaceholderTextField;
 
@@ -34,6 +31,7 @@ public class OfficeManagerForm extends JFrame {
     private JLayeredPane layeredPane;
     private JPanel stockPanel;
     private JPanel reportPanel;
+    private Connection con;
     private String url = "jdbc:mysql://localhost:3306/airticketsales";
     private String name = "akmal";
     private String password = "]WCgDKEN69Wf>zE.";
@@ -450,7 +448,8 @@ public class OfficeManagerForm extends JFrame {
                 if(customerIDTextfield.getText().trim().isEmpty()){
                     try{
                         // 1. get a connection
-                        Connection con = DriverManager.getConnection(url, name, password);
+                        con = getConnection();
+
                         //2. create a statement
                         String sql = "INSERT INTO payment"
                                 + " (paymentType, amount)"
@@ -496,7 +495,7 @@ public class OfficeManagerForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try{
                 // 1. get a connection
-                Connection con = DriverManager.getConnection(url, name , password);
+                con = getConnection();
 
                 //2. create a statement
                 String sql = "INSERT INTO customeraccount"
@@ -529,7 +528,7 @@ public class OfficeManagerForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try{
                     // 1. get a connection
-                    Connection con = DriverManager.getConnection(url, name , password);
+                    con = getConnection();
 
                     //2. create a statement
                     String sql = "UPDATE customeraccount "
@@ -562,7 +561,7 @@ public class OfficeManagerForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    Connection con = DriverManager.getConnection(url, name, password);
+                    con = getConnection();
 
                     //2. create a statement
                     String sql = "UPDATE blank "
@@ -597,5 +596,14 @@ public class OfficeManagerForm extends JFrame {
     public int getID(){
         return id;
     }
-
+    public Connection getConnection(){
+        try{
+            con = DriverManager.getConnection(url,name,password);
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        finally {
+            return con;
+        }
+    }
 }
