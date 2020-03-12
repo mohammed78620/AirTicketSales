@@ -1,5 +1,5 @@
 CREATE TABLE `staff` (
-  `staff_id` int NOT NULL,
+  `staff_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `address` varchar(45) DEFAULT NULL,
   `telephone` varchar(45) DEFAULT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE `staff` (
   `agency` varchar(45) DEFAULT NULL,
   `staffType` varchar(45) NOT NULL,
   PRIMARY KEY (`staff_id`,`staffType`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `customeraccount` (
   `customerAccount_id` int NOT NULL AUTO_INCREMENT,
@@ -74,6 +74,4 @@ CREATE TABLE `blank` (
   PRIMARY KEY (`blank_id`),
   KEY `Staffstaff_id_idx` (`Staffstaff_id`),
   CONSTRAINT `Staffstaff_id` FOREIGN KEY (`Staffstaff_id`) REFERENCES `staff` (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
