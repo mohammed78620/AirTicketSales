@@ -11,14 +11,18 @@ import java.sql.*;
 
 import component.PlaceholderTextField;
 
+import static java.sql.DriverManager.getConnection;
+
 
 public class TravelAdvisorForm extends JFrame {
-    private String url = "jdbc:mysql://localhost:3306/airticketsales";
-    private String name = "akmal";
-    private String password = "]WCgDKEN69Wf>zE.";
+    private int id;
+    private String url = "jdbc:mysql://localhost:3306/databasename";
+    private String name = "root";
+    private String password = "kamal997";
 
-    public TravelAdvisorForm(){
+    public TravelAdvisorForm(int id){
         super("Travel Advisor page");
+        this.id = id;
 
         JPanel panel1 = new JPanel(new BorderLayout());
 
@@ -249,7 +253,7 @@ public class TravelAdvisorForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    Connection con = DriverManager.getConnection(url, name , password);
+                    Connection con = getConnection(url, name , password);
 
                     //2. create a statement
                     String sql = "INSERT INTO customeraccount"
@@ -281,7 +285,7 @@ public class TravelAdvisorForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try{
                     // 1. get a connection
-                    Connection con = DriverManager.getConnection(url, name , password);
+                    Connection con = getConnection(url, name , password);
 
                     //2. create a statement
                     String sql = "UPDATE customeraccount "
@@ -316,7 +320,7 @@ public class TravelAdvisorForm extends JFrame {
                 if(customerIDTextfield.getText().trim().isEmpty()){
                     try{
                         // 1. get a connection
-                        Connection con = DriverManager.getConnection(url, name, password);
+                        Connection con = getConnection(url, name, password);
                         //2. create a statement
                         String sql = "INSERT INTO payment"
                                 + " (paymentType, amount)"
@@ -335,7 +339,7 @@ public class TravelAdvisorForm extends JFrame {
                 }else{
                     try {
                         // 1. get a connection
-                        Connection con = DriverManager.getConnection(url, name, password);
+                        Connection con = getConnection(url, name, password);
 
                         //2. create a statement
                         String sql = "INSERT INTO payment "
@@ -362,10 +366,9 @@ public class TravelAdvisorForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // 1. get a connection
-                    Connection myConn = DriverManager.getConnection(url, name, password);
+                    Connection myConn = getConnection(url, name, password);
 
                     // 2. create a statement
-
                     String sql = "DELETE FROM payment WHERE payment_id=?";
                     PreparedStatement stm = myConn.prepareStatement(sql);
                     stm.setInt(1,Integer.parseInt(ticketIdTextfield.getText()));
@@ -379,11 +382,83 @@ public class TravelAdvisorForm extends JFrame {
             }
         });
 
+        viewIndividualReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection myConn = DriverManager.getConnection(url, name, password);
+
+                    // 2. create a statement
+                    //report needs to be added to database with more data fields
+                    String sql = "SELECT (report_id, dateGenerated, endDate) "
+                            + "FROM report"
+                            + " WHERE staff_id=?";
+
+                    PreparedStatement stm = myConn.prepareStatement(sql);
+                    stm.setInt(1,Integer.parseInt(IDTextField.getText()));
+
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        viewCustomers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection myConn = DriverManager.getConnection(url, name, password);
+
+                    // 2. create a statement
+                    String sql = "SELECT * FROM customeraccount"
+                            + " WHERE customeraccount_id=?";
+
+                    PreparedStatement stm = myConn.prepareStatement(sql);
+                    stm.setInt(1,Integer.parseInt(IDTextField.getText()));
+
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        generateIndividualReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection myConn = DriverManager.getConnection(url, name, password);
+
+                    // 2. create a statement
+                    //report needs to be added to database with more data fields
+                    String sql = "INSERT INTO report "
+                            + " (report_id, dateGenerated, endDate)"
+                            + "VALUES ( ?,?,?,)";
+
+
+                    PreparedStatement stm = myConn.prepareStatement(sql);
+
+
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
 
 
     }
-
+    public int getID(){
+        return id;
+    }
 }
