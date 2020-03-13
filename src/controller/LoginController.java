@@ -20,7 +20,7 @@ public class LoginController {
     public boolean loginAuthenticated(){
         try {
             //get a connection to database
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/databasename","root","kamal997");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airticketsales","akmal","]WCgDKEN69Wf>zE.");
             // create a statement
             Statement stm =  con.createStatement();
             //execute sql query
