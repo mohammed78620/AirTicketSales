@@ -20,7 +20,7 @@ public class LoginController {
     public boolean loginAuthenticated(){
         try {
             //get a connection to database
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airticketsales","akmal","]WCgDKEN69Wf>zE.");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/databasename","root","kamal997");
             // create a statement
             Statement stm =  con.createStatement();
             //execute sql query
@@ -39,7 +39,7 @@ public class LoginController {
                         officeManagerForm.setVisible(true);
                         break;
                     case "ta":
-                        TravelAdvisorForm travelAdvisorForm = new TravelAdvisorForm();
+                        TravelAdvisorForm travelAdvisorForm = new TravelAdvisorForm(rs.getInt("staff_id"));
                         travelAdvisorForm.setVisible(true);
                         break;
                     default:
