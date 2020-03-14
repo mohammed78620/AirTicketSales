@@ -27,12 +27,13 @@ CREATE TABLE `customeraccount` (
 
 
 CREATE TABLE `exchangerate` (
-  `exchangeRate_id` int NOT NULL,
+  `exchangeRate_id` int NOT NULL AUTO_INCREMENT,
   `currency` varchar(45) NOT NULL,
   `exchangeRate` float DEFAULT NULL,
   PRIMARY KEY (`exchangeRate_id`,`currency`),
   UNIQUE KEY `currency_UNIQUE` (`currency`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `payment` (
   `payment_id` int NOT NULL AUTO_INCREMENT,
@@ -46,11 +47,11 @@ CREATE TABLE `payment` (
   KEY `CustomerAccountcustomerAccount_id_idx` (`CustomerAccountcustomerAccount_id`),
   KEY `ExchangeRateexchangeRate_id_idx` (`ExchangeRateexchangeRate_id`),
   KEY `ExchangeRatecurrency_idx` (`ExchangeRatecurrency`),
-  KEY `FKPayment351416` (`ExchangeRateexchangeRate_id`,`ExchangeRatecurrency`),
+  KEY `ExchangeRateexchangeRate_id` (`ExchangeRateexchangeRate_id`,`ExchangeRatecurrency`),
   CONSTRAINT `CustomerAccountcustomerAccount_id` FOREIGN KEY (`CustomerAccountcustomerAccount_id`) REFERENCES `customeraccount` (`customerAccount_id`),
-  CONSTRAINT `FKPayment351416` FOREIGN KEY (`ExchangeRateexchangeRate_id`, `ExchangeRatecurrency`) REFERENCES `exchangerate` (`exchangeRate_id`, `currency`),
-  CONSTRAINT `FKPayment660359` FOREIGN KEY (`CustomerAccountcustomerAccount_id`) REFERENCES `customeraccount` (`customerAccount_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `ExchangeRateexchangeRate_id` FOREIGN KEY (`ExchangeRateexchangeRate_id`, `ExchangeRatecurrency`) REFERENCES `exchangerate` (`exchangeRate_id`, `currency`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 CREATE TABLE `sale` (
   `sale_id` int NOT NULL,

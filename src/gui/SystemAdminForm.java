@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 import component.PlaceholderTextField;
+import database.DatabaseHelper;
 
 
 public class SystemAdminForm extends JFrame {
@@ -24,6 +25,7 @@ public class SystemAdminForm extends JFrame {
     private String url = "jdbc:mysql://localhost:3306/airticketsales";
     private String name = "akmal";
     private String password = "]WCgDKEN69Wf>zE.";
+    private DatabaseHelper db = new DatabaseHelper();
 
     public SystemAdminForm(int id){
         super("System Administrator page");
@@ -46,19 +48,20 @@ public class SystemAdminForm extends JFrame {
 
         //sets up center of borderLayout
         JLayeredPane layeredPane = new JLayeredPane();
-        JPanel user = new JPanel();
+        JPanel userPanel = new JPanel();
         JPanel stockPanel = new JPanel();
         JPanel databasePanel = new JPanel();
+        JPanel ratesPanel = new JPanel();
         centerPanel.add(layeredPane,BorderLayout.CENTER);
         layeredPane.setPreferredSize(new Dimension(600,600));
 
 
         String[] s1 = {"user: 1","user: 2","user: 3","user: 4","user: 5"};
-        user.setLayout(new BorderLayout());
+        userPanel.setLayout(new BorderLayout());
         JList advisors = new JList(s1);
         JScrollPane jScrollPane11 = new JScrollPane(advisors);
-        user.add(jScrollPane11,BorderLayout.CENTER);
-        user.setBounds(0,0,600,600);
+        userPanel.add(jScrollPane11,BorderLayout.CENTER);
+        userPanel.setBounds(0,0,600,600);
 
         String[] s2 = {"stock: 1","stock: 2","stock: 3","stock: 4","stock: 5"};
         stockPanel.setLayout(new BorderLayout());
@@ -74,11 +77,17 @@ public class SystemAdminForm extends JFrame {
         databasePanel.add(jScrollPane13,BorderLayout.CENTER);
         databasePanel.setBounds(0,0,600,600);
 
+        String[] s4 = {"rate: 1","rate: 2","rate: 3","rate: 4","rate: 5"};
+        ratesPanel.setLayout(new BorderLayout());
+        JList rate = new JList(s4);
+        JScrollPane jScrollPane14 = new JScrollPane(rate);
+        ratesPanel.add(jScrollPane14,BorderLayout.CENTER);
+        ratesPanel.setBounds(0,0,600,600);
 
-
-        layeredPane.add(user);
+        layeredPane.add(userPanel);
         layeredPane.add(stockPanel);
         layeredPane.add(databasePanel);
+        layeredPane.add(ratesPanel);
 
         //sets up bottom of borderLayout
         JButton logoutButton = new JButton("Logout");
@@ -100,15 +109,7 @@ public class SystemAdminForm extends JFrame {
         JButton viewStockButton = new JButton("View stock");
 
         JLabel changeCommissionLabel = new JLabel("change commission rate");
-        JLabel changeCurrencyrate = new JLabel("change rate");
-        JComboBox rates = new JComboBox();
-        PlaceholderTextField ratesTextfield = new PlaceholderTextField();
-        ratesTextfield.setPlaceholder("rate");
-        rates.addItem("GBP/USD");
-        rates.addItem("EUR/USD");
-        rates.addItem("USD/CAD");
-        rates.addItem("USD/JPY");
-
+        JButton viewExchangeRates = new JButton("view rates");
         PlaceholderTextField changeCommissionTextField = new PlaceholderTextField();
         changeCommissionTextField.setPlaceholder("commission rate");
         rightPanel.add(viewBackupButton);
@@ -116,27 +117,23 @@ public class SystemAdminForm extends JFrame {
         rightPanel.add(backupDatabaseButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(restoreDatabaseButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(changeCommissionLabel);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(changeCommissionTextField);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(addUserButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(updateUserButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(removeUserButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(viewUserButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(viewStockButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        rightPanel.add(changeCurrencyrate);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        rightPanel.add(rates);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
-        rightPanel.add(ratesTextfield);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        rightPanel.add(viewExchangeRates);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
 
 
 
@@ -155,6 +152,23 @@ public class SystemAdminForm extends JFrame {
         removeBlankPanel.setVisible(false);
         removeBlankPanel.setLayout(new BoxLayout(removeBlankPanel,BoxLayout.Y_AXIS));
         removeBlankPanel.setBounds(0,0,150,450);
+        JPanel ratesUpdatePanel = new JPanel();
+        ratesUpdatePanel.setVisible(false);
+        ratesUpdatePanel.setLayout(new BoxLayout(ratesUpdatePanel,BoxLayout.Y_AXIS));
+        ratesUpdatePanel.setBounds(0,0,150,450);
+        JPanel addRatePanel = new JPanel();
+        addRatePanel.setVisible(false);
+        addRatePanel.setLayout(new BoxLayout(addRatePanel,BoxLayout.Y_AXIS));
+        addRatePanel.setBounds(0,0,150,450);
+        JPanel updateRatePanel = new JPanel();
+        updateRatePanel.setVisible(false);
+        updateRatePanel.setLayout(new BoxLayout(updateRatePanel,BoxLayout.Y_AXIS));
+        updateRatePanel.setBounds(0,0,150,450);
+        JPanel removeRatePanel = new JPanel();
+        removeRatePanel.setVisible(false);
+        removeRatePanel.setLayout(new BoxLayout(removeRatePanel,BoxLayout.Y_AXIS));
+        removeRatePanel.setBounds(0,0,150,450);
+
 
         JLabel idLabel = new JLabel("iD");
         JLabel usernameLabel = new JLabel("Username");
@@ -221,10 +235,87 @@ public class SystemAdminForm extends JFrame {
         JButton addBlankButton = new JButton("add blank");
         JButton viewRemoveBlankButton = new JButton("more");
         JButton removeBlankButton = new JButton("remove blank");
-        JButton backButton = new JButton("back");
+        JButton backButton1 = new JButton("back");
+
+        JButton viewAddRateButton = new JButton("add rate");
+        JButton viewUpdateRateButton = new JButton("update rate");
+        JButton viewRemoveRateButton = new JButton("remove rate");
+
+
+        JLabel currencyLabel = new JLabel("currency");
+        JLabel rate1Label = new JLabel("rate");
+        JLabel rateID1Label = new JLabel("rate id");
+        JLabel rate2Label = new JLabel("rate");
+        JLabel rateID2Label = new JLabel("rate id");
+
+
+        PlaceholderTextField currencyTextfield = new PlaceholderTextField();
+        currencyTextfield.setPlaceholder("currency");
+        PlaceholderTextField rate1Textfield = new PlaceholderTextField();
+        rate1Textfield.setPlaceholder("rate");
+        PlaceholderTextField rateID1Textfield = new PlaceholderTextField();
+        rateID1Textfield.setPlaceholder("rate id");
+        PlaceholderTextField rate2Textfield = new PlaceholderTextField();
+        rate2Textfield.setPlaceholder("rate");
+        PlaceholderTextField rateID2Textfield = new PlaceholderTextField();
+        rateID2Textfield.setPlaceholder("rate id");
+
+        JButton addRateButton = new JButton("add rate");
+        JButton updateRateButton = new JButton("update rate");
+        JButton removeRateButton = new JButton("remove rate");
+        JButton backButton2 = new JButton("back");
+        JButton backButton3 = new JButton("back");
+        JButton backButton4 = new JButton("back");
+
+        ratesUpdatePanel.add(viewAddRateButton);
+        ratesUpdatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        ratesUpdatePanel.add(viewUpdateRateButton);
+        ratesUpdatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        ratesUpdatePanel.add(viewRemoveRateButton);
+
+
+        //add rate panel
+        addRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        addRatePanel.add(currencyLabel);
+        addRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        addRatePanel.add(currencyTextfield);
+        addRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        addRatePanel.add(rate1Label);
+        addRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        addRatePanel.add(rate1Textfield);
+        addRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        addRatePanel.add(addRateButton);
+        addRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        addRatePanel.add(backButton2);
+        addRatePanel.add(Box.createRigidArea(new Dimension(0,350)));
+
+        //update rate panel
+        updateRatePanel.add(rateID1Label);
+        updateRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateRatePanel.add(rateID1Textfield);
+        updateRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateRatePanel.add(rate2Label);
+        updateRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateRatePanel.add(rate2Textfield);
+        updateRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateRatePanel.add(updateRateButton);
+        updateRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateRatePanel.add(backButton3);
+        updateRatePanel.add(Box.createRigidArea(new Dimension(0,350)));
+
+        //remove rate panel
+        removeRatePanel.add(rateID2Label);
+        removeRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        removeRatePanel.add(rateID2Textfield);
+        removeRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        removeRatePanel.add(removeRateButton);
+        removeRatePanel.add(Box.createRigidArea(new Dimension(0,15)));
+        removeRatePanel.add(backButton4);
+        removeRatePanel.add(Box.createRigidArea(new Dimension(0,350)));
+
+
+
         //adds to update travel advisor panel
-
-
         updateTravelAdvisorPanel.add(idLabel);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(idTextfield);
@@ -305,7 +396,7 @@ public class SystemAdminForm extends JFrame {
         removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
         removeBlankPanel.add(removeBlankButton);
         removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        removeBlankPanel.add(backButton);
+        removeBlankPanel.add(backButton1);
         removeBlankPanel.add(Box.createRigidArea(new Dimension(0,350)));
 
 
@@ -316,237 +407,339 @@ public class SystemAdminForm extends JFrame {
         leftLayeredPane.add(updateTravelAdvisorPanel);
         leftLayeredPane.add(updateStockPanel);
         leftLayeredPane.add(removeBlankPanel);
+        leftLayeredPane.add(ratesUpdatePanel);
+        leftLayeredPane.add(addRatePanel);
+        leftLayeredPane.add(updateRatePanel);
+        leftLayeredPane.add(removeRatePanel);
         leftPanel.add(leftLayeredPane,BorderLayout.CENTER);
 
 
 
 
         //sets button listeners
-        viewRemoveBlankButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateStockPanel.setVisible(false);
-                removeBlankPanel.setVisible(true);
+        viewRemoveBlankButton.addActionListener(e -> {
+            updateStockPanel.setVisible(false);
+            removeBlankPanel.setVisible(true);
+            ratesUpdatePanel.setVisible(false);
+            updateRatePanel.setVisible(false);
 
-            }
-        });
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateStockPanel.setVisible(true);
-                removeBlankPanel.setVisible(false);
 
+        });
+        backButton1.addActionListener(e -> {
+            updateStockPanel.setVisible(true);
+            removeBlankPanel.setVisible(false);
+            ratesUpdatePanel.setVisible(false);
+            updateRatePanel.setVisible(false);
+
+        });
+
+        viewUserButton.addActionListener(e -> {
+            userPanel.setVisible(true);
+            stockPanel.setVisible(false);
+            updateTravelAdvisorPanel.setVisible(true);
+            updateStockPanel.setVisible(false);
+            databasePanel.setVisible(false);
+            ratesPanel.setVisible(false);
+            ratesUpdatePanel.setVisible(false);
+            updateRatePanel.setVisible(false);
+
+        });
+        viewStockButton.addActionListener(e -> {
+            stockPanel.setVisible(true);
+            userPanel.setVisible(false);
+            updateStockPanel.setVisible(true);
+            updateTravelAdvisorPanel.setVisible(false);
+            databasePanel.setVisible(false);
+            ratesPanel.setVisible(false);
+            ratesUpdatePanel.setVisible(false);
+            updateRatePanel.setVisible(false);
+
+
+        });
+        viewBackupButton.addActionListener(e -> {
+            databasePanel.setVisible(true);
+            stockPanel.setVisible(false);
+            userPanel.setVisible(false);
+            updateStockPanel.setVisible(false);
+            updateTravelAdvisorPanel.setVisible(false);
+            ratesPanel.setVisible(false);
+            ratesUpdatePanel.setVisible(false);
+            updateRatePanel.setVisible(false);
+
+        });
+        viewExchangeRates.addActionListener(e -> {
+            ratesPanel.setVisible(true);
+            ratesUpdatePanel.setVisible(true);
+            databasePanel.setVisible(false);
+            stockPanel.setVisible(false);
+            userPanel.setVisible(false);
+            updateStockPanel.setVisible(false);
+            updateTravelAdvisorPanel.setVisible(false);
+            updateRatePanel.setVisible(false);
+        });
+        viewAddRateButton.addActionListener(e -> {
+            addRatePanel.setVisible(true);
+            ratesUpdatePanel.setVisible(false);
+            databasePanel.setVisible(false);
+            stockPanel.setVisible(false);
+            userPanel.setVisible(false);
+            updateStockPanel.setVisible(false);
+            updateTravelAdvisorPanel.setVisible(false);
+            updateRatePanel.setVisible(false);
+        });
+        backButton2.addActionListener(e -> {
+            addRatePanel.setVisible(false);
+            ratesUpdatePanel.setVisible(true);
+        });
+        viewUpdateRateButton.addActionListener(e -> {
+            updateRatePanel.setVisible(true);
+            ratesUpdatePanel.setVisible(false);
+            ratesUpdatePanel.setVisible(false);
+            databasePanel.setVisible(false);
+            stockPanel.setVisible(false);
+            userPanel.setVisible(false);
+            updateStockPanel.setVisible(false);
+            updateTravelAdvisorPanel.setVisible(false);
+
+        });
+        backButton3.addActionListener(e -> {
+            ratesUpdatePanel.setVisible(true);
+            updateRatePanel.setVisible(false);
+        });
+        viewRemoveRateButton.addActionListener(e -> {
+            removeRatePanel.setVisible(true);
+            updateRatePanel.setVisible(false);
+            ratesUpdatePanel.setVisible(false);
+            ratesUpdatePanel.setVisible(false);
+            databasePanel.setVisible(false);
+            stockPanel.setVisible(false);
+            userPanel.setVisible(false);
+            updateStockPanel.setVisible(false);
+            updateTravelAdvisorPanel.setVisible(false);
+        });
+        backButton4.addActionListener(e -> {
+            removeRatePanel.setVisible(false);
+            ratesUpdatePanel.setVisible(true);
+        });
+        logoutButton.addActionListener(e -> {
+            LoginForm loginForm = new LoginForm();
+            dispose();
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+        addUserButton.addActionListener(e -> {
+            try {
+                // 1. get a connection
+                con = getConnection();
+
+                //2. create a statement
+                String sql = "INSERT INTO staff "
+                        + " (name, address, telephone, email, username, password, staffType)"
+                        + "VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+                stm = con.prepareStatement(sql);
+
+                stm.setString(1, nameTextfield.getText());
+                stm.setString(2, addressTextfield.getText());
+                stm.setInt(3,Integer.parseInt(telephoneTextfield.getText()));
+                stm.setString(4, emailTextfield.getText());
+                stm.setString(5, usernameTextfield.getText());
+                stm.setString(6, passwordTextfield.getText());
+                stm.setString(7,staffType.getSelectedItem().toString());
+
+                //3. execute sql query
+                stm.executeUpdate();
+
+
+
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
         });
 
-        viewUserButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                user.setVisible(true);
-                stockPanel.setVisible(false);
-                updateTravelAdvisorPanel.setVisible(true);
-                updateStockPanel.setVisible(false);
-                databasePanel.setVisible(false);
-            }
-        });
-        viewStockButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stockPanel.setVisible(true);
-                user.setVisible(false);
-                updateStockPanel.setVisible(true);
-                updateTravelAdvisorPanel.setVisible(false);
-                databasePanel.setVisible(false);
-            }
-        });
-        viewBackupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                databasePanel.setVisible(true);
-                stockPanel.setVisible(false);
-                user.setVisible(false);
-                updateStockPanel.setVisible(false);
-                updateTravelAdvisorPanel.setVisible(false);
-            }
-        });
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LoginForm loginForm = new LoginForm();
-                dispose();
-                try {
-                    con.close();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-        addUserButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    con = getConnection();
+        updateUserButton.addActionListener(e -> {
+            try {
+                // 1. get a connection
+                con = getConnection();
 
-                    //2. create a statement
-                    String sql = "INSERT INTO staff "
-                            + " (name, address, telephone, email, username, password, staffType)"
-                            + "VALUES ( ?, ?, ?, ?, ?, ?, ?)";
-                    stm = con.prepareStatement(sql);
+                //2. create a statement
+                String sql = "UPDATE staff "
+                        + " SET name=?, address=?, telephone=?, email=?, username=?, password=?,staffType=?"
+                        + " WHERE staff_id=?";
 
-                    stm.setString(1, nameTextfield.getText());
-                    stm.setString(2, addressTextfield.getText());
-                    stm.setInt(3,Integer.parseInt(telephoneTextfield.getText()));
-                    stm.setString(4, emailTextfield.getText());
-                    stm.setString(5, usernameTextfield.getText());
-                    stm.setString(6, passwordTextfield.getText());
-                    stm.setString(7,staffType.getSelectedItem().toString());
+                stm = con.prepareStatement(sql);
+
+                stm.setString(1,usernameTextfield.getText());
+                stm.setString(2,addressTextfield.getText());
+                stm.setInt(3,Integer.parseInt(telephoneTextfield.getText()));
+                stm.setString(4,emailTextfield.getText());
+                stm.setString(5,usernameTextfield.getText());
+                stm.setString(6,passwordTextfield.getText());
+                stm.setString(7,staffType.getSelectedItem().toString());
+                stm.setInt(8,Integer.parseInt(idTextfield.getText()));
+
+
+
+
+                //3. execute sql query
+                stm.executeUpdate();
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+        });
+        removeUserButton.addActionListener(e -> {
+            try {
+                // 1. get a connection
+                con = getConnection();
+
+                //2. create a statement
+
+                String sql = "DELETE FROM staff WHERE staff_id=?";
+                stm = con.prepareStatement(sql);
+
+                stm.setInt(1, Integer.parseInt(idTextfield.getText()));
+
+                //3. execute sql query
+                stm.executeUpdate();
+
+
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        });
+        addBlankButton.addActionListener(e -> {
+            try {
+                // 1. get a connection
+                con = getConnection();
+
+                //2. create a statement
+                String sql = "INSERT INTO blank "
+                        + " (blankType,flightType)"
+                        + "VALUES ( ?, ?)";
+                stm = con.prepareStatement(sql);
+
+                int amount = Integer.parseInt(amountTextfield2.getText());
+
+                for(int i = 0; i < amount; i++) {
+                    stm.setInt(1, Integer.parseInt(typeBox2.getSelectedItem().toString()));
+                    stm.setString(2, flightTypeBox2.getSelectedItem().toString());
+
 
                     //3. execute sql query
                     stm.executeUpdate();
 
-
-
-                }catch (Exception ex){
-                    ex.printStackTrace();
                 }
+
+
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
         });
+        assignBlankButton.addActionListener(e -> {
+            try {
+                // 1. get a connection
+                con = getConnection();
 
-        updateUserButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    con = getConnection();
+                //2. create a statement
+                String sql = "UPDATE blank "
+                        + " SET Staffstaff_id=?"
+                        + " WHERE blank_id=?";
 
-                    //2. create a statement
-                    String sql = "UPDATE staff "
-                            + " SET name=?, address=?, telephone=?, email=?, username=?, password=?,staffType=?"
-                            + " WHERE staff_id=?";
+                stm = con.prepareStatement(sql);
 
-                    stm = con.prepareStatement(sql);
 
-                    stm.setString(1,usernameTextfield.getText());
-                    stm.setString(2,addressTextfield.getText());
-                    stm.setInt(3,Integer.parseInt(telephoneTextfield.getText()));
-                    stm.setString(4,emailTextfield.getText());
-                    stm.setString(5,usernameTextfield.getText());
-                    stm.setString(6,passwordTextfield.getText());
-                    stm.setString(7,staffType.getSelectedItem().toString());
-                    stm.setInt(8,Integer.parseInt(idTextfield.getText()));
+                stm.setInt(1, Integer.parseInt(idStaffTextfield.getText()));
+                stm.setInt(2, Integer.parseInt(idTextfield2.getText()));
 
 
 
+                stm.executeUpdate();
 
-                    //3. execute sql query
-                    stm.executeUpdate();
-
-                }catch(Exception ex){
-                    ex.printStackTrace();
-                }
+            }catch(Exception ex){
+                ex.printStackTrace();
             }
         });
-        removeUserButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    con = getConnection();
+        removeBlankButton.addActionListener(e -> {
+            try {
+                // 1. get a connection
+                con = getConnection();
 
-                    //2. create a statement
+                // 2. create a statement
 
-                    String sql = "DELETE FROM staff WHERE staff_id=?";
-                    stm = con.prepareStatement(sql);
+                String sql = "DELETE FROM blank WHERE blank_id=?";
+                PreparedStatement stm = con.prepareStatement(sql);
+                stm.setInt(1,Integer.parseInt(idTextfield3.getText()));
 
-                    stm.setInt(1, Integer.parseInt(idTextfield.getText()));
+                // 3. execute sql statement
+                stm.executeUpdate();
 
-                    //3. execute sql query
-                    stm.executeUpdate();
-
-
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
         });
-        addBlankButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    con = getConnection();
+        addRateButton.addActionListener(e -> {
+            try {
+                // 1. get a connection
+                con = db.getConnection();
 
-                    //2. create a statement
-                    String sql = "INSERT INTO blank "
-                            + " (blankType,flightType)"
-                            + "VALUES ( ?, ?)";
-                    stm = con.prepareStatement(sql);
+                //2. create a statement
+                String sql = "INSERT INTO exchangerate "
+                        + " (currency,exchangeRate)"
+                        + "VALUES ( ?, ?)";
+                stm = con.prepareStatement(sql);
 
-                    int amount = Integer.parseInt(amountTextfield2.getText());
+                stm.setString(1, currencyTextfield.getText());
+                stm.setFloat(2, Float.parseFloat(rate1Textfield.getText()));
 
-                    for(int i = 0; i < amount; i++) {
-                        stm.setInt(1, Integer.parseInt(typeBox2.getSelectedItem().toString()));
-                        stm.setString(2, flightTypeBox2.getSelectedItem().toString());
+                //3. execute sql statement
+                stm.executeUpdate();
+
+            }catch(SQLException ex){
+                ex.printStackTrace();
+            }
+
+        });
+        updateRateButton.addActionListener(e -> {
+            try{
+                // 1. get a connection
+                con = db.getConnection();
+
+                //2. create a statement
+                String sql = "UPDATE exchangerate "
+                        + " SET exchangeRate=? "
+                        + "WHERE exchangeRate_id=?";
+                stm = con.prepareStatement(sql);
+
+                stm.setFloat(1, Float.parseFloat(rate2Textfield.getText()));
+                stm.setInt(2, Integer.parseInt(rateID1Textfield.getText()));
+
+                //3. execute sql statement
+                stm.executeUpdate();
 
 
-                        //3. execute sql query
-                        stm.executeUpdate();
-
-                    }
-
-
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
+            }catch(SQLException ex){
+                ex.printStackTrace();
             }
         });
-        assignBlankButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    con = getConnection();
+        removeRateButton.addActionListener(e -> {
+            try{
+                // 1. get a connection
+                con = db.getConnection();
 
-                    //2. create a statement
-                    String sql = "UPDATE blank "
-                            + " SET Staffstaff_id=?"
-                            + " WHERE blank_id=?";
+                //2. create a statement
+                String sql = "DELETE FROM exchangeRate WHERE exchangeRate_id=?";
+                stm = con.prepareStatement(sql);
 
-                    stm = con.prepareStatement(sql);
+                stm.setInt(1, Integer.parseInt(rateID2Textfield.getText()));
 
+                //3. execute sql statement
+                stm.executeUpdate();
 
-                    stm.setInt(1, Integer.parseInt(idStaffTextfield.getText()));
-                    stm.setInt(2, Integer.parseInt(idTextfield2.getText()));
-
-
-
-                    stm.executeUpdate();
-
-                }catch(Exception ex){
-                    ex.printStackTrace();
-                }
-            }
-        });
-        removeBlankButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    con = getConnection();
-
-                    // 2. create a statement
-
-                    String sql = "DELETE FROM blank WHERE blank_id=?";
-                    PreparedStatement stm = con.prepareStatement(sql);
-                    stm.setInt(1,Integer.parseInt(idTextfield3.getText()));
-
-                    // 3. execute sql statement
-                    stm.executeUpdate();
-
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
+            }catch (SQLException ex){
+                ex.printStackTrace();
             }
         });
 
