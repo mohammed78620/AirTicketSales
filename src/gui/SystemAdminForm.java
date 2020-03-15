@@ -1,13 +1,19 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import component.PlaceholderTextField;
+import container.AssignBlankPanel;
+import container.UpdateStockPanel;
 import database.DatabaseHelper;
+import domain.Blank;
 
 
 public class SystemAdminForm extends JFrame {
@@ -63,12 +69,12 @@ public class SystemAdminForm extends JFrame {
         userPanel.add(jScrollPane11,BorderLayout.CENTER);
         userPanel.setBounds(0,0,600,600);
 
-        String[] s2 = {"stock: 1","stock: 2","stock: 3","stock: 4","stock: 5"};
+
         stockPanel.setLayout(new BorderLayout());
-        JList stock = new JList(s2);
+        JTable stock = new JTable();
         JScrollPane jScrollPane12 = new JScrollPane(stock);
         stockPanel.add(jScrollPane12,BorderLayout.CENTER);
-        stockPanel.setBounds(0,0,600,600);
+        stockPanel.setBounds(0,0,400,600);
 
         String[] s3 = {"database: 1","database: 2","database: 3","database: 4","database: 5"};
         databasePanel.setLayout(new BorderLayout());
@@ -133,7 +139,7 @@ public class SystemAdminForm extends JFrame {
         rightPanel.add(viewStockButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(viewExchangeRates);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,105)));
 
 
 
@@ -144,11 +150,11 @@ public class SystemAdminForm extends JFrame {
         updateTravelAdvisorPanel.setVisible(false);
         updateTravelAdvisorPanel.setLayout(new BoxLayout(updateTravelAdvisorPanel,BoxLayout.Y_AXIS));
         updateTravelAdvisorPanel.setBounds(0,0,150,450);
-        JPanel updateStockPanel = new JPanel();
-        updateStockPanel.setVisible(false);
+        UpdateStockPanel updateStockPanel = new UpdateStockPanel();
         updateStockPanel.setLayout(new BoxLayout(updateStockPanel,BoxLayout.Y_AXIS));
-        updateStockPanel.setBounds(0,0,150,450);
         JPanel removeBlankPanel = new JPanel();
+        AssignBlankPanel assignBlankPanel = new AssignBlankPanel();
+        assignBlankPanel.setLayout(new BoxLayout(assignBlankPanel,BoxLayout.Y_AXIS));
         removeBlankPanel.setVisible(false);
         removeBlankPanel.setLayout(new BoxLayout(removeBlankPanel,BoxLayout.Y_AXIS));
         removeBlankPanel.setBounds(0,0,150,450);
@@ -211,7 +217,6 @@ public class SystemAdminForm extends JFrame {
         JLabel amountLabel2 = new JLabel("amount");
         JLabel removeBlankLabel = new JLabel("Remove blank");
         JLabel idLabel3 = new JLabel("blank id");
-
         PlaceholderTextField idTextfield2 = new PlaceholderTextField();
         idTextfield2.setPlaceholder("blank id");
         JLabel idStaffLabel = new JLabel("staff id");
@@ -351,38 +356,38 @@ public class SystemAdminForm extends JFrame {
 
 
         //adds components to update stock panel
-        updateStockPanel.add(assignBlanksLabel);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(idLabel2);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(idTextfield2);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(typeLabel1);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(idStaffLabel);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(idStaffTextfield);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(assignBlankButton);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(addBlankLabel);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(typeLabel2);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(typeBox2);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(flightTypeLabel2);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(flightTypeBox2);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(amountLabel2);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(amountTextfield2);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(addBlankButton);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        updateStockPanel.add(viewRemoveBlankButton);
-        updateStockPanel.add(Box.createRigidArea(new Dimension(0,45)));
+//        updateStockPanel.add(assignBlanksLabel);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(idLabel2);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(idTextfield2);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(typeLabel1);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(idStaffLabel);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(idStaffTextfield);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(assignBlankButton);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(addBlankLabel);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(typeLabel2);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(typeBox2);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(flightTypeLabel2);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(flightTypeBox2);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(amountLabel2);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(amountTextfield2);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(addBlankButton);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
+//        updateStockPanel.add(viewRemoveBlankButton);
+//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,45)));
 
 
 
@@ -406,6 +411,7 @@ public class SystemAdminForm extends JFrame {
 
         leftLayeredPane.add(updateTravelAdvisorPanel);
         leftLayeredPane.add(updateStockPanel);
+        leftLayeredPane.add(assignBlankPanel);
         leftLayeredPane.add(removeBlankPanel);
         leftLayeredPane.add(ratesUpdatePanel);
         leftLayeredPane.add(addRatePanel);
@@ -417,6 +423,38 @@ public class SystemAdminForm extends JFrame {
 
 
         //sets button listeners
+        updateStockPanel.viewAssignBlankButton.addActionListener(e -> {
+            updateStockPanel.setVisible(false);
+            assignBlankPanel.setVisible(true);
+        });
+        assignBlankPanel.backButton.addActionListener(e -> {
+            updateStockPanel.setVisible(true);
+            assignBlankPanel.setVisible(false);
+        });
+        assignBlankPanel.assignBlankButton.addActionListener(e -> {
+            int[] rows = stock.getSelectedRows();
+
+            try {
+                // 1. get a connection
+                con = db.getConnection();
+
+                //2. create a statement
+                String sql = "UPDATE blank "
+                        + " SET Staffstaff_id=?"
+                        + " WHERE blank_id=?";
+                PreparedStatement stm = con.prepareStatement(sql);
+
+                stm.setInt(1, Integer.parseInt(assignBlankPanel.idStaffTextfield.getText()));
+                for (int i = 0; i < rows.length; i++) {
+
+                    stm.setInt(2, Integer.parseInt(stock.getValueAt(rows[i],0).toString()));
+                    //3. execute sql query
+                    stm.executeUpdate();
+                }
+            }catch (SQLException ex){
+                ex.printStackTrace();
+            }
+        });
         viewRemoveBlankButton.addActionListener(e -> {
             updateStockPanel.setVisible(false);
             removeBlankPanel.setVisible(true);
@@ -444,18 +482,52 @@ public class SystemAdminForm extends JFrame {
             updateRatePanel.setVisible(false);
 
         });
-        viewStockButton.addActionListener(e -> {
-            stockPanel.setVisible(true);
-            userPanel.setVisible(false);
-            updateStockPanel.setVisible(true);
-            updateTravelAdvisorPanel.setVisible(false);
-            databasePanel.setVisible(false);
-            ratesPanel.setVisible(false);
-            ratesUpdatePanel.setVisible(false);
-            updateRatePanel.setVisible(false);
+        viewStockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                stockPanel.setVisible(true);
+                userPanel.setVisible(false);
+                updateStockPanel.setVisible(true);
+                updateTravelAdvisorPanel.setVisible(false);
+                databasePanel.setVisible(false);
+                ratesPanel.setVisible(false);
+                ratesUpdatePanel.setVisible(false);
+                updateRatePanel.setVisible(false);
 
+                List<Blank> stocklist = new ArrayList<>();
+                try {
+                    con = db.getConnection();
+                    Statement stm = con.createStatement();
+                    ResultSet rs = stm.executeQuery("SELECT * FROM blank");
 
+                    while(rs.next()){
+                        stocklist.add(new Blank(rs.getInt(1),
+                                rs.getInt(2),
+                                rs.getInt(3),
+                                rs.getString(4)));
+
+                    }
+                    Blank b;
+                    DefaultTableModel model =new DefaultTableModel();
+                    model.addColumn("blank id");
+                    model.addColumn("staff id");
+                    model.addColumn("blank type");
+                    model.addColumn("flight type");
+                    stock.setModel(model);
+
+                    for (int i = 0; i < stocklist.size(); i++) {
+                        b = stocklist.get(i);
+                        model.addRow(b.rowArray());
+
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
         });
+
+
+
         viewBackupButton.addActionListener(e -> {
             databasePanel.setVisible(true);
             stockPanel.setVisible(false);
@@ -764,5 +836,6 @@ public class SystemAdminForm extends JFrame {
         }
 
     }
+
 
 }

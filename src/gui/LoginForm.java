@@ -73,6 +73,9 @@ public class LoginForm extends JFrame {
 
             }
         });
+        usernameText.setText("ak");
+        passwordText.setText("erhjgoieq");
+        loginButton.doClick();
 
 
         setVisible(true);
