@@ -4,8 +4,8 @@ import javax.swing.*;
 
 public class UpdateStockPanel extends JPanel {
     public JButton viewAssignBlankButton;
-    JButton viewAddBlankButton;
-    JButton viewRemoveBlankButton;
+    public JButton viewAddBlankButton;
+    public JButton viewRemoveBlankButton;
     public UpdateStockPanel(){
         setVisible(false);
         setBounds(0,0,150,450);

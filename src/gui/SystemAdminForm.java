@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import component.PlaceholderTextField;
+import container.AddBlankPanel;
 import container.AssignBlankPanel;
+import container.RemoveBlankPanel;
 import container.UpdateStockPanel;
 import database.DatabaseHelper;
 import domain.Blank;
@@ -152,12 +154,12 @@ public class SystemAdminForm extends JFrame {
         updateTravelAdvisorPanel.setBounds(0,0,150,450);
         UpdateStockPanel updateStockPanel = new UpdateStockPanel();
         updateStockPanel.setLayout(new BoxLayout(updateStockPanel,BoxLayout.Y_AXIS));
-        JPanel removeBlankPanel = new JPanel();
         AssignBlankPanel assignBlankPanel = new AssignBlankPanel();
         assignBlankPanel.setLayout(new BoxLayout(assignBlankPanel,BoxLayout.Y_AXIS));
-        removeBlankPanel.setVisible(false);
+        AddBlankPanel addBlankPanel = new AddBlankPanel();
+        addBlankPanel.setLayout(new BoxLayout(addBlankPanel,BoxLayout.Y_AXIS));
+        RemoveBlankPanel removeBlankPanel = new RemoveBlankPanel();
         removeBlankPanel.setLayout(new BoxLayout(removeBlankPanel,BoxLayout.Y_AXIS));
-        removeBlankPanel.setBounds(0,0,150,450);
         JPanel ratesUpdatePanel = new JPanel();
         ratesUpdatePanel.setVisible(false);
         ratesUpdatePanel.setLayout(new BoxLayout(ratesUpdatePanel,BoxLayout.Y_AXIS));
@@ -206,40 +208,9 @@ public class SystemAdminForm extends JFrame {
 
 
 
-        JLabel assignBlanksLabel = new JLabel("Assign blank");
-        JLabel idLabel2 = new JLabel("id");
-        JLabel typeLabel1 = new JLabel("type");
-        JLabel flightTypeLabel1 = new JLabel("flight type");
-        JLabel amountLabel = new JLabel("amount");
-        JLabel addBlankLabel = new JLabel("Add blank");
-        JLabel typeLabel2 = new JLabel("type");
-        JLabel flightTypeLabel2 = new JLabel("flight type");
-        JLabel amountLabel2 = new JLabel("amount");
-        JLabel removeBlankLabel = new JLabel("Remove blank");
-        JLabel idLabel3 = new JLabel("blank id");
-        PlaceholderTextField idTextfield2 = new PlaceholderTextField();
-        idTextfield2.setPlaceholder("blank id");
-        JLabel idStaffLabel = new JLabel("staff id");
-        PlaceholderTextField idStaffTextfield = new PlaceholderTextField();
-        idStaffTextfield.setPlaceholder("staff id");
-        JComboBox typeBox2 = new JComboBox();
-        typeBox2.addItem("444");
-        typeBox2.addItem("440");
-        typeBox2.addItem("420");
-        typeBox2.addItem("201");
-        typeBox2.addItem("101");
-        JComboBox flightTypeBox2 = new JComboBox();
-        flightTypeBox2.addItem("interline");
-        flightTypeBox2.addItem("domestic");
-        PlaceholderTextField amountTextfield2 = new PlaceholderTextField();
-        amountTextfield2.setPlaceholder("amount");
-        PlaceholderTextField idTextfield3 = new PlaceholderTextField();
-        idTextfield3.setPlaceholder("id");
 
-        JButton assignBlankButton = new JButton("assign blank");
-        JButton addBlankButton = new JButton("add blank");
-        JButton viewRemoveBlankButton = new JButton("more");
-        JButton removeBlankButton = new JButton("remove blank");
+
+
         JButton backButton1 = new JButton("back");
 
         JButton viewAddRateButton = new JButton("add rate");
@@ -355,54 +326,7 @@ public class SystemAdminForm extends JFrame {
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,50)));
 
 
-        //adds components to update stock panel
-//        updateStockPanel.add(assignBlanksLabel);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(idLabel2);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(idTextfield2);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(typeLabel1);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(idStaffLabel);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(idStaffTextfield);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(assignBlankButton);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(addBlankLabel);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(typeLabel2);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(typeBox2);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(flightTypeLabel2);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(flightTypeBox2);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(amountLabel2);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(amountTextfield2);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(addBlankButton);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,2)));
-//        updateStockPanel.add(viewRemoveBlankButton);
-//        updateStockPanel.add(Box.createRigidArea(new Dimension(0,45)));
 
-
-
-
-        //adds to removeBlankPanel
-        removeBlankPanel.add(removeBlankLabel);
-        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        removeBlankPanel.add(idLabel3);
-        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        removeBlankPanel.add(idTextfield3);
-        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        removeBlankPanel.add(removeBlankButton);
-        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,2)));
-        removeBlankPanel.add(backButton1);
-        removeBlankPanel.add(Box.createRigidArea(new Dimension(0,350)));
 
 
 
@@ -412,6 +336,7 @@ public class SystemAdminForm extends JFrame {
         leftLayeredPane.add(updateTravelAdvisorPanel);
         leftLayeredPane.add(updateStockPanel);
         leftLayeredPane.add(assignBlankPanel);
+        leftLayeredPane.add(addBlankPanel);
         leftLayeredPane.add(removeBlankPanel);
         leftLayeredPane.add(ratesUpdatePanel);
         leftLayeredPane.add(addRatePanel);
@@ -426,6 +351,14 @@ public class SystemAdminForm extends JFrame {
         updateStockPanel.viewAssignBlankButton.addActionListener(e -> {
             updateStockPanel.setVisible(false);
             assignBlankPanel.setVisible(true);
+        });
+        updateStockPanel.viewAddBlankButton.addActionListener(e -> {
+            addBlankPanel.setVisible(true);
+            updateStockPanel.setVisible(false);
+        });
+        updateStockPanel.viewRemoveBlankButton.addActionListener(e -> {
+            removeBlankPanel.setVisible(true);
+            updateStockPanel.setVisible(false);
         });
         assignBlankPanel.backButton.addActionListener(e -> {
             updateStockPanel.setVisible(true);
@@ -455,17 +388,66 @@ public class SystemAdminForm extends JFrame {
                 ex.printStackTrace();
             }
         });
-        viewRemoveBlankButton.addActionListener(e -> {
-            updateStockPanel.setVisible(false);
-            removeBlankPanel.setVisible(true);
-            ratesUpdatePanel.setVisible(false);
-            updateRatePanel.setVisible(false);
+        addBlankPanel.addBlankButton.addActionListener(e ->{
+            try {
+                // 1. get a connection
+                con = db.getConnection();
+
+                //2. create a statement
+                String sql = "INSERT INTO blank "
+                        + " (blankType,flightType)"
+                        + "VALUES ( ?, ?)";
+                stm = con.prepareStatement(sql);
+
+                int amount = Integer.parseInt(addBlankPanel.amountTextfield.getText());
+
+                for(int i = 0; i < amount; i++) {
+                    stm.setInt(1, Integer.parseInt(addBlankPanel.typeBox.getSelectedItem().toString()));
+                    stm.setString(2, addBlankPanel.flightTypeBox.getSelectedItem().toString());
 
 
+                    //3. execute sql query
+                    stm.executeUpdate();
+
+                }
+
+
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        });
+        addBlankPanel.backButton.addActionListener(e -> {
+            addBlankPanel.setVisible(false);
+            updateStockPanel.setVisible(true);
+        });
+
+        removeBlankPanel.removeBlankButton.addActionListener(e -> {
+            try {
+                // 1. get a connection
+                con = db.getConnection();
+
+                // 2. create a statement
+                String sql = "DELETE FROM blank WHERE blank_id=?";
+                PreparedStatement stm = con.prepareStatement(sql);
+
+                int[] rows = stock.getSelectedRows();
+
+                for (int i = 0; i <rows.length ; i++) {
+                    stm.setInt(1,Integer.parseInt(stock.getValueAt(rows[i],0).toString()));
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+                }
+
+            }catch (SQLException ex){
+                ex.printStackTrace();
+            }
+        });
+        removeBlankPanel.backButton.addActionListener(e -> {
+            removeBlankPanel.setVisible(false);
+            updateStockPanel.setVisible(true);
         });
         backButton1.addActionListener(e -> {
             updateStockPanel.setVisible(true);
-            removeBlankPanel.setVisible(false);
             ratesUpdatePanel.setVisible(false);
             updateRatePanel.setVisible(false);
 
@@ -682,76 +664,8 @@ public class SystemAdminForm extends JFrame {
                 ex.printStackTrace();
             }
         });
-        addBlankButton.addActionListener(e -> {
-            try {
-                // 1. get a connection
-                con = getConnection();
-
-                //2. create a statement
-                String sql = "INSERT INTO blank "
-                        + " (blankType,flightType)"
-                        + "VALUES ( ?, ?)";
-                stm = con.prepareStatement(sql);
-
-                int amount = Integer.parseInt(amountTextfield2.getText());
-
-                for(int i = 0; i < amount; i++) {
-                    stm.setInt(1, Integer.parseInt(typeBox2.getSelectedItem().toString()));
-                    stm.setString(2, flightTypeBox2.getSelectedItem().toString());
 
 
-                    //3. execute sql query
-                    stm.executeUpdate();
-
-                }
-
-
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
-        });
-        assignBlankButton.addActionListener(e -> {
-            try {
-                // 1. get a connection
-                con = getConnection();
-
-                //2. create a statement
-                String sql = "UPDATE blank "
-                        + " SET Staffstaff_id=?"
-                        + " WHERE blank_id=?";
-
-                stm = con.prepareStatement(sql);
-
-
-                stm.setInt(1, Integer.parseInt(idStaffTextfield.getText()));
-                stm.setInt(2, Integer.parseInt(idTextfield2.getText()));
-
-
-
-                stm.executeUpdate();
-
-            }catch(Exception ex){
-                ex.printStackTrace();
-            }
-        });
-        removeBlankButton.addActionListener(e -> {
-            try {
-                // 1. get a connection
-                con = getConnection();
-
-                // 2. create a statement
-
-                String sql = "DELETE FROM blank WHERE blank_id=?";
-                PreparedStatement stm = con.prepareStatement(sql);
-                stm.setInt(1,Integer.parseInt(idTextfield3.getText()));
-
-                // 3. execute sql statement
-                stm.executeUpdate();
-
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
-        });
         addRateButton.addActionListener(e -> {
             try {
                 // 1. get a connection
