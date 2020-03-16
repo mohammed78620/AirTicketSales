@@ -1,6 +1,7 @@
 package container;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class UpdateStockPanel extends JPanel {
     public JButton viewAssignBlankButton;
@@ -13,7 +14,9 @@ public class UpdateStockPanel extends JPanel {
         viewAddBlankButton = new JButton("add blank");
         viewRemoveBlankButton = new JButton("remove blank");
         add(viewAssignBlankButton);
+        add(Box.createRigidArea(new Dimension(0,15)));
         add(viewAddBlankButton);
+        add(Box.createRigidArea(new Dimension(0,15)));
         add(viewRemoveBlankButton);
     }
 }
