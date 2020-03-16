@@ -4,6 +4,7 @@ import component.PlaceholderTextField;
 import controller.LoginController;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,88 +12,72 @@ import java.awt.event.ActionListener;
 public class LoginForm extends JFrame {
     private String username;
     private String password;
-    private final JLabel usernameLabel;
-    private final JLabel passwordLabel;
-    private PlaceholderTextField usernameText;
-    private PlaceholderTextField passwordText;
-    private JPanel panel1;
-    private JPanel panel2;
-    private JPanel panel3;
-    private JPanel panel4;
-    private JButton loginButton;
+    private JLabel userIcon = new JLabel(new ImageIcon(new ImageIcon("data/user.png").getImage().getScaledInstance(70, 65, Image.SCALE_SMOOTH)));
+    private PlaceholderTextField usernameText = new PlaceholderTextField(15);
+    private JPasswordField passwordText = new JPasswordField();
+    private JPanel panel = new JPanel();
+    private JButton loginButton = new JButton("Login");
+    private int spacing = 20;
     private LoginController loginController;
 
 
-    public LoginForm(){
+    public LoginForm() {
         //frame setup
-        super("Login Page");
-        setLayout(new GridLayout(2,2,3,3));
-        panel1 = new JPanel();
-        panel2 = new JPanel();
-        panel3 = new JPanel();
-        panel4 = new JPanel();
-        add(panel1);
-        add(panel2);
-        add(panel3);
-        add(panel4);
-        usernameLabel = new JLabel("username");
-        panel1.add(usernameLabel);
+        super("AirTicketSales");
+        panel.setLayout(null);
+        int w = 350;
+        int h = 175;
+        panel.setSize(w, h);
+        this.add(panel);
 
-        usernameText = new PlaceholderTextField(15);
-        usernameText.setPlaceholder("username");
-        panel2.add(usernameText);
+        panel.add(userIcon);
+        panel.add(usernameText);
+        panel.add(passwordText);
+        panel.add(loginButton);
 
+        userIcon.setBounds(w / 5 - 25, h / 2 - 65, 70, 65);
+        usernameText.setBounds(userIcon.getX() + spacing * 5, userIcon.getY() , 150, 25);
+        passwordText.setBounds(userIcon.getX() + spacing * 5, usernameText. getY() + spacing * 2, 150, 25);
+        loginButton.setBounds(userIcon.getX() + spacing * 4, passwordText.getY() + spacing * 2, 100, 25);
 
-        passwordLabel = new JLabel("password");
-        panel3.add(passwordLabel);
+        // Customise Login button
+        loginButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setBackground(Color.DARK_GRAY);
+        loginButton.setBorder(new LineBorder(Color.BLACK));
 
-        passwordText = new PlaceholderTextField(15);
-        passwordText.setPlaceholder("password");
-        panel4.add(passwordText);
+        usernameText.setPlaceholder("Username");
 
-        loginButton = new JButton("Login");
-        panel4.add(loginButton);
+        loginButton.addActionListener(e -> {
+            //gets the username and password from JtextField
+            username = usernameText.getText();
+            password = String.valueOf(passwordText.getPassword());
 
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //gets the username and password from JtextField
-                username = usernameText.getText();
-                password = passwordText.getText();
-
-                if(!(username.isEmpty() || password.isEmpty())) {
+            if (!(username.isEmpty() || password.isEmpty())) {
 //                System.out.println("the username is: " +username +" the password is: " + password);
-                    LoginController loginController = new LoginController(username, password);
-                    //sets the login page as invisible and opens officemanagerform
-                    if (loginController.loginAuthenticated()) {
-                        dispose();
-                    }
+                LoginController loginController = new LoginController(username, password);
+                //sets the login page as invisible and opens officemanagerform
+                if (loginController.loginAuthenticated()) {
+                    dispose();
                 }
-
-
-
+                else {
+                    usernameText.setPlaceholder("Incorrect login");
+                    usernameText.setText("");
+                    passwordText.setText("");
+                    panel.updateUI();
+                }
             }
+            else{
+                usernameText.setPlaceholder("Please enter details");
+                panel.updateUI();
+            }
+
         });
 
-
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(350,250);
-
-    }
-    public void openOfficeManagerForm(){
-
-    }
-    public void openTicketAdvisorForm(){
-
-    }
-    public void openTravelAdvisorForm(){
-
-    }
-    public String getUsername(){
-        return username;
-    }
-    public String getPassword(){
-        return password;
+        panel.setBackground(Color.WHITE);
+        panel.setVisible(true);
+        this.setVisible(true);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setSize(w, h);
     }
 }
