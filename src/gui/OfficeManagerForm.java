@@ -1,202 +1,299 @@
 package gui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.sql.*;
 
 import component.PlaceholderTextField;
+import database.DatabaseHelper;
 
 
 public class OfficeManagerForm extends JFrame {
-    private int id;
-    public JButton logoutButton;
-    private JButton domesticReportButton;
-    private JButton interlineReportButton;
-    private JButton turnoverReportButton;
-    private JButton viewReportButton;
-    private JButton viewStockButton;
-    private JPanel panel1;
-    private JPanel panel2;
-    private JPanel panel3;
-    private JPanel panel4;
-    private JPanel panel5;
-    private JLabel changeCommissionLabel;
-    private PlaceholderTextField changeCommissionTextfield;
-    private JScrollPane jScrollPane1;
-    private JScrollPane jScrollPane2;
-    private JList stock;
-    private JList report;
-    private JLayeredPane layeredPane;
-    private JPanel stockPanel;
-    private JPanel reportPanel;
-    private Connection con;
-    private String url = "jdbc:mysql://localhost:3306/airticketsales";
-    private String name = "akmal";
-    private String password = "]WCgDKEN69Wf>zE.";
+    private int userID;
+    DatabaseHelper db = new DatabaseHelper();
+    Connection con = db.getConnection();
 
 
+    public OfficeManagerForm(int currentID){
+        // Frame setup
+        super("Welcome Office Manager");
+        this.userID = currentID;
 
+        JTabbedPane tabPane = new JTabbedPane();
+        JPanel centrePanel = new JPanel(new BorderLayout());
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        JPanel lowerPanel = new JPanel();
+        JPanel rightPanel = new JPanel();
 
-    public OfficeManagerForm(int id){
-        //frame setup
-        super("Office manager page");
-        this.id = id;
-        logoutButton = new JButton("Logout");
+        // Sets the layout of the JFrame
+        this.add(centrePanel, BorderLayout.CENTER);
+        this.add(leftPanel, BorderLayout.LINE_START);
+        this.add(lowerPanel, BorderLayout.PAGE_END);
+        this.add(rightPanel, BorderLayout.LINE_END);
 
-        stockPanel = new JPanel(new BorderLayout());
-        reportPanel = new JPanel(new BorderLayout());
-        panel2 = new JPanel(new BorderLayout());
-        panel3 = new JPanel(new BorderLayout());
-        panel4 = new JPanel();
-        panel5 = new JPanel();
-        layeredPane = new JLayeredPane();
+        // **** LOWER PANEL ****
 
+        // Make buttons
+        JButton domesticReportButton = new JButton("GenerateDomesticReport");
+        JButton interlineReportButton = new JButton("GenerateInterlineReport");
+        JButton turnoverReportButton = new JButton("GenerateTurnoverReport");
+        JButton logoutButton = new JButton("Logout");
 
-        //sets the layout as BorderLayout
-        panel1 = new JPanel(new BorderLayout());
-        panel1.add(panel2,BorderLayout.CENTER);
-        panel1.add(panel3,BorderLayout.LINE_START);
-        panel1.add(panel4,BorderLayout.PAGE_END);
-        panel1.add(panel5,BorderLayout.LINE_END);
+        // Add buttons panel
+        lowerPanel.add(domesticReportButton);
+        lowerPanel.add(interlineReportButton);
+        lowerPanel.add(turnoverReportButton);
+        lowerPanel.add(logoutButton);
 
+        // **** CENTRE PANEL ****
 
-
-        //sets the bottom part of the layout
-        domesticReportButton = new JButton("GenerateDomesticReport");
-        interlineReportButton = new JButton("GenerateInterlineReport");
-        turnoverReportButton = new JButton("GenerateTurnoverReport");
-
-
-        panel4.add(logoutButton);
-        panel4.add(domesticReportButton);
-        panel4.add(interlineReportButton);
-        panel4.add(turnoverReportButton);
-        panel4.add(logoutButton);
-
-
-        //sets the center part of the layout
-        panel2.add(layeredPane,BorderLayout.CENTER);
-        layeredPane.setPreferredSize(new Dimension(600,600));
+        // Set Panels into tabs
+        centrePanel.add(tabPane);
+        JPanel stockPanel = new JPanel(new BorderLayout());
+        JPanel reportPanel = new JPanel(new BorderLayout());
         JPanel customerPanel = new JPanel(new BorderLayout());
-        JPanel transactionPanel = new JPanel(new BorderLayout());
-        transactionPanel.setLayout(new BoxLayout(transactionPanel,BoxLayout.Y_AXIS));
+        JPanel sellPanel = new JPanel(new BorderLayout());
         JPanel advisorPanel = new JPanel(new BorderLayout());
+        JPanel tranPanel = new JPanel(new BorderLayout());
+        JPanel updateCustomerPanel = new JPanel();
+        JPanel assignBlankPanel = new JPanel();
+        JPanel manageDiscountPanel = new JPanel();
 
 
-        String[] s1 = {"item: 1","item: 2","item: 3","item: 4","item: 5","item: 1","item: 2","item: 3","item: 4","item: 5"};
-        stockPanel.setLayout(new BorderLayout());
-        stock = new JList(s1);
-        jScrollPane1 = new JScrollPane(stock);
-        stockPanel.add(jScrollPane1,BorderLayout.CENTER);
-//        stock.setVisibleRowCount(4);
-        stockPanel.setBounds(0,0,600,600);
+        // Add tabs to the TabbedPane
+        ImageIcon stockIcon = new ImageIcon("data/stockIcon.png");
+        tabPane.addTab("Stock", stockIcon, stockPanel, "See all stock");
+
+        ImageIcon docIcon = new ImageIcon("data/docIcon.png");
+        tabPane.addTab("Reports", docIcon, reportPanel, "See all reports");
+
+        ImageIcon cartIcon = new ImageIcon("data/cartIcon.png");
+        tabPane.addTab("Customers", cartIcon, customerPanel, "See all customers");
+
+        ImageIcon tranIcon = new ImageIcon("data/tranIcon.png");
+        tabPane.addTab("Transactions", tranIcon, tranPanel, "See all sold tickets");
+
+        ImageIcon userIcon = new ImageIcon("data/userIcon.png");
+        tabPane.addTab("Travel Advisors", userIcon, advisorPanel, "See all travel advisors");
+
+        // Set Sell Ticket Panel
+        JLabel sellTicketTitle = new JLabel("Sell a ticket");
+        PlaceholderTextField amountTextfield = new PlaceholderTextField();
+        amountTextfield.setPlaceholder("Amount");
+        JLabel paymentTypeLabel = new JLabel("Payment type");
+        JCheckBox cashPaymentBox = new JCheckBox("Cash", false);
+        JCheckBox cardPaymentBox = new JCheckBox("Card", false);
+        PlaceholderTextField customerIDTextfield = new PlaceholderTextField();
+        customerIDTextfield.setPlaceholder("CustomerID");
+
+        JButton sellButton = new JButton("Sell");
 
 
+        // Show stock table in Stock panel
+        JTable stockTable = new JTable();
+        DefaultTableModel dtmStock = new DefaultTableModel();
+        stockTable.setModel(dtmStock);
+        dtmStock.setColumnIdentifiers(new Object[]{"ID", "Assigned to ID", "Type", "Flight Type"});
+
+        try {
+            String getStock = "SELECT * FROM stock";
+            PreparedStatement getStockStm = null;
+            getStockStm = con.prepareStatement(getStock);
+            ResultSet getStockRs = getStockStm.executeQuery(getStock);
+
+            while (getStockRs.next()) {
+                int blankID = getStockRs.getInt(1);
+                int staffID = getStockRs.getInt(2);
+                int type = getStockRs.getInt(3);
+                String fType = getStockRs.getString(4);
+                //int customerID = getTranRs.getInt("CustomerID");
+                dtmStock.addRow(new Object[]{blankID, staffID, type, fType});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        stockPanel.add(new JScrollPane(stockTable));
+
+        // **** Temporary Report List ****
         String[] s2 = {"report: 1","report: 2","report: 3","report: 4","report: 5"};
-        report = new JList(s2);
-        jScrollPane2 = new JScrollPane(report);
+        JList report = new JList(s2);
+        JScrollPane jScrollPane2 = new JScrollPane(report);
         reportPanel.add(jScrollPane2,BorderLayout.CENTER);
 //        report.setVisibleRowCount(4);
         reportPanel.setBounds(0,0,600,600);
 
-        String[] s3 = {"customer: 1","customer: 2","customer: 3","customer: 4","customer: 5"};
+        // Show Customer table in customer panel
+        JTable customerTable = new JTable();
+        DefaultTableModel dtmCust = new DefaultTableModel();
+        customerTable.setModel(dtmCust);
+        dtmCust.setColumnIdentifiers(new Object[]{"ID", "Forename", "Surname", "D.O.B", "Telephone", "Email", "Type", "Discount"});
 
-        JList customer = new JList(s3);
-        JScrollPane jScrollPane3 = new JScrollPane(customer);
-        customerPanel.add(jScrollPane3,BorderLayout.CENTER);
-//        report.setVisibleRowCount(4);
-        customerPanel.setBounds(0,0,600,600);
+        try {
+            String getCustomer = "SELECT * FROM customer";
+            PreparedStatement getCustomerStm = null;
+            getCustomerStm = con.prepareStatement(getCustomer);
+            ResultSet getCustomerRs = getCustomerStm.executeQuery(getCustomer);
 
-        String[] s4 = {"advisor: 1","advisor: 2","advisor: 3","advisor: 4","advisor: 5"};
-        JList advisor = new JList(s4);
-        JScrollPane jScrollPane4 = new JScrollPane(advisor);
-        advisorPanel.add(jScrollPane4,BorderLayout.CENTER);
-//        report.setVisibleRowCount(4);
-        advisorPanel.setBounds(0,0,600,600);
+            while (getCustomerRs.next()) {
+                int id = getCustomerRs.getInt(1);
+                String fname = getCustomerRs.getString(2);
+                String sname = getCustomerRs.getString(3);
+                String date = getCustomerRs.getString(4);
+                int tel = getCustomerRs.getInt(5);
+                String email = getCustomerRs.getString(6);
+                String type = getCustomerRs.getString(7);
+                int discount = getCustomerRs.getInt(8);
+                //int customerID = getTranRs.getInt("CustomerID");
+                dtmCust.addRow(new Object[]{id, fname, sname, date, tel, email, type, discount});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        customerPanel.add(new JScrollPane(customerTable));
 
-        JLabel amountLabel = new JLabel("amount");
-        PlaceholderTextField amountTextfield = new PlaceholderTextField();
-        JLabel paymentTypeLabel = new JLabel("payment type");
-        JComboBox<String> paymentTypeComboBox = new JComboBox<>();
-        paymentTypeComboBox.addItem("creditCard");
-        paymentTypeComboBox.addItem("cash");
-        JLabel customerIDLabel = new JLabel("customer id");
-        PlaceholderTextField customerIDTextfield = new PlaceholderTextField();
-        customerIDTextfield.setPlaceholder("customer id");
-        JButton sellButton = new JButton("sell");
+        // Show Advisors in the advisor panel
+        JTable advisorTable = new JTable();
+        DefaultTableModel dtmAdvisor = new DefaultTableModel();
+        advisorTable.setModel(dtmAdvisor);
+        dtmAdvisor.setColumnIdentifiers(new Object[]{"ID", "Forename", "Surname", "D.O.B", "Telephone", "Email"});
 
+        try {
+            String getAdvisor = "SELECT ID, Forename, Surname, Address, Telephone, Email FROM staff WHERE Type = 'ta'";
+            PreparedStatement getAdvisorStm = null;
+            getAdvisorStm = con.prepareStatement(getAdvisor);
+            ResultSet getStaffRs = getAdvisorStm.executeQuery(getAdvisor);
 
-        amountTextfield.setPlaceholder("amount");
-        transactionPanel.add(amountLabel);
-        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        transactionPanel.add(amountTextfield);
-        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        transactionPanel.setVisible(false);
-        transactionPanel.add(paymentTypeLabel);
-        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        transactionPanel.add(paymentTypeComboBox);
-        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        transactionPanel.add(customerIDLabel);
-        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        transactionPanel.add(customerIDTextfield);
-        transactionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        transactionPanel.add(sellButton);
-        transactionPanel.add(Box.createRigidArea(new Dimension(0,260)));
+            while (getStaffRs.next()) {
+                int id = getStaffRs.getInt(1);
+                String fname = getStaffRs.getString(2);
+                String sname = getStaffRs.getString(3);
+                String date = getStaffRs.getString(4);
+                int tel = getStaffRs.getInt(5);
+                String email = getStaffRs.getString(6);
+                //int customerID = getTranRs.getInt("CustomerID");
+                dtmAdvisor.addRow(new Object[]{id, fname, sname, date, tel, email});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        transactionPanel.setBounds(0,0,400,400);
+        advisorPanel.add(new JScrollPane(advisorTable));
 
-        layeredPane.add(stockPanel);
-        layeredPane.add(reportPanel);
-        layeredPane.add(customerPanel);
-        layeredPane.add(advisorPanel);
-        layeredPane.add(transactionPanel);
+        // Sold Transactions panel
+        JTable transactionTable = new JTable();
+        DefaultTableModel dtmTrans = new DefaultTableModel();
+        transactionTable.setModel(dtmTrans);
+        dtmTrans.setColumnIdentifiers(new Object[]{"ID", "Date", "Price", "Discount Type"});
 
+        try {
+            String getTran = "SELECT * FROM soldtickets";
+            PreparedStatement getTranStm = null;
+            getTranStm = con.prepareStatement(getTran);
+            ResultSet getTranRs = getTranStm.executeQuery(getTran);
 
+            while (getTranRs.next()) {
+                int ticketID = getTranRs.getInt("TicketID");
+                String date = getTranRs.getString("Date");
+                int price = getTranRs.getInt("Price");
+                String discountType = getTranRs.getString("DiscountType");
+                //int customerID = getTranRs.getInt("CustomerID");
+                dtmTrans.addRow(new Object[]{ticketID, date, price, discountType});
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        tranPanel.add(new JScrollPane(transactionTable));
+
+        /*
+        // Set Sell Ticket Panel Layout
+        sellPanel.add(sellTicketTitle);
+        sellTicketTitle.setBounds(25, 10, 200, 100);
+        sellTicketTitle.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+
+        sellPanel.add(amountTextfield);
+        amountTextfield.setBounds(sellTicketTitle.getX(), 175, 50, 25);
+
+        sellPanel.add(paymentTypeLabel);
+        paymentTypeLabel.setBounds(amountTextfield.getX(), 250, 100, 25);
+        paymentTypeLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+
+        sellPanel.add(cashPaymentBox); sellPanel.add(cardPaymentBox);
+        //cashPaymentBox.setBounds()
+
+        sellPanel.add(customerIDTextfield);
+        sellPanel.add(sellButton);
+        sellPanel.setLayout(null);
+
+        sellPanel.setPreferredSize(centrePanel.getPreferredSize());
+         */
+
+        // Tabbed Pane Action Listener
+        tabPane.addChangeListener(e -> {
+            JTabbedPane tPane = (JTabbedPane) e.getSource();
+            if (tPane.getSelectedIndex() == tPane.indexOfTab("Stock")){
+                assignBlankPanel.setVisible(true);
+                manageDiscountPanel.setVisible(false);
+                updateCustomerPanel.setVisible(false);
+            } else if (tPane.getSelectedIndex() == tPane.indexOfTab("Customers")){
+                updateCustomerPanel.setVisible(true);
+                manageDiscountPanel.setVisible(true);
+                assignBlankPanel.setVisible(false);
+            } else if(tPane.getSelectedIndex() == tPane.indexOfTab("Reports")) {
+                assignBlankPanel.setVisible(false);
+                updateCustomerPanel.setVisible(false);
+                manageDiscountPanel.setVisible(false);
+            } else if(tPane.getSelectedIndex() == tPane.indexOfTab("Transactions")){
+                manageDiscountPanel.setVisible(false);
+                updateCustomerPanel.setVisible(false);
+                assignBlankPanel.setVisible(false);
+            } else if (tPane.getSelectedIndex() == tPane.indexOfTab("Travel Advisors")){
+                assignBlankPanel.setVisible(true);
+                updateCustomerPanel.setVisible(false);
+                manageDiscountPanel.setVisible(false);
+            }
+        });
 
         //sets the right part of the layout
-        changeCommissionLabel = new JLabel("Change commission rate");
+        JLabel changeCommissionLabel = new JLabel("Change commission rate");
         JLabel cancelTicketLabel = new JLabel("Cancel ticket");
-        changeCommissionTextfield = new PlaceholderTextField();
-        changeCommissionTextfield.setPlaceholder("Commission rate");
+        PlaceholderTextField changeCommissionTextfield = new PlaceholderTextField();
+        changeCommissionTextfield.setPlaceholder("New rate");
         PlaceholderTextField cancelTicketTextfield = new PlaceholderTextField();
-        cancelTicketTextfield.setPlaceholder("cancel ticket");
-        viewReportButton = new JButton("View report");
-        viewStockButton = new JButton("View stock");
+        cancelTicketTextfield.setPlaceholder("Ticket ID");
         JButton cancelTicketButton = new JButton("cancel ticket");
-        JButton viewCustomerButton = new JButton("View customer");
-        JButton viewTravelAdvisorButton = new JButton("View travel advisor");
         JButton createCustomerButton = new JButton("Create customer");
         JButton updateCustomerButton = new JButton("Update customer");
-        JButton viewTransactionButton = new JButton("View transaction");
 
-        panel5.setLayout(new BoxLayout(panel5,BoxLayout.Y_AXIS));
-        panel5.add(cancelTicketLabel);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(cancelTicketTextfield);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(cancelTicketButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(changeCommissionLabel);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(changeCommissionTextfield);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(viewReportButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(viewStockButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(viewCustomerButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(viewTravelAdvisorButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(createCustomerButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(updateCustomerButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,10)));
-        panel5.add(viewTransactionButton);
-        panel5.add(Box.createRigidArea(new Dimension(0,280)));
+        rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
+        rightPanel.add(cancelTicketLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(cancelTicketTextfield);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(cancelTicketButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(changeCommissionLabel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(changeCommissionTextfield);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(createCustomerButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(updateCustomerButton);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        rightPanel.add(Box.createRigidArea(new Dimension(0,280)));
 
 
 
@@ -204,9 +301,8 @@ public class OfficeManagerForm extends JFrame {
         JLayeredPane leftLayeredPane = new JLayeredPane();
         leftLayeredPane.setPreferredSize(new Dimension(150,150));
 
-        JPanel assignBlankPanel = new JPanel();
         assignBlankPanel.setLayout(new BoxLayout(assignBlankPanel,BoxLayout.Y_AXIS));
-        assignBlankPanel.setVisible(false);
+        //assignBlankPanel.setVisible(false);
         assignBlankPanel.setBounds(0,0,150,450);
         JLabel assignBlank = new JLabel("Assign blank");
         JLabel idLabel = new JLabel("id");
@@ -216,7 +312,6 @@ public class OfficeManagerForm extends JFrame {
         PlaceholderTextField idTextfield2 = new PlaceholderTextField();
         idTextfield2.setPlaceholder("staff id");
         JButton assignBlankButton = new JButton("assign blank");
-        JPanel manageDiscountPanel = new JPanel();
         manageDiscountPanel.setLayout(new BoxLayout(manageDiscountPanel,BoxLayout.Y_AXIS));
         manageDiscountPanel.setBounds(0,0,150,150);
         manageDiscountPanel.setVisible(false);
@@ -236,7 +331,7 @@ public class OfficeManagerForm extends JFrame {
 
 
         //sets up panel
-        JPanel updateCustomerPanel = new JPanel();
+
         updateCustomerPanel.setLayout(new BoxLayout(updateCustomerPanel,BoxLayout.Y_AXIS));
         updateCustomerPanel.setBounds(0,0,150,450);
         //components inside updateCustomerPanel
@@ -264,9 +359,6 @@ public class OfficeManagerForm extends JFrame {
         telephoneTextField.setPlaceholder("telephone");
         PlaceholderTextField emailTextField = new PlaceholderTextField();
         emailTextField.setPlaceholder("email");
-
-
-
 
         assignBlankPanel.add(assignBlank);
         assignBlankPanel.add(Box.createRigidArea(new Dimension(0,15)));
@@ -327,97 +419,24 @@ public class OfficeManagerForm extends JFrame {
         leftLayeredPane.add(assignBlankPanel);
         leftLayeredPane.add(updateCustomerPanel);
         leftLayeredPane.add(manageDiscountPanel);
-        panel3.add(leftLayeredPane,BorderLayout.CENTER);
+        leftPanel.add(leftLayeredPane,BorderLayout.CENTER);
 
 
+        // Set Action listeners for each
         cancelTicketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    // 1. get a connection
-                    Connection con = DriverManager.getConnection(url, name, password);
-
-                    // 2. create a statement
+                    // Create a statement
                     String sql = "DELETE from payment WHERE payment_id=?";
                     PreparedStatement stm = con.prepareStatement(sql);
                     stm.setInt(1, Integer.parseInt(cancelTicketTextfield.getText()));
 
-                    // 3. execute sql statement
+                    // Execute SQL statement
                     stm.executeUpdate();
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }
-            }
-        });
-        viewReportButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                reportPanel.setVisible(true);
-                stockPanel.setVisible(false);
-                customerPanel.setVisible(false);
-                assignBlankPanel.setVisible(false);
-                updateCustomerPanel.setVisible(false);
-                advisorPanel.setVisible(false);
-                manageDiscountPanel.setVisible(false);
-
-
-
-            }
-        });
-
-        viewStockButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stockPanel.setVisible(true);
-                assignBlankPanel.setVisible(true);
-                reportPanel.setVisible(false);
-                customerPanel.setVisible(false);
-                updateCustomerPanel.setVisible(false);
-                advisorPanel.setVisible(false);
-                manageDiscountPanel.setVisible(false);
-
-
-
-            }
-        });
-        viewCustomerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                customerPanel.setVisible(true);
-                updateCustomerPanel.setVisible(true);
-                reportPanel.setVisible(false);
-                stockPanel.setVisible(false);
-                assignBlankPanel.setVisible(false);
-                advisorPanel.setVisible(false);
-
-
-            }
-        });
-        viewTransactionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                transactionPanel.setVisible(true);
-                customerPanel.setVisible(false);
-                updateCustomerPanel.setVisible(false);
-                reportPanel.setVisible(false);
-                stockPanel.setVisible(false);
-                assignBlankPanel.setVisible(false);
-                advisorPanel.setVisible(false);
-                manageDiscountPanel.setVisible(false);
-
-            }
-        });
-        viewTravelAdvisorButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                advisorPanel.setVisible(true);
-                transactionPanel.setVisible(false);
-                customerPanel.setVisible(false);
-                updateCustomerPanel.setVisible(false);
-                reportPanel.setVisible(false);
-                stockPanel.setVisible(false);
-                assignBlankPanel.setVisible(false);
-                manageDiscountPanel.setVisible(false);
             }
         });
         manageDiscountButton.addActionListener(new ActionListener() {
@@ -452,16 +471,12 @@ public class OfficeManagerForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if(customerIDTextfield.getText().trim().isEmpty()){
                     try{
-                        // 1. get a connection
-                        con = getConnection();
-
-                        //2. create a statement
                         String sql = "INSERT INTO payment"
                                 + " (paymentType, amount)"
                                 +"VALUES ( ?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
-                        stm.setString(1, paymentTypeComboBox.getSelectedItem().toString());
+                        //stm.setString(1, paymentTypeComboBox.getSelectedItem().toString());
                         stm.setFloat(2, Float.parseFloat(amountTextfield.getText()));
 
                         //3. execute sql query
@@ -472,9 +487,6 @@ public class OfficeManagerForm extends JFrame {
                     }
                 }else{
                     try {
-                        // 1. get a connection
-                        Connection con = DriverManager.getConnection(url, name, password);
-
                         //2. create a statement
                         String sql = "INSERT INTO payment "
                                 + " (paymentType, amount, CustomerAccountcustomerAccount_id)"
@@ -482,7 +494,7 @@ public class OfficeManagerForm extends JFrame {
 
                         PreparedStatement stm = con.prepareStatement(sql);
 
-                        stm.setString(1, paymentTypeComboBox.getSelectedItem().toString());
+                        //stm.setString(1, paymentTypeComboBox.getSelectedItem().toString());
                         stm.setFloat(2, Float.parseFloat(amountTextfield.getText()));
                         stm.setInt(3, Integer.parseInt(customerIDTextfield.getText()));
 
@@ -499,14 +511,9 @@ public class OfficeManagerForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                // 1. get a connection
-                con = getConnection();
-
-                //2. create a statement
                 String sql = "INSERT INTO customeraccount"
                         + " (name, dateOfBirth, address, postalCode, telephone, email)"
                         + "VALUES ( ?, ?, ?, ?, ?, ?)";
-
 
                 PreparedStatement stm = con.prepareStatement(sql);
 
@@ -517,8 +524,6 @@ public class OfficeManagerForm extends JFrame {
                 stm.setLong(5, Long.parseLong(telephoneTextField.getText()));
                 stm.setString(6, emailTextField.getText());
 
-
-                //3. execute sql query
                 stm.executeUpdate();
 
 
@@ -532,10 +537,6 @@ public class OfficeManagerForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    // 1. get a connection
-                    con = getConnection();
-
-                    //2. create a statement
                     String sql = "UPDATE customeraccount "
                             + "SET name=?,dateOfBirth=?,address=?,postalCode=?,telephone=?,email=?"
                             + "WHERE customerAccount_id=?";
@@ -565,9 +566,6 @@ public class OfficeManagerForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    // 1. get a connection
-                    con = getConnection();
-
                     //2. create a statement
                     String sql = "UPDATE blank "
                             + " SET Staffstaff_id=?"
@@ -587,28 +585,13 @@ public class OfficeManagerForm extends JFrame {
             }
         });
 
-        add(panel1);
-
-
-
-
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(750,500);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setSize(960,720);
 //        setVisible(true);
         System.out.println("this user has logged in ->" + getID());
 
     }
     public int getID(){
-        return id;
-    }
-    public Connection getConnection(){
-        try{
-            con = DriverManager.getConnection(url,name,password);
-        }catch (SQLException ex){
-            ex.printStackTrace();
-        }
-        finally {
-            return con;
-        }
+        return userID;
     }
 }
