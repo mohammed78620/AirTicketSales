@@ -76,3 +76,10 @@ CREATE TABLE `blank` (
   KEY `Staffstaff_id_idx` (`Staffstaff_id`),
   CONSTRAINT `Staffstaff_id` FOREIGN KEY (`Staffstaff_id`) REFERENCES `staff` (`staff_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `commission` (
+  `commission_id` int NOT NULL AUTO_INCREMENT,
+  `commission_rate` float DEFAULT NULL,
+  `active` tinyint DEFAULT '0',
+  PRIMARY KEY (`commission_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -1,5 +1,6 @@
 package controller;
 
+import database.DatabaseHelper;
 import gui.*;
 
 import java.sql.Connection;
@@ -10,6 +11,7 @@ import java.sql.Statement;
 public class LoginController {
     String username;
     String password;
+    DatabaseHelper db  = new DatabaseHelper();
 
     public LoginController(String username, String password){
         this.username = username;
@@ -20,7 +22,7 @@ public class LoginController {
     public boolean loginAuthenticated(){
         try {
             //get a connection to database
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/airticketsales","root","ba!E%xxd-9F7_NdQ");
+            Connection con = db.getConnection();
             // create a statement
             Statement stm =  con.createStatement();
             //execute sql query
