@@ -46,12 +46,11 @@ public class TravelAdvisorForm extends JFrame {
         layeredPane.setBackground(Color.RED);
         JLayeredPane leftLayeredPane = new JLayeredPane();
         leftLayeredPane.setPreferredSize(new Dimension(150,150));
-        JPanel customerPanel = new JPanel(new BorderLayout());
+        JPanel customerPanel = new JPanel(new GridLayout(8,8,5,40));
         JPanel reportPanel = new JPanel(new BorderLayout());
         JPanel transactionPanel = new JPanel();
         transactionPanel.setLayout(new BoxLayout(transactionPanel,BoxLayout.Y_AXIS));
         JPanel stockPanel = new JPanel(new BorderLayout());
-        JPanel mainPanel = new JPanel(new GridLayout(8,8,5,40));
         add(panel1);
 
         //sets Panel Layout
@@ -122,45 +121,6 @@ public class TravelAdvisorForm extends JFrame {
         layeredPane.add(stockPanel);
 
         //sets up main left BorderLayout
-        JLabel IDLabel = new JLabel("ID");
-        JLabel nameLabel = new JLabel("Name");
-        JLabel dateOfBirthLabel = new JLabel("Date of birth");
-        JLabel addressLabel = new JLabel("Address");
-        JLabel postalCodeLabel = new JLabel("Postcode");
-        JLabel telephoneLabel = new JLabel("telephone");
-        JLabel emailLabel = new JLabel("Email");
-
-        PlaceholderTextField IDTextField = new PlaceholderTextField();
-        IDTextField.setPlaceholder("ID");
-        PlaceholderTextField nameTextField = new PlaceholderTextField();
-        nameTextField.setPlaceholder("Name");
-        PlaceholderTextField dateOfBirthTextField = new PlaceholderTextField();
-        dateOfBirthTextField.setPlaceholder("date of birth");
-        PlaceholderTextField addressTextField = new PlaceholderTextField();
-        addressTextField.setPlaceholder("address");
-        PlaceholderTextField postalCodeTextField = new PlaceholderTextField();
-        postalCodeTextField.setPlaceholder("postcode");
-        PlaceholderTextField telephoneTextField = new PlaceholderTextField();
-        telephoneTextField.setPlaceholder("telephone");
-        PlaceholderTextField emailTextField = new PlaceholderTextField();
-        emailTextField.setPlaceholder("email");
-
-        mainPanel.add(IDLabel);
-        mainPanel.add(IDTextField);
-        mainPanel.add(nameLabel);
-        mainPanel.add(nameTextField);
-        mainPanel.add(dateOfBirthLabel);
-        mainPanel.add(dateOfBirthTextField);
-        mainPanel.add(addressLabel);
-        mainPanel.add(addressTextField);
-        mainPanel.add(postalCodeLabel);
-        mainPanel.add(postalCodeTextField);
-        mainPanel.add(telephoneLabel);
-        mainPanel.add(telephoneTextField);
-        mainPanel.add(emailLabel);
-        mainPanel.add(emailTextField);
-        mainPanel.setVisible(true);
-
         ManageCustomerPanel manageCustomerPanel = new ManageCustomerPanel();
         manageCustomerPanel.setLayout(new BoxLayout(manageCustomerPanel,BoxLayout.Y_AXIS));
         manageCustomerPanel.setVisible(false);
@@ -173,7 +133,6 @@ public class TravelAdvisorForm extends JFrame {
         updateCustomerPanel.setLayout(new BoxLayout(updateCustomerPanel,BoxLayout.Y_AXIS));
         updateCustomerPanel.setVisible(false);
 
-        leftLayeredPane.add(mainPanel);
         leftLayeredPane.add(manageCustomerPanel);
         leftLayeredPane.add(discountPanel);
         leftLayeredPane.add(updateCustomerPanel);
@@ -228,7 +187,6 @@ public class TravelAdvisorForm extends JFrame {
         });
         manageCustomerPanel.backButton.addActionListener(e -> {
             manageCustomerPanel.setVisible(false);
-            mainPanel.setVisible(true);
         });
         discountPanel.backButton.addActionListener(e -> {
             manageCustomerPanel.setVisible(true);
@@ -252,13 +210,13 @@ public class TravelAdvisorForm extends JFrame {
 
                     PreparedStatement stm = con.prepareStatement(sql);
 
-                    stm.setString(1, nameTextField.getText());
-                    stm.setDate(2,Date.valueOf(dateOfBirthTextField.getText()));
-                    stm.setString(3, addressTextField.getText());
-                    stm.setString(4, postalCodeTextField.getText());
-                    stm.setInt(5, Integer.parseInt(telephoneTextField.getText()));
-                    stm.setString(6, emailTextField.getText());
-                    stm.setInt(7,Integer.parseInt(IDTextField.getText()));
+                    stm.setString(1, updateCustomerPanel.nameTextField.getText());
+                    stm.setDate(2,Date.valueOf(updateCustomerPanel.dateOfBirthTextField.getText()));
+                    stm.setString(3, updateCustomerPanel.addressTextField.getText());
+                    stm.setString(4, updateCustomerPanel.postalCodeTextField.getText());
+                    stm.setInt(5, Integer.parseInt(updateCustomerPanel.telephoneTextField.getText()));
+                    stm.setString(6, updateCustomerPanel.emailTextField.getText());
+                    stm.setInt(7,Integer.parseInt(updateCustomerPanel.IDField.getText()));
 
                     //3. execute sql query
                     stm.executeUpdate();
@@ -278,7 +236,6 @@ public class TravelAdvisorForm extends JFrame {
                 transactionPanel.setVisible(false);
                 reportPanel.setVisible(false);
                 stockPanel.setVisible(false);
-                mainPanel.setVisible(false);
 
                  List<Customer> customers = new ArrayList<>();
                 try {
@@ -334,7 +291,6 @@ public class TravelAdvisorForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 transactionPanel.setVisible(true);
-                mainPanel.setVisible(true);
                 customerPanel.setVisible(false);
                 reportPanel.setVisible(false);
                 stockPanel.setVisible(false);
@@ -347,7 +303,6 @@ public class TravelAdvisorForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 stockPanel.setVisible(true);
-                mainPanel.setVisible(true);
                 transactionPanel.setVisible(false);
                 customerPanel.setVisible(false);
                 reportPanel.setVisible(false);
@@ -376,12 +331,12 @@ public class TravelAdvisorForm extends JFrame {
 
                     PreparedStatement stm = con.prepareStatement(sql);
 
-                    stm.setString(1, nameTextField.getText());
-                    stm.setDate(2, Date.valueOf(dateOfBirthTextField.getText()));
-                    stm.setString(3, addressTextField.getText());
-                    stm.setString(4, postalCodeTextField.getText());
-                    stm.setInt(5, Integer.parseInt(telephoneTextField.getText()));
-                    stm.setString(6, emailTextField.getText());
+                    stm.setString(1, updateCustomerPanel.nameTextField.getText());
+                    stm.setDate(2, Date.valueOf(updateCustomerPanel.dateOfBirthTextField.getText()));
+                    stm.setString(3, updateCustomerPanel.addressTextField.getText());
+                    stm.setString(4, updateCustomerPanel.postalCodeTextField.getText());
+                    stm.setInt(5, Integer.parseInt(updateCustomerPanel.telephoneTextField.getText()));
+                    stm.setString(6, updateCustomerPanel.emailTextField.getText());
 
 
                     //3. execute sql query
@@ -535,3 +490,5 @@ public class TravelAdvisorForm extends JFrame {
 
     }
 }
+
+
