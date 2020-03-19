@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import container.CancelTicketPanel;
 import container.ManageCustomerPanel;
 import container.DiscountPanel;
 import container.UpdateCustomerPanel;
@@ -115,10 +116,15 @@ public class TravelAdvisorForm extends JFrame {
         transactionPanel.setBounds(0,0,400,400);
         transactionPanel.setVisible(false);
 
+        CancelTicketPanel cancelTicketPanel = new CancelTicketPanel();
+        cancelTicketPanel.setLayout(new BoxLayout(cancelTicketPanel,BoxLayout.Y_AXIS));
+        cancelTicketPanel.setVisible(false);
+
         layeredPane.add(transactionPanel);
         layeredPane.add(customerPanel);
         layeredPane.add(reportPanel);
         layeredPane.add(stockPanel);
+        layeredPane.add(cancelTicketPanel);
 
         //sets up main left BorderLayout
         ManageCustomerPanel manageCustomerPanel = new ManageCustomerPanel();
@@ -147,29 +153,21 @@ public class TravelAdvisorForm extends JFrame {
         JButton viewCustomers = new JButton("view customer");
         JButton sellTicketButton = new JButton("sell ticket");
         JButton createAccountButton = new JButton("create account");
-//        JButton updateAccountButton = new JButton("update account");
         JButton viewIndividualReport = new JButton("view reports");
         JButton viewIndividualStock = new JButton("view stock");
-        JLabel cancelTicket = new JLabel("cancel ticket: ");
-        PlaceholderTextField ticketIdTextfield = new PlaceholderTextField();
-        ticketIdTextfield.setPlaceholder("ticket ID");
-        JButton cancelTicketButton = new JButton("cancel ticket");
+        JButton viewCancelTicketButton = new JButton("cancel ticket");
 
         //adds to right container
         rightPanel.add(viewCustomers);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(sellTicketButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        rightPanel.add(cancelTicket);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        rightPanel.add(ticketIdTextfield);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        rightPanel.add(cancelTicketButton);
+        rightPanel.add(viewCancelTicketButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(createAccountButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
-//        rightPanel.add(updateAccountButton);
-//        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(viewIndividualReport);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(viewIndividualStock);
@@ -236,6 +234,7 @@ public class TravelAdvisorForm extends JFrame {
                 transactionPanel.setVisible(false);
                 reportPanel.setVisible(false);
                 stockPanel.setVisible(false);
+                cancelTicketPanel.setVisible(false);
 
                  List<Customer> customers = new ArrayList<>();
                 try {
@@ -285,6 +284,7 @@ public class TravelAdvisorForm extends JFrame {
                 transactionPanel.setVisible(false);
                 stockPanel.setVisible(false);
                 manageCustomerPanel.setVisible(false);
+                cancelTicketPanel.setVisible(false);
             }
         });
         sellTicketButton.addActionListener(new ActionListener() {
@@ -297,6 +297,7 @@ public class TravelAdvisorForm extends JFrame {
                 manageCustomerPanel.setVisible(false);
                 updateCustomerPanel.setVisible(false);
                 discountPanel.setVisible(false);
+                cancelTicketPanel.setVisible(false);
             }
         });
         viewIndividualStock.addActionListener(new ActionListener() {
@@ -307,8 +308,45 @@ public class TravelAdvisorForm extends JFrame {
                 customerPanel.setVisible(false);
                 reportPanel.setVisible(false);
                 manageCustomerPanel.setVisible(false);
+                cancelTicketPanel.setVisible(false);
             }
         });
+        cancelTicketPanel.cancelButton.addActionListener(e -> {
+
+            try {
+
+                // 1. get a connection
+                con = db.getConnection();
+
+                // 2. create a statement
+                String sql = "DELETE FROM payment WHERE payment_id=?"
+                        + "INSERT INTO refund"
+                        + " (description, amount, refundType)"
+                        + "VALUES ( ?, ?, ?)";
+                PreparedStatement stm = con.prepareStatement(sql);
+                stm.setInt(1,Integer.parseInt(cancelTicketPanel.ticketIdTextfield.getText()));
+                stm.setString(2,cancelTicketPanel.descriptionTextfield.getText());
+                stm.setInt(3,Integer.parseInt(cancelTicketPanel.amountTextfield.getText()));
+                stm.setString(4, cancelTicketPanel.typeBox.getSelectedItem().toString());
+
+                // 3. execute sql statement
+                stm.executeUpdate();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+    });
+        viewCancelTicketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cancelTicketPanel.setVisible(true);
+                stockPanel.setVisible(false);
+                transactionPanel.setVisible(false);
+                customerPanel.setVisible(false);
+                reportPanel.setVisible(false);
+                manageCustomerPanel.setVisible(false);
+            }
+            });
+
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -397,26 +435,7 @@ public class TravelAdvisorForm extends JFrame {
                 }
             }
         });
-        cancelTicketButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    con = db.getConnection();
 
-                    // 2. create a statement
-                    String sql = "DELETE FROM payment WHERE payment_id=?";
-                    PreparedStatement stm = con.prepareStatement(sql);
-                    stm.setInt(1,Integer.parseInt(ticketIdTextfield.getText()));
-
-                    // 3. execute sql statement
-                    stm.executeUpdate();
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
-
-            }
-        });
 
 //        viewIndividualReport.addActionListener(new ActionListener() {
 //            @Override
