@@ -11,6 +11,7 @@ import java.sql.Statement;
 public class LoginController {
     String username;
     String password;
+
     DatabaseHelper db = new DatabaseHelper();
     Connection con = db.getConnection();
 
@@ -20,6 +21,11 @@ public class LoginController {
     }
     public boolean loginAuthenticated(){
         try {
+
+            //get a connection to database
+            Connection con = db.getConnection();
+            // create a statement
+
             Statement stm =  con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT Username, Password, Type, ID FROM staff WHERE Username ='" + username + "'");
             if(rs.next()) {
