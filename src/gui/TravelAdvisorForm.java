@@ -196,80 +196,80 @@ public class TravelAdvisorForm extends JFrame {
             updateCustomerPanel.setVisible(false);
         });
         manageCustomerPanel.manageDiscountButton.addActionListener(e -> {
-        manageCustomerPanel.setVisible(false);
-        manageDiscountsPanel.setVisible(true);
-        discountPanel.setVisible(true);
-        customerPanel.setVisible(false);
-        transactionPanel.setVisible(false);
-        updateCustomerPanel.setVisible(false);
-        reportPanel.setVisible(false);
-        stockPanel.setVisible(false);
-        cancelTicketPanel.setVisible(false);
+            manageCustomerPanel.setVisible(false);
+            manageDiscountsPanel.setVisible(true);
+            discountPanel.setVisible(true);
+            customerPanel.setVisible(false);
+            transactionPanel.setVisible(false);
+            updateCustomerPanel.setVisible(false);
+            reportPanel.setVisible(false);
+            stockPanel.setVisible(false);
+            cancelTicketPanel.setVisible(false);
 
 
-                List<Discount> discounts = new ArrayList<>();
-                try {
-                    con = db.getConnection();
-                    Statement stm = con.createStatement();
-                    ResultSet rs = stm.executeQuery("SELECT customerAccount_id, name, customerType, discount" +
-                            " FROM customeraccount WHERE customerType= 'valued'");
+            List<Discount> discounts = new ArrayList<>();
+            try {
+                con = db.getConnection();
+                Statement stm = con.createStatement();
+                ResultSet rs = stm.executeQuery("SELECT customerAccount_id, name, customerType, discount" +
+                        " FROM customeraccount WHERE customerType= 'valued'");
 
 
-                    while(rs.next()) {
-                        discounts.add(new Discount(rs.getInt(1),
-                                rs.getString(2),
-                                rs.getString(3),
-                                rs.getString(4)));
-                    }
-                    Discount b;
-                    DefaultTableModel model =new DefaultTableModel();
-                    model.addColumn("customer ID: ");
-                    model.addColumn("name: ");
-                    model.addColumn("customer type: ");
-                    model.addColumn("discount: ");
-                    discount.setModel(model);
-
-                    for (int i = 0; i < discounts.size(); i++) {
-                        b = discounts.get(i);
-                        model.addRow(b.rowArray());
-
-                    }
-                }catch(SQLException ex) {
-                    ex.printStackTrace();
+                while(rs.next()) {
+                    discounts.add(new Discount(rs.getInt(1),
+                            rs.getString(2),
+                            rs.getString(3),
+                            rs.getString(4)));
                 }
+                Discount b;
+                DefaultTableModel model =new DefaultTableModel();
+                model.addColumn("customer ID: ");
+                model.addColumn("name: ");
+                model.addColumn("customer type: ");
+                model.addColumn("discount: ");
+                discount.setModel(model);
+
+                for (int i = 0; i < discounts.size(); i++) {
+                    b = discounts.get(i);
+                    model.addRow(b.rowArray());
+
+                }
+            }catch(SQLException ex) {
+                ex.printStackTrace();
+            }
         });
 
 
         updateCustomerPanel.updateButton.addActionListener(e -> {
 
-                try{
-                    // 1. get a connection
-                    con = db.getConnection();
+            try{
+                // 1. get a connection
+                con = db.getConnection();
 
-                    //2. create a statement
-                    String sql = "UPDATE customeraccount "
-                            + "SET name=?,dateOfBirth=?,address=?,postalCode=?,telephone=?,email=?, customerType=?"
-                            + "WHERE customerAccount_id=?";
+                //2. create a statement
+                String sql = "UPDATE customeraccount "
+                        + "SET name=?,dateOfBirth=?,address=?,postalCode=?,telephone=?,email=?, customerType=?"
+                        + "WHERE customerAccount_id=?";
 
-                    PreparedStatement stm = con.prepareStatement(sql);
+                PreparedStatement stm = con.prepareStatement(sql);
 
-                    stm.setString(1, updateCustomerPanel.nameTextField.getText());
-                    stm.setDate(2,Date.valueOf(updateCustomerPanel.dateOfBirthTextField.getText()));
-                    stm.setString(3, updateCustomerPanel.addressTextField.getText());
-                    stm.setString(4, updateCustomerPanel.postalCodeTextField.getText());
-                    stm.setInt(5, Integer.parseInt(updateCustomerPanel.telephoneTextField.getText()));
-                    stm.setString(6, updateCustomerPanel.emailTextField.getText());
-                    stm.setString(7, updateCustomerPanel.typeBox.getSelectedItem().toString());
-                    stm.setInt(8,Integer.parseInt(updateCustomerPanel.IDField.getText()));
+                stm.setString(1, updateCustomerPanel.nameTextField.getText());
+                stm.setDate(2,Date.valueOf(updateCustomerPanel.dateOfBirthTextField.getText()));
+                stm.setString(3, updateCustomerPanel.addressTextField.getText());
+                stm.setString(4, updateCustomerPanel.postalCodeTextField.getText());
+                stm.setInt(5, Integer.parseInt(updateCustomerPanel.telephoneTextField.getText()));
+                stm.setString(6, updateCustomerPanel.emailTextField.getText());
+                stm.setString(7, updateCustomerPanel.typeBox.getSelectedItem().toString());
+                stm.setInt(8,Integer.parseInt(updateCustomerPanel.IDField.getText()));
 
-                    //3. execute sql query
-                    stm.executeUpdate();
+                //3. execute sql query
+                stm.executeUpdate();
 
 
 
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
         });
 
         viewCustomers.addActionListener(new ActionListener() {
@@ -284,7 +284,7 @@ public class TravelAdvisorForm extends JFrame {
                 discountPanel.setVisible(false);
                 manageDiscountsPanel.setVisible(false);
 
-                 List<Customer> customers = new ArrayList<>();
+                List<Customer> customers = new ArrayList<>();
                 try {
                     con = db.getConnection();
                     Statement stm = con.createStatement();
@@ -386,7 +386,7 @@ public class TravelAdvisorForm extends JFrame {
             }catch (Exception ex){
                 ex.printStackTrace();
             }
-    });
+        });
         cancelTicketPanel.refundButton.addActionListener(e -> {
             try {
 
@@ -460,7 +460,7 @@ public class TravelAdvisorForm extends JFrame {
                         con = db.getConnection();
                         //2. create a statement
                         String sql = "INSERT INTO payment"
-                                + " (Type, amount)"
+                                + " (paymentType, amount)"
                                 +"VALUES ( ?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
@@ -480,7 +480,7 @@ public class TravelAdvisorForm extends JFrame {
 
                         //2. create a statement
                         String sql = "INSERT INTO payment "
-                                + " (Type, amount, CustomerID)"
+                                + " (paymentType, amount, CustomerAccountcustomerAccount_id)"
                                 + "VALUES ( ?,?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
@@ -498,62 +498,6 @@ public class TravelAdvisorForm extends JFrame {
                 }
             }
         });
-        cancelTicketButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    Connection myConn = getConnection(url, name, password);
-
-                    // 2. create a statement
-                    String sql = "DELETE FROM payment WHERE PaymentID=?";
-                    PreparedStatement stm = myConn.prepareStatement(sql);
-                    stm.setInt(1,Integer.parseInt(ticketIdTextfield.getText()));
-
-                    // 3. execute sql statement
-                    stm.executeUpdate();
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
-
-            }
-        });
-
-        viewIndividualReport.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    Connection myConn = DriverManager.getConnection(url, name, password);
-
-                    // 2. create a statement
-                    //report needs to be added to database with more data fields
-                    String sql = "SELECT (report_id, dateGenerated, endDate) "
-                            + "FROM report"
-                            + " WHERE staff_id=?";
-
-                    PreparedStatement stm = myConn.prepareStatement(sql);
-                    stm.setInt(1,Integer.parseInt(IDTextField.getText()));
-
-                    // 3. execute sql statement
-                    stm.executeUpdate();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        viewCustomers.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    // 1. get a connection
-                    Connection myConn = DriverManager.getConnection(url, name, password);
-
-                    // 2. create a statement
-                    String sql = "SELECT * FROM customeraccount"
-                            + " WHERE customeraccount_id=?";
-
 
 
 //        viewIndividualReport.addActionListener(new ActionListener() {
@@ -628,5 +572,4 @@ public class TravelAdvisorForm extends JFrame {
 
     }
 }
-
 
