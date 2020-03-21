@@ -97,7 +97,8 @@ public class SystemAdminForm extends JFrame {
         stockModel.addColumn("blank id");
         stockModel.addColumn("staff id");
         stockModel.addColumn("blank type");
-        stockModel.addColumn("flight type");
+        stockModel.addColumn("used");
+        stockModel.addColumn("received");
         stock.setModel(stockModel);
         JScrollPane jScrollPane12 = new JScrollPane(stock);
         viewStock();
@@ -163,20 +164,12 @@ public class SystemAdminForm extends JFrame {
         JButton viewUserButton = new JButton("View users");
         JButton viewStockButton = new JButton("View stock");
         JButton viewCommission = new JButton("view Commission");
-
-        JLabel changeCommissionLabel = new JLabel("change commission rate");
         JButton viewExchangeRates = new JButton("view rates");
-        PlaceholderTextField changeCommissionTextField = new PlaceholderTextField();
-        changeCommissionTextField.setPlaceholder("commission rate");
         rightPanel.add(viewBackupButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(backupDatabaseButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(restoreDatabaseButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
-        rightPanel.add(changeCommissionLabel);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
-        rightPanel.add(changeCommissionTextField);
         rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(addUserButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
@@ -504,16 +497,14 @@ public class SystemAdminForm extends JFrame {
 
                 //2. create a statement
                 String sql = "INSERT INTO blank "
-                        + " (blankType,flightType)"
-                        + "VALUES ( ?, ?)";
+                        + " (blankType)"
+                        + "VALUES ( ?)";
                 stm = con.prepareStatement(sql);
 
                 int amount = Integer.parseInt(addBlankPanel.amountTextfield.getText());
 
                 for(int i = 0; i < amount; i++) {
                     stm.setInt(1, Integer.parseInt(addBlankPanel.typeBox.getSelectedItem().toString()));
-                    stm.setString(2, addBlankPanel.flightTypeBox.getSelectedItem().toString());
-
 
                     //3. execute sql query
                     stm.executeUpdate();
@@ -970,7 +961,8 @@ public class SystemAdminForm extends JFrame {
                 stockList.add(new Blank(rs.getInt(1),
                         rs.getInt(2),
                         rs.getInt(3),
-                        rs.getString(4)));
+                        rs.getBoolean(4),
+                        rs.getDate(5)));
 
             }
             Blank b;
