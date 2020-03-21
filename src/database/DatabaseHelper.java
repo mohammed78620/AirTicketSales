@@ -5,8 +5,8 @@ import java.sql.*;
 public class DatabaseHelper {
     private Connection con;
     private String url = "jdbc:mysql://localhost:3306/airticketsales";
-    private String name = "root";
-    private String password = "ba!E%xxd-9F7_NdQ";
+    private String name = "akmal";
+    private String password = "]WCgDKEN69Wf>zE.";
     public DatabaseHelper(){
 
     }
