@@ -83,9 +83,10 @@ CREATE TABLE `commission` (
   PRIMARY KEY (`commssion_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `databasename`.`refund` (
-  `refund_id` INT NOT NULL AUTO_INCREMENT,
-  `amount` INT NULL,
-  `description` VARCHAR(45) NULL,
-  `refundType` VARCHAR(45) NULL,
-  PRIMARY KEY (`refund_id`));
+CREATE TABLE `refund` (
+  `refund_id` int NOT NULL AUTO_INCREMENT,
+  `amount` int DEFAULT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `refundType` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`refund_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
