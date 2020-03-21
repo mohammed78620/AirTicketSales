@@ -77,16 +77,4 @@ CREATE TABLE `blank` (
   CONSTRAINT `Staffstaff_id` FOREIGN KEY (`Staffstaff_id`) REFERENCES `staff` (`staff_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `commission` (
-  `commssion_id` int NOT NULL AUTO_INCREMENT,
-  `commison_rate` float DEFAULT NULL,
-  PRIMARY KEY (`commssion_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `refund` (
-  `refund_id` int NOT NULL AUTO_INCREMENT,
-  `amount` int DEFAULT NULL,
-  `description` varchar(45) DEFAULT NULL,
-  `refundType` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`refund_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

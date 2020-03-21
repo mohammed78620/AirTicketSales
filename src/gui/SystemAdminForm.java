@@ -16,6 +16,9 @@ import container.RemoveBlankPanel;
 import container.UpdateStockPanel;
 import database.DatabaseHelper;
 import domain.Blank;
+import domain.Commission;
+import domain.Rate;
+import domain.User;
 
 
 public class SystemAdminForm extends JFrame {
@@ -34,6 +37,10 @@ public class SystemAdminForm extends JFrame {
     private String name = "akmal";
     private String password = "]WCgDKEN69Wf>zE.";
     private DatabaseHelper db = new DatabaseHelper();
+    private DefaultTableModel userModel;
+    private DefaultTableModel stockModel;
+    private DefaultTableModel rateModel;
+    private DefaultTableModel commissionModel;
 
     public SystemAdminForm(int id){
         super("System Administrator page");
@@ -55,26 +62,46 @@ public class SystemAdminForm extends JFrame {
 
 
         //sets up center of borderLayout
-        JLayeredPane layeredPane = new JLayeredPane();
+        JTabbedPane centerPane = new JTabbedPane();
         JPanel userPanel = new JPanel();
         JPanel stockPanel = new JPanel();
         JPanel databasePanel = new JPanel();
         JPanel ratesPanel = new JPanel();
-        centerPanel.add(layeredPane,BorderLayout.CENTER);
-        layeredPane.setPreferredSize(new Dimension(600,600));
+        JPanel commissionPanel = new JPanel();
+        centerPanel.add(centerPane,BorderLayout.CENTER);
 
 
-        String[] s1 = {"user: 1","user: 2","user: 3","user: 4","user: 5"};
+
+
         userPanel.setLayout(new BorderLayout());
-        JList advisors = new JList(s1);
-        JScrollPane jScrollPane11 = new JScrollPane(advisors);
+        JTable users = new JTable();
+        userModel = new DefaultTableModel();
+        userModel.addColumn("staff_id");
+        userModel.addColumn("name");
+        userModel.addColumn("address");
+        userModel.addColumn("telephone");
+        userModel.addColumn("email");
+        userModel.addColumn("username");
+        userModel.addColumn("password");
+        userModel.addColumn("staffType");
+        users.setModel(userModel);
+        JScrollPane jScrollPane11 = new JScrollPane(users);
+        viewUser();
         userPanel.add(jScrollPane11,BorderLayout.CENTER);
         userPanel.setBounds(0,0,600,600);
 
 
         stockPanel.setLayout(new BorderLayout());
         JTable stock = new JTable();
+        stockModel =new DefaultTableModel();
+        stockModel.addColumn("blank id");
+        stockModel.addColumn("staff id");
+        stockModel.addColumn("blank type");
+        stockModel.addColumn("used");
+        stockModel.addColumn("received");
+        stock.setModel(stockModel);
         JScrollPane jScrollPane12 = new JScrollPane(stock);
+        viewStock();
         stockPanel.add(jScrollPane12,BorderLayout.CENTER);
         stockPanel.setBounds(0,0,400,600);
 
@@ -85,17 +112,38 @@ public class SystemAdminForm extends JFrame {
         databasePanel.add(jScrollPane13,BorderLayout.CENTER);
         databasePanel.setBounds(0,0,600,600);
 
-        String[] s4 = {"rate: 1","rate: 2","rate: 3","rate: 4","rate: 5"};
+
         ratesPanel.setLayout(new BorderLayout());
-        JList rate = new JList(s4);
+        JTable rate = new JTable();
+        rateModel = new DefaultTableModel();
+        rateModel.addColumn("id");
+        rateModel.addColumn("currency");
+        rateModel.addColumn("rate");
+        rate.setModel(rateModel);
         JScrollPane jScrollPane14 = new JScrollPane(rate);
+        viewRate();
         ratesPanel.add(jScrollPane14,BorderLayout.CENTER);
         ratesPanel.setBounds(0,0,600,600);
 
-        layeredPane.add(userPanel);
-        layeredPane.add(stockPanel);
-        layeredPane.add(databasePanel);
-        layeredPane.add(ratesPanel);
+        commissionPanel.setLayout(new BorderLayout());
+        JTable commission = new JTable();
+        commissionModel = new DefaultTableModel();
+        commissionModel.addColumn("id");
+        commissionModel.addColumn("commission rate");
+        commissionModel.addColumn("active");
+        commission.setModel(commissionModel);
+        JScrollPane jScrollPane5 = new JScrollPane(commission);
+        viewCommission();
+        commissionPanel.add(jScrollPane5,BorderLayout.CENTER);
+        commissionPanel.setBounds(0,0,600,600);
+
+
+        centerPane.add("users",userPanel);
+        centerPane.add("stock",stockPanel);
+        centerPane.add("databases",databasePanel);
+        centerPane.add("rates",ratesPanel);
+        centerPane.add("commission",commissionPanel);
+
 
         //sets up bottom of borderLayout
         JButton logoutButton = new JButton("Logout");
@@ -115,20 +163,13 @@ public class SystemAdminForm extends JFrame {
         JButton removeUserButton = new JButton("Remove User");
         JButton viewUserButton = new JButton("View users");
         JButton viewStockButton = new JButton("View stock");
-
-        JLabel changeCommissionLabel = new JLabel("change commission rate");
+        JButton viewCommission = new JButton("view Commission");
         JButton viewExchangeRates = new JButton("view rates");
-        PlaceholderTextField changeCommissionTextField = new PlaceholderTextField();
-        changeCommissionTextField.setPlaceholder("commission rate");
         rightPanel.add(viewBackupButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(backupDatabaseButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(restoreDatabaseButton);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
-        rightPanel.add(changeCommissionLabel);
-        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
-        rightPanel.add(changeCommissionTextField);
         rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(addUserButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
@@ -141,6 +182,8 @@ public class SystemAdminForm extends JFrame {
         rightPanel.add(viewStockButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(viewExchangeRates);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        rightPanel.add(viewCommission);
         rightPanel.add(Box.createRigidArea(new Dimension(0,105)));
 
 
@@ -176,7 +219,10 @@ public class SystemAdminForm extends JFrame {
         removeRatePanel.setVisible(false);
         removeRatePanel.setLayout(new BoxLayout(removeRatePanel,BoxLayout.Y_AXIS));
         removeRatePanel.setBounds(0,0,150,450);
-
+        JPanel commissionUpdatePanel = new JPanel();
+        commissionUpdatePanel.setVisible(false);
+        commissionUpdatePanel.setLayout(new BoxLayout(commissionUpdatePanel,BoxLayout.Y_AXIS));
+        commissionUpdatePanel.setBounds(0,0,150,450);
 
         JLabel idLabel = new JLabel("iD");
         JLabel usernameLabel = new JLabel("Username");
@@ -242,6 +288,61 @@ public class SystemAdminForm extends JFrame {
         JButton backButton2 = new JButton("back");
         JButton backButton3 = new JButton("back");
         JButton backButton4 = new JButton("back");
+
+
+
+        JTabbedPane commissionPane = new JTabbedPane();
+        commissionUpdatePanel.add(commissionPane);
+        JPanel addCommissionPanel = new JPanel();
+        addCommissionPanel.setLayout(new BoxLayout(addCommissionPanel,BoxLayout.Y_AXIS));
+        JPanel updateCommissionPanel = new JPanel();
+        updateCommissionPanel.setLayout(new BoxLayout(updateCommissionPanel,BoxLayout.Y_AXIS));
+        JPanel removeCommissionPanel = new JPanel();
+        removeCommissionPanel.setLayout(new BoxLayout(removeCommissionPanel,BoxLayout.Y_AXIS));
+
+
+        JLabel commissionRateLabel1 = new JLabel("commission rate");
+        JLabel commissionRateLabel2 = new JLabel("commission rate");
+        JLabel isActiveLabel = new JLabel("is active");
+
+        PlaceholderTextField commissionRateTextfield1 = new PlaceholderTextField();
+        commissionRateTextfield1.setPlaceholder("rate");
+        PlaceholderTextField commissionRateTextfield2 = new PlaceholderTextField();
+        commissionRateTextfield2.setPlaceholder("rate");
+        JComboBox isActiveBox = new JComboBox();
+        isActiveBox.addItem("no");
+        isActiveBox.addItem("yes");
+
+
+        JButton addCommissionButton = new JButton("add");
+        JButton updateCommissionButton = new JButton("update");
+        JButton removeCommissionButton = new JButton("remove");
+
+        addCommissionPanel.add(commissionRateLabel1);
+        addCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        addCommissionPanel.add(commissionRateTextfield1);
+        addCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        addCommissionPanel.add(addCommissionButton);
+        addCommissionPanel.add(Box.createRigidArea(new Dimension(0,500)));
+
+        updateCommissionPanel.add(commissionRateLabel2);
+        updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateCommissionPanel.add(commissionRateTextfield2);
+        updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateCommissionPanel.add(isActiveLabel);
+        updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateCommissionPanel.add(isActiveBox);
+        updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        updateCommissionPanel.add(updateCommissionButton);
+        updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,400)));
+
+        removeCommissionPanel.add(removeCommissionButton);
+        removeCommissionPanel.add(Box.createRigidArea(new Dimension(0,400)));
+
+        commissionPane.add("add commission",addCommissionPanel);
+        commissionPane.add("update commission",updateCommissionPanel);
+        commissionPane.add("remove commission",removeCommissionPanel);
 
         ratesUpdatePanel.add(viewAddRateButton);
         ratesUpdatePanel.add(Box.createRigidArea(new Dimension(0,15)));
@@ -342,6 +443,7 @@ public class SystemAdminForm extends JFrame {
         leftLayeredPane.add(addRatePanel);
         leftLayeredPane.add(updateRatePanel);
         leftLayeredPane.add(removeRatePanel);
+        leftLayeredPane.add(commissionUpdatePanel);
         leftPanel.add(leftLayeredPane,BorderLayout.CENTER);
 
 
@@ -395,16 +497,14 @@ public class SystemAdminForm extends JFrame {
 
                 //2. create a statement
                 String sql = "INSERT INTO blank "
-                        + " (blankType,flightType)"
-                        + "VALUES ( ?, ?)";
+                        + " (blankType)"
+                        + "VALUES ( ?)";
                 stm = con.prepareStatement(sql);
 
                 int amount = Integer.parseInt(addBlankPanel.amountTextfield.getText());
 
                 for(int i = 0; i < amount; i++) {
                     stm.setInt(1, Integer.parseInt(addBlankPanel.typeBox.getSelectedItem().toString()));
-                    stm.setString(2, addBlankPanel.flightTypeBox.getSelectedItem().toString());
-
 
                     //3. execute sql query
                     stm.executeUpdate();
@@ -463,6 +563,9 @@ public class SystemAdminForm extends JFrame {
             ratesUpdatePanel.setVisible(false);
             updateRatePanel.setVisible(false);
 
+            userModel.setRowCount(0);
+            viewUser();
+
         });
         viewStockButton.addActionListener(new ActionListener() {
             @Override
@@ -476,35 +579,8 @@ public class SystemAdminForm extends JFrame {
                 ratesUpdatePanel.setVisible(false);
                 updateRatePanel.setVisible(false);
 
-                List<Blank> stocklist = new ArrayList<>();
-                try {
-                    con = db.getConnection();
-                    Statement stm = con.createStatement();
-                    ResultSet rs = stm.executeQuery("SELECT * FROM blank");
-
-                    while(rs.next()){
-                        stocklist.add(new Blank(rs.getInt(1),
-                                rs.getInt(2),
-                                rs.getInt(3),
-                                rs.getString(4)));
-
-                    }
-                    Blank b;
-                    DefaultTableModel model =new DefaultTableModel();
-                    model.addColumn("blank id");
-                    model.addColumn("staff id");
-                    model.addColumn("blank type");
-                    model.addColumn("flight type");
-                    stock.setModel(model);
-
-                    for (int i = 0; i < stocklist.size(); i++) {
-                        b = stocklist.get(i);
-                        model.addRow(b.rowArray());
-
-                    }
-                }catch(SQLException ex){
-                    ex.printStackTrace();
-                }
+                stockModel.setRowCount(0);
+                viewStock();
             }
         });
 
@@ -530,6 +606,23 @@ public class SystemAdminForm extends JFrame {
             updateStockPanel.setVisible(false);
             updateTravelAdvisorPanel.setVisible(false);
             updateRatePanel.setVisible(false);
+
+            rateModel.setRowCount(0);
+            viewRate();
+        });
+        viewCommission.addActionListener(e -> {
+            commissionUpdatePanel.setVisible(true);
+            ratesPanel.setVisible(false);
+            ratesUpdatePanel.setVisible(false);
+            databasePanel.setVisible(false);
+            stockPanel.setVisible(false);
+            userPanel.setVisible(false);
+            updateStockPanel.setVisible(false);
+            updateTravelAdvisorPanel.setVisible(false);
+            updateRatePanel.setVisible(false);
+
+            commissionModel.setRowCount(0);
+            viewCommission();
         });
         viewAddRateButton.addActionListener(e -> {
             addRatePanel.setVisible(true);
@@ -728,6 +821,85 @@ public class SystemAdminForm extends JFrame {
                 ex.printStackTrace();
             }
         });
+        addCommissionButton.addActionListener(e -> {
+            try{
+                // 1. get a connection
+                con = db.getConnection();
+
+                //2. create a statement
+                String sql = "INSERT INTO commission "
+                        + " (commission_rate)"
+                        + "VALUES (?)";
+                stm = con.prepareStatement(sql);
+
+                stm.setFloat(1, Float.parseFloat(commissionRateTextfield1.getText()));
+
+                //3. execute sql statement
+                stm.executeUpdate();
+
+            }catch (SQLException ex){
+                ex.printStackTrace();
+            }
+        });
+        updateCommissionButton.addActionListener(e -> {
+            try {
+                con = db.getConnection();
+                if (isActiveBox.getSelectedItem().toString().equals("no")) {
+
+                    int[] rows = commission.getSelectedRows();
+                    String sql = "UPDATE commission "
+                            + " SET commission_rate=?,active=0"
+                            + " WHERE commission_id=?";
+                    PreparedStatement stm = con.prepareStatement(sql);
+
+                    stm.setFloat(1, Float.parseFloat(commissionRateTextfield2.getText()));
+
+                    for (int i = 0; i <rows.length ; i++) {
+                        System.out.println(commission.getValueAt(rows[i],0).toString());
+                        stm.setInt(2, Integer.parseInt(commission.getValueAt(rows[i],0).toString()));
+                        stm.executeUpdate();
+                    }
+
+
+                }else {
+                    int cell = Integer.parseInt(commission.getValueAt(commission.getSelectedRow(),0).toString());
+                    String sql = "UPDATE commission "
+                            + " SET active=0";
+
+                    PreparedStatement stm = con.prepareStatement(sql);
+                    stm.executeUpdate();
+
+                    String sql2 =  "UPDATE commission"
+                            + " SET active=1 "
+                            + " WHERE commission_id=? ";
+                    stm = con.prepareStatement(sql2);
+                    stm.setInt(1,cell);
+                    stm.executeUpdate();
+
+
+                }
+            }catch (SQLException ex){
+                ex.printStackTrace();
+            }
+        });
+        removeCommissionButton.addActionListener(e -> {
+            try{
+                con = db.getConnection();
+                int[] rows = commission.getSelectedRows();
+
+                String sql = "DELETE FROM commission "
+                        + " WHERE commission_id=? ";
+
+                PreparedStatement stm = con.prepareStatement(sql);
+                for (int i = 0; i <rows.length ; i++) {
+                    stm.setInt(1, Integer.parseInt(commission.getValueAt(rows[i],0).toString()));
+                    stm.executeUpdate();
+                }
+
+            }catch (SQLException ex){
+                ex.printStackTrace();
+            }
+        });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
@@ -749,6 +921,108 @@ public class SystemAdminForm extends JFrame {
             return con;
         }
 
+    }
+    public void viewUser(){
+        List<User> userList = new ArrayList<>();
+        try{
+            con = db.getConnection();
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT * FROM staff");
+
+            while(rs.next()){
+                userList.add(new User(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getString(8)));
+            }
+            User u;
+
+            for (int i = 0; i < userList.size() ; i++) {
+                u = userList.get(i);
+                userModel.addRow(u.rowArray());
+            }
+
+        }catch (SQLException ex){
+           ex.printStackTrace();
+        }
+    }
+    public void viewStock(){
+        List<Blank> stockList = new ArrayList<>();
+        try {
+            con = db.getConnection();
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT * FROM blank");
+
+            while(rs.next()){
+                stockList.add(new Blank(rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getBoolean(4),
+                        rs.getDate(5)));
+
+            }
+            Blank b;
+
+            for (int i = 0; i < stockList.size(); i++) {
+                b = stockList.get(i);
+                stockModel.addRow(b.rowArray());
+
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+    public void viewRate(){
+        List<Rate> rateList = new ArrayList<>();
+        try {
+            con = db.getConnection();
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT * FROM exchangerate");
+
+            while(rs.next()){
+                rateList.add(new Rate(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getFloat(3)));
+
+            }
+            Rate r;
+
+            for (int i = 0; i < rateList.size(); i++) {
+                r = rateList.get(i);
+                rateModel.addRow(r.rowArray());
+
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+    public void viewCommission(){
+        List<Commission> commissionList = new ArrayList<>();
+        try {
+            con = db.getConnection();
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT * FROM commission");
+
+            while(rs.next()){
+                commissionList.add(new Commission(rs.getInt(1),
+                        rs.getFloat(2),
+                        rs.getBoolean(3)));
+
+            }
+            Commission c;
+
+            for (int i = 0; i < commissionList.size(); i++) {
+                c = commissionList.get(i);
+                commissionModel.addRow(c.rowArray());
+
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
 

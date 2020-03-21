@@ -7,7 +7,6 @@ import java.awt.*;
 
 public class AddBlankPanel extends JPanel {
     public JComboBox typeBox;
-    public JComboBox flightTypeBox;
     public PlaceholderTextField amountTextfield;
     public JButton addBlankButton;
     public JButton backButton;
@@ -21,10 +20,6 @@ public class AddBlankPanel extends JPanel {
         typeBox.addItem("420");
         typeBox.addItem("201");
         typeBox.addItem("101");
-        JLabel flightTypeLabel = new JLabel("flight type");
-        flightTypeBox = new JComboBox();
-        flightTypeBox.addItem("interline");
-        flightTypeBox.addItem("domestic");
         amountTextfield = new PlaceholderTextField();
         amountTextfield.setPlaceholder("amount");
         addBlankButton = new JButton("add blank");
@@ -33,10 +28,6 @@ public class AddBlankPanel extends JPanel {
         add(typeLabel);
         add(Box.createRigidArea(new Dimension(0,15)));
         add(typeBox);
-        add(Box.createRigidArea(new Dimension(0,15)));
-        add(flightTypeLabel);
-        add(Box.createRigidArea(new Dimension(0,15)));
-        add(flightTypeBox);
         add(Box.createRigidArea(new Dimension(0,15)));
         add(amountTextfield);
         add(Box.createRigidArea(new Dimension(0,15)));

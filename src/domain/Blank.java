@@ -1,15 +1,19 @@
 package domain;
 
+import java.util.Date;
+
 public class Blank {
     private int blank_id;
     private int Staffstaff_id;
     private int blankType;
-    private String flightType;
-    public Blank(int blank_id, int Staffstaff_id, int blankType, String flightType){
+    private boolean used;
+    private Date created_on;
+    public Blank(int blank_id, int Staffstaff_id, int blankType, Boolean used,Date created_on){
         this.blank_id = blank_id;
         this.Staffstaff_id = Staffstaff_id;
         this.blankType = blankType;
-        this.flightType = flightType;
+        this.used = used;
+        this.created_on = created_on;
     }
     public int getBlank_id(){
         return blank_id;
@@ -23,16 +27,19 @@ public class Blank {
         return blankType;
     }
 
-    public String getFlightType() {
-        return flightType;
+    public Boolean getUsed(){
+        return used;
     }
+    public Date getCreated_on(){
+        return created_on;
+    }
+
     public String row(){
         return "blank id: " +getBlank_id()
                 + " staff id: " + getStaffstaff_id()
-                + " type: " + getBlankType()
-                + " flight type: " + getFlightType();
+                + " type: " + getBlankType();
     }
     public Object[] rowArray(){
-        return new Object[] {getBlank_id(),getStaffstaff_id(),getBlankType(),getFlightType()};
+        return new Object[] {getBlank_id(),getStaffstaff_id(),getBlankType(),getUsed(),getCreated_on()};
     }
 }
