@@ -34,8 +34,8 @@ public class SystemAdminForm extends JFrame {
     private PreparedStatement stm = null;
     private ResultSet rs = null;
     private String url = "jdbc:mysql://localhost:3306/airticketsales";
-    private String name = "akmal";
-    private String password = "]WCgDKEN69Wf>zE.";
+    private String name = "root";
+    private String password = "ba!E%xxd-9F7_NdQ";
     private DatabaseHelper db = new DatabaseHelper();
     private DefaultTableModel userModel;
     private DefaultTableModel stockModel;
@@ -101,7 +101,6 @@ public class SystemAdminForm extends JFrame {
         stockModel.addColumn("received");
         stock.setModel(stockModel);
         JScrollPane jScrollPane12 = new JScrollPane(stock);
-        viewStock();
         stockPanel.add(jScrollPane12,BorderLayout.CENTER);
         stockPanel.setBounds(0,0,400,600);
 
@@ -160,7 +159,7 @@ public class SystemAdminForm extends JFrame {
         JButton restoreDatabaseButton = new JButton("restoreDatabase");
         JButton addUserButton = new JButton("Add user");
         JButton updateUserButton = new JButton("Update user");
-        JButton removeUserButton = new JButton("Remove User");
+        JButton removeUserButton = new JButton("Remove entities.User");
         JButton viewUserButton = new JButton("View users");
         JButton viewStockButton = new JButton("View stock");
         JButton viewCommission = new JButton("view Commission");
@@ -690,7 +689,7 @@ public class SystemAdminForm extends JFrame {
 
                 stm.setString(1, nameTextfield.getText());
                 stm.setString(2, addressTextfield.getText());
-                stm.setInt(3,Integer.parseInt(telephoneTextfield.getText()));
+                stm.setInt(3, Integer.parseInt(telephoneTextfield.getText()));
                 stm.setString(4, emailTextfield.getText());
                 stm.setString(5, usernameTextfield.getText());
                 stm.setString(6, passwordTextfield.getText());

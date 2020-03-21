@@ -1,57 +1,68 @@
-CREATE TABLE `staff` (
-  `staff_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  `address` varchar(45) DEFAULT NULL,
-  `telephone` varchar(45) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `username` varchar(45) DEFAULT NULL,
-  `password` varchar(45) DEFAULT NULL,
-  `accessLevel` int DEFAULT NULL,
-  `agency` varchar(45) DEFAULT NULL,
-  `staffType` varchar(45) NOT NULL,
-  PRIMARY KEY (`staff_id`,`staffType`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `customeraccount` (
-  `customerAccount_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  `dateOfBirth` datetime DEFAULT NULL,
-  `address` varchar(45) DEFAULT NULL,
-  `postalCode` varchar(45) DEFAULT NULL,
-  `telephone` bigint DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `customerType` varchar(45) DEFAULT NULL,
-  `discount` int DEFAULT NULL,
-  PRIMARY KEY (`customerAccount_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-CREATE TABLE `exchangerate` (
-  `exchangeRate_id` int NOT NULL AUTO_INCREMENT,
-  `currency` varchar(45) NOT NULL,
-  `exchangeRate` float DEFAULT NULL,
-  PRIMARY KEY (`exchangeRate_id`,`currency`),
-  UNIQUE KEY `currency_UNIQUE` (`currency`)
+CREATE TABLE `blank_status` (
+  `StatusID` int NOT NULL AUTO_INCREMENT,
+  `Status` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`StatusID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `blank_type` (
+  `TypeID` int NOT NULL AUTO_INCREMENT,
+  `Type` int DEFAULT NULL,
+  PRIMARY KEY (`TypeID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `card_details` (
+  `Number` int NOT NULL,
+  `Code` int DEFAULT NULL,
+  `ExpDate` int DEFAULT NULL,
+  `Address` varchar(128) DEFAULT NULL,
+  `Name` varchar(45) DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  PRIMARY KEY (`Number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `commission` (
+  `CommissionID` int NOT NULL AUTO_INCREMENT,
+  `CommissionRate` float DEFAULT NULL,
+  PRIMARY KEY (`CommissionID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `customer` (
+  `CustomerID` int NOT NULL AUTO_INCREMENT,
+  `Forename` varchar(45) DEFAULT NULL,
+  `Surname` varchar(45) DEFAULT NULL,
+  `DateOfBirth` date DEFAULT NULL,
+  `Telephone` int DEFAULT NULL,
+  `Email` varchar(45) DEFAULT NULL,
+  `Type` varchar(45) DEFAULT NULL,
+  `Discount` int DEFAULT NULL,
+  PRIMARY KEY (`CustomerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `exchange_rate` (
+  `RateID` int NOT NULL,
+  `CurrencyCode` varchar(45) NOT NULL,
+  `Rate` float DEFAULT NULL,
+  PRIMARY KEY (`RateID`,`CurrencyCode`),
+  UNIQUE KEY `currency_UNIQUE` (`CurrencyCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `payment` (
-  `payment_id` int NOT NULL AUTO_INCREMENT,
-  `paymentType` varchar(45) DEFAULT NULL,
-  `amount` float DEFAULT NULL,
-  `totalAmountPaid` float DEFAULT NULL,
-  `CustomerAccountcustomerAccount_id` int DEFAULT NULL,
-  `ExchangeRateexchangeRate_id` int DEFAULT NULL,
-  `ExchangeRatecurrency` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`payment_id`),
-  KEY `CustomerAccountcustomerAccount_id_idx` (`CustomerAccountcustomerAccount_id`),
-  KEY `ExchangeRateexchangeRate_id_idx` (`ExchangeRateexchangeRate_id`),
-  KEY `ExchangeRatecurrency_idx` (`ExchangeRatecurrency`),
-  KEY `ExchangeRateexchangeRate_id` (`ExchangeRateexchangeRate_id`,`ExchangeRatecurrency`),
-  CONSTRAINT `CustomerAccountcustomerAccount_id` FOREIGN KEY (`CustomerAccountcustomerAccount_id`) REFERENCES `customeraccount` (`customerAccount_id`),
-  CONSTRAINT `ExchangeRateexchangeRate_id` FOREIGN KEY (`ExchangeRateexchangeRate_id`, `ExchangeRatecurrency`) REFERENCES `exchangerate` (`exchangeRate_id`, `currency`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+  `PaymentID` int NOT NULL AUTO_INCREMENT,
+  `Type` varchar(45) DEFAULT NULL,
+  `Amount` float DEFAULT NULL,
+  `TotalPaid` float DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  `RateID` int DEFAULT NULL,
+  `RateCurrency` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`PaymentID`),
+  KEY `CustomerAccountcustomerAccount_id_idx` (`CustomerID`),
+  KEY `ExchangeRateexchangeRate_id_idx` (`RateID`),
+  KEY `ExchangeRatecurrency_idx` (`RateCurrency`),
+  KEY `FKPayment351416` (`RateID`,`RateCurrency`),
+  CONSTRAINT `CustomerAccountcustomerAccount_id` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`CustomerID`),
+  CONSTRAINT `FKPayment351416` FOREIGN KEY (`RateID`, `RateCurrency`) REFERENCES `exchange_rate` (`RateID`, `CurrencyCode`),
+  CONSTRAINT `FKPayment660359` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`CustomerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `sale` (
   `sale_id` int NOT NULL,
@@ -67,6 +78,42 @@ CREATE TABLE `sale` (
   PRIMARY KEY (`sale_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `sold_tickets` (
+  `TicketID` int NOT NULL AUTO_INCREMENT,
+  `Date` date NOT NULL,
+  `Price` int NOT NULL,
+  `Destination` varchar(15) DEFAULT NULL,
+  `BlankID` int DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  PRIMARY KEY (`TicketID`),
+  KEY `sold_tickets_stock_blank_id_fk` (`BlankID`),
+  CONSTRAINT `sold_tickets_stock_blank_id_fk` FOREIGN KEY (`BlankID`) REFERENCES `stock` (`BlankID`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `staff` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Forename` varchar(45) DEFAULT NULL,
+  `Surname` varchar(45) DEFAULT NULL,
+  `Address` varchar(45) DEFAULT NULL,
+  `Telephone` varchar(45) DEFAULT NULL,
+  `Email` varchar(45) DEFAULT NULL,
+  `Username` varchar(45) DEFAULT NULL,
+  `Password` varchar(45) DEFAULT NULL,
+  `Type` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `stock` (
+  `BlankID` int NOT NULL,
+  `StaffID` int DEFAULT NULL,
+  `Type` int DEFAULT NULL,
+  `Status` varchar(10) DEFAULT NULL,
+  `DateAdded` date DEFAULT NULL,
+  PRIMARY KEY (`BlankID`),
+  KEY `Staffstaff_id_idx` (`StaffID`),
+  CONSTRAINT `Staffstaff_id` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+=======
 CREATE TABLE `blank` (
   `blank_id` int NOT NULL AUTO_INCREMENT,
   `Staffstaff_id` int DEFAULT NULL,
@@ -76,5 +123,4 @@ CREATE TABLE `blank` (
   KEY `Staffstaff_id_idx` (`Staffstaff_id`),
   CONSTRAINT `Staffstaff_id` FOREIGN KEY (`Staffstaff_id`) REFERENCES `staff` (`staff_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 

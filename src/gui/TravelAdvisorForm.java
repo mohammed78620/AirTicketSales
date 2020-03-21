@@ -460,7 +460,7 @@ public class TravelAdvisorForm extends JFrame {
                         con = db.getConnection();
                         //2. create a statement
                         String sql = "INSERT INTO payment"
-                                + " (paymentType, amount)"
+                                + " (Type, amount)"
                                 +"VALUES ( ?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
@@ -480,7 +480,7 @@ public class TravelAdvisorForm extends JFrame {
 
                         //2. create a statement
                         String sql = "INSERT INTO payment "
-                                + " (paymentType, amount, CustomerAccountcustomerAccount_id)"
+                                + " (Type, amount, CustomerID)"
                                 + "VALUES ( ?,?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
@@ -498,6 +498,62 @@ public class TravelAdvisorForm extends JFrame {
                 }
             }
         });
+        cancelTicketButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection myConn = getConnection(url, name, password);
+
+                    // 2. create a statement
+                    String sql = "DELETE FROM payment WHERE PaymentID=?";
+                    PreparedStatement stm = myConn.prepareStatement(sql);
+                    stm.setInt(1,Integer.parseInt(ticketIdTextfield.getText()));
+
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
+            }
+        });
+
+        viewIndividualReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection myConn = DriverManager.getConnection(url, name, password);
+
+                    // 2. create a statement
+                    //report needs to be added to database with more data fields
+                    String sql = "SELECT (report_id, dateGenerated, endDate) "
+                            + "FROM report"
+                            + " WHERE staff_id=?";
+
+                    PreparedStatement stm = myConn.prepareStatement(sql);
+                    stm.setInt(1,Integer.parseInt(IDTextField.getText()));
+
+                    // 3. execute sql statement
+                    stm.executeUpdate();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        viewCustomers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // 1. get a connection
+                    Connection myConn = DriverManager.getConnection(url, name, password);
+
+                    // 2. create a statement
+                    String sql = "SELECT * FROM customeraccount"
+                            + " WHERE customeraccount_id=?";
+
 
 
 //        viewIndividualReport.addActionListener(new ActionListener() {
