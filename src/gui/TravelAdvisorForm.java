@@ -11,11 +11,12 @@ import java.util.List;
 
 import container.CancelTicketPanel;
 import container.ManageCustomerPanel;
-import container.DiscountPanel;
+import container.ManageDiscountsPanel;
 import container.UpdateCustomerPanel;
 import component.PlaceholderTextField;
 import database.DatabaseHelper;
 import domain.Customer;
+import domain.Discount;
 
 
 
@@ -48,6 +49,7 @@ public class TravelAdvisorForm extends JFrame {
         JLayeredPane leftLayeredPane = new JLayeredPane();
         leftLayeredPane.setPreferredSize(new Dimension(150,150));
         JPanel customerPanel = new JPanel(new GridLayout(8,8,5,40));
+        JPanel discountPanel = new JPanel(new GridLayout(8,4,5,40));
         JPanel reportPanel = new JPanel(new BorderLayout());
         JPanel transactionPanel = new JPanel();
         transactionPanel.setLayout(new BoxLayout(transactionPanel,BoxLayout.Y_AXIS));
@@ -73,6 +75,11 @@ public class TravelAdvisorForm extends JFrame {
         customerPanel.add(jScrollPane1,BorderLayout.CENTER);
         customerPanel.setBounds(0,0,600,600);
 
+        discountPanel.setLayout(new BorderLayout());
+        JTable discount = new JTable();
+        JScrollPane jScrollPane2 = new JScrollPane(discount);
+        discountPanel.add(jScrollPane2,BorderLayout.CENTER);
+        discountPanel.setBounds(0,0,600,600);
 
         String[] s2 = {"report: 1","report: 2","report: 3","report: 4","report: 5"};
         JList reports = new JList(s2);
@@ -125,22 +132,23 @@ public class TravelAdvisorForm extends JFrame {
         layeredPane.add(reportPanel);
         layeredPane.add(stockPanel);
         layeredPane.add(cancelTicketPanel);
+        layeredPane.add(discountPanel);
 
         //sets up main left BorderLayout
         ManageCustomerPanel manageCustomerPanel = new ManageCustomerPanel();
         manageCustomerPanel.setLayout(new BoxLayout(manageCustomerPanel,BoxLayout.Y_AXIS));
         manageCustomerPanel.setVisible(false);
 
-        DiscountPanel discountPanel = new DiscountPanel();
-        discountPanel.setLayout(new BoxLayout(discountPanel,BoxLayout.Y_AXIS));
-        discountPanel.setVisible(false);
+        ManageDiscountsPanel manageDiscountsPanel = new ManageDiscountsPanel();
+        manageDiscountsPanel.setLayout(new BoxLayout(manageDiscountsPanel,BoxLayout.Y_AXIS));
+        manageDiscountsPanel.setVisible(false);
 
         UpdateCustomerPanel updateCustomerPanel = new UpdateCustomerPanel();
         updateCustomerPanel.setLayout(new BoxLayout(updateCustomerPanel,BoxLayout.Y_AXIS));
         updateCustomerPanel.setVisible(false);
 
         leftLayeredPane.add(manageCustomerPanel);
-        leftLayeredPane.add(discountPanel);
+        leftLayeredPane.add(manageDiscountsPanel);
         leftLayeredPane.add(updateCustomerPanel);
         leftPanel.add(leftLayeredPane,BorderLayout.CENTER);
 
@@ -162,8 +170,6 @@ public class TravelAdvisorForm extends JFrame {
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(sellTicketButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(viewCancelTicketButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(createAccountButton);
@@ -174,11 +180,6 @@ public class TravelAdvisorForm extends JFrame {
         rightPanel.add(Box.createRigidArea(new Dimension(0,260)));
 
         //sets up buttonListeners
-        manageCustomerPanel.manageDiscountButton.addActionListener(e -> {
-            manageCustomerPanel.setVisible(false);
-            discountPanel.setVisible(true);
-        });
-
         manageCustomerPanel.viewUpdateButton.addActionListener(e -> {
             manageCustomerPanel.setVisible(false);
             updateCustomerPanel.setVisible(true);
@@ -186,14 +187,58 @@ public class TravelAdvisorForm extends JFrame {
         manageCustomerPanel.backButton.addActionListener(e -> {
             manageCustomerPanel.setVisible(false);
         });
-        discountPanel.backButton.addActionListener(e -> {
+        manageDiscountsPanel.backButton.addActionListener(e -> {
             manageCustomerPanel.setVisible(true);
-            discountPanel.setVisible(false);
+            manageDiscountsPanel.setVisible(false);
         });
         updateCustomerPanel.backButton.addActionListener(e -> {
             manageCustomerPanel.setVisible(true);
             updateCustomerPanel.setVisible(false);
         });
+        manageCustomerPanel.manageDiscountButton.addActionListener(e -> {
+        manageCustomerPanel.setVisible(false);
+        manageDiscountsPanel.setVisible(true);
+        discountPanel.setVisible(true);
+        customerPanel.setVisible(false);
+        transactionPanel.setVisible(false);
+        updateCustomerPanel.setVisible(false);
+        reportPanel.setVisible(false);
+        stockPanel.setVisible(false);
+        cancelTicketPanel.setVisible(false);
+
+
+                List<Discount> discounts = new ArrayList<>();
+                try {
+                    con = db.getConnection();
+                    Statement stm = con.createStatement();
+                    ResultSet rs = stm.executeQuery("SELECT customerAccount_id, name, customerType, discount" +
+                            " FROM customeraccount WHERE customerType= 'valued'");
+
+
+                    while(rs.next()) {
+                        discounts.add(new Discount(rs.getInt(1),
+                                rs.getString(2),
+                                rs.getString(3),
+                                rs.getString(4)));
+                    }
+                    Discount b;
+                    DefaultTableModel model =new DefaultTableModel();
+                    model.addColumn("customer ID: ");
+                    model.addColumn("name: ");
+                    model.addColumn("customer type: ");
+                    model.addColumn("discount: ");
+                    discount.setModel(model);
+
+                    for (int i = 0; i < discounts.size(); i++) {
+                        b = discounts.get(i);
+                        model.addRow(b.rowArray());
+
+                    }
+                }catch(SQLException ex) {
+                    ex.printStackTrace();
+                }
+        });
+
 
         updateCustomerPanel.updateButton.addActionListener(e -> {
 
@@ -203,7 +248,7 @@ public class TravelAdvisorForm extends JFrame {
 
                     //2. create a statement
                     String sql = "UPDATE customeraccount "
-                            + "SET name=?,dateOfBirth=?,address=?,postalCode=?,telephone=?,email=?"
+                            + "SET name=?,dateOfBirth=?,address=?,postalCode=?,telephone=?,email=?, customerType=?"
                             + "WHERE customerAccount_id=?";
 
                     PreparedStatement stm = con.prepareStatement(sql);
@@ -214,7 +259,8 @@ public class TravelAdvisorForm extends JFrame {
                     stm.setString(4, updateCustomerPanel.postalCodeTextField.getText());
                     stm.setInt(5, Integer.parseInt(updateCustomerPanel.telephoneTextField.getText()));
                     stm.setString(6, updateCustomerPanel.emailTextField.getText());
-                    stm.setInt(7,Integer.parseInt(updateCustomerPanel.IDField.getText()));
+                    stm.setString(7, updateCustomerPanel.typeBox.getSelectedItem().toString());
+                    stm.setInt(8,Integer.parseInt(updateCustomerPanel.IDField.getText()));
 
                     //3. execute sql query
                     stm.executeUpdate();
@@ -235,6 +281,8 @@ public class TravelAdvisorForm extends JFrame {
                 reportPanel.setVisible(false);
                 stockPanel.setVisible(false);
                 cancelTicketPanel.setVisible(false);
+                discountPanel.setVisible(false);
+                manageDiscountsPanel.setVisible(false);
 
                  List<Customer> customers = new ArrayList<>();
                 try {
@@ -250,8 +298,8 @@ public class TravelAdvisorForm extends JFrame {
                                 rs.getString(5),
                                 rs.getInt(6),
                                 rs.getString(7),
-                                rs.getInt(8),
-                                rs.getInt(9)));
+                                rs.getString(8),
+                                rs.getString(9)));
                     }
                     Customer b;
                     DefaultTableModel model =new DefaultTableModel();
@@ -296,7 +344,7 @@ public class TravelAdvisorForm extends JFrame {
                 stockPanel.setVisible(false);
                 manageCustomerPanel.setVisible(false);
                 updateCustomerPanel.setVisible(false);
-                discountPanel.setVisible(false);
+                manageDiscountsPanel.setVisible(false);
                 cancelTicketPanel.setVisible(false);
             }
         });
@@ -311,30 +359,6 @@ public class TravelAdvisorForm extends JFrame {
                 cancelTicketPanel.setVisible(false);
             }
         });
-        cancelTicketPanel.cancelButton.addActionListener(e -> {
-
-            try {
-
-                // 1. get a connection
-                con = db.getConnection();
-
-                // 2. create a statement
-                String sql = "DELETE FROM payment WHERE payment_id=?"
-                        + "INSERT INTO refund"
-                        + " (description, amount, refundType)"
-                        + "VALUES ( ?, ?, ?)";
-                PreparedStatement stm = con.prepareStatement(sql);
-                stm.setInt(1,Integer.parseInt(cancelTicketPanel.ticketIdTextfield.getText()));
-                stm.setString(2,cancelTicketPanel.descriptionTextfield.getText());
-                stm.setInt(3,Integer.parseInt(cancelTicketPanel.amountTextfield.getText()));
-                stm.setString(4, cancelTicketPanel.typeBox.getSelectedItem().toString());
-
-                // 3. execute sql statement
-                stm.executeUpdate();
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
-    });
         viewCancelTicketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -345,7 +369,46 @@ public class TravelAdvisorForm extends JFrame {
                 reportPanel.setVisible(false);
                 manageCustomerPanel.setVisible(false);
             }
-            });
+        });
+        cancelTicketPanel.cancelButton.addActionListener(e -> {
+            try {
+
+                // 1. get a connection
+                con = db.getConnection();
+
+                // 2. create a statement
+                String sql = "DELETE FROM payment WHERE payment_id=?";
+                PreparedStatement stm = con.prepareStatement(sql);
+                stm.setInt(1,Integer.parseInt(cancelTicketPanel.ticketIdTextfield.getText()));
+
+                // 3. execute sql statement
+                stm.executeUpdate();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+    });
+        cancelTicketPanel.refundButton.addActionListener(e -> {
+            try {
+
+                // 1. get a connection
+                con = db.getConnection();
+
+                // 2. create a statement
+                String sql = "INSERT INTO refund"
+                        + " (description, amount, refundType)"
+                        + "VALUES ( ?, ?, ?)";
+                PreparedStatement stm = con.prepareStatement(sql);
+                stm.setString(1,cancelTicketPanel.descriptionTextfield.getText());
+                stm.setInt(2,Integer.parseInt(cancelTicketPanel.amountTextfield.getText()));
+                stm.setString(3, cancelTicketPanel.typeBox.getSelectedItem().toString());
+
+                // 3. execute sql statement
+                stm.executeUpdate();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        });
+
 
         logoutButton.addActionListener(new ActionListener() {
             @Override

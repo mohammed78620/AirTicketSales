@@ -76,3 +76,16 @@ CREATE TABLE `blank` (
   KEY `Staffstaff_id_idx` (`Staffstaff_id`),
   CONSTRAINT `Staffstaff_id` FOREIGN KEY (`Staffstaff_id`) REFERENCES `staff` (`staff_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `commission` (
+  `commssion_id` int NOT NULL AUTO_INCREMENT,
+  `commison_rate` float DEFAULT NULL,
+  PRIMARY KEY (`commssion_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `databasename`.`refund` (
+  `refund_id` INT NOT NULL AUTO_INCREMENT,
+  `amount` INT NULL,
+  `description` VARCHAR(45) NULL,
+  `refundType` VARCHAR(45) NULL,
+  PRIMARY KEY (`refund_id`));

@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class UpdateCustomerPanel extends JPanel {
     public JButton backButton = new JButton("back");
-    public JButton updateButton = new JButton("update details");
+    public JButton updateButton = new JButton("update");
     public JLabel IDLabel = new JLabel("customer ID: ");
     public JLabel nameLabel = new JLabel("name: ");
     public JLabel dateOfBirthLabel = new JLabel("date of birth: ");
@@ -14,6 +14,8 @@ public class UpdateCustomerPanel extends JPanel {
     public JLabel postalCodeLabel = new JLabel("postcode: ");
     public JLabel telephoneLabel = new JLabel("telephone: ");
     public JLabel emailLabel = new JLabel("email: ");
+    public JLabel customerTypeLabel = new JLabel("customer type: ");
+    public JComboBox typeBox = new JComboBox();
 
     public PlaceholderTextField IDField = new PlaceholderTextField();
     public PlaceholderTextField nameTextField = new PlaceholderTextField();
@@ -22,7 +24,6 @@ public class UpdateCustomerPanel extends JPanel {
     public PlaceholderTextField postalCodeTextField = new PlaceholderTextField();
     public PlaceholderTextField telephoneTextField = new PlaceholderTextField();
     public PlaceholderTextField emailTextField = new PlaceholderTextField();
-
     public UpdateCustomerPanel(){
         setVisible(false);
         setBounds(0,0,150,400);
@@ -40,8 +41,12 @@ public class UpdateCustomerPanel extends JPanel {
         add(telephoneTextField);
         add(emailLabel);
         add(emailTextField);
-        add(backButton);
+        add(customerTypeLabel);
+        typeBox.addItem("regular");
+        typeBox.addItem("valued");
+        add(typeBox);
         add(updateButton);
+        add(backButton);
 
 
 

@@ -10,12 +10,12 @@ public class Customer {
     private String postalCode;
     private int telephone;
     private String email;
-    private int customerType;
-    private int discount;
+    private String customerType;
+    private String discount;
 
     public Customer(int customerAccount_id, String name, Date dateOfBirth,
                     String address, String postalCode, int telephone, String email,
-                    int customerType, int discount) {
+                    String customerType, String discount) {
         this.customerAccount_id = customerAccount_id;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
@@ -55,11 +55,11 @@ public class Customer {
         return email;
     }
 
-    public int getCustomerType() {
+    public String getCustomerType() {
         return customerType;
     }
 
-    public int getDiscount() {
+    public String getDiscount() {
         return discount;
     }
 
