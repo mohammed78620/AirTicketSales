@@ -32,6 +32,8 @@ public class LoginForm extends JFrame {
         panel.setSize(w, h);
         this.add(panel);
 
+        this.setLocationRelativeTo(null);
+
         panel.add(userIcon);
         panel.add(usernameText);
         panel.add(passwordText);

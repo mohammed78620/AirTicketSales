@@ -10,11 +10,13 @@ public class DatabaseHelper {
     public DatabaseHelper(){
 
     }
-    public void getConnection() {
-        try {
-            con = DriverManager.getConnection(url, name, password);
-        } catch (SQLException ex) {
+    public Connection getConnection(){
+        try{
+            con = DriverManager.getConnection(url,name,password);
+        }catch (SQLException ex){
             ex.printStackTrace();
+        } finally {
+            return con;
         }
     }
 }

@@ -323,7 +323,7 @@ public class TravelAdvisorForm extends JFrame {
                         Connection con = getConnection(url, name, password);
                         //2. create a statement
                         String sql = "INSERT INTO payment"
-                                + " (paymentType, amount)"
+                                + " (Type, amount)"
                                 +"VALUES ( ?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
@@ -343,7 +343,7 @@ public class TravelAdvisorForm extends JFrame {
 
                         //2. create a statement
                         String sql = "INSERT INTO payment "
-                                + " (paymentType, amount, CustomerAccountcustomerAccount_id)"
+                                + " (Type, amount, CustomerID)"
                                 + "VALUES ( ?,?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
@@ -369,7 +369,7 @@ public class TravelAdvisorForm extends JFrame {
                     Connection myConn = getConnection(url, name, password);
 
                     // 2. create a statement
-                    String sql = "DELETE FROM payment WHERE payment_id=?";
+                    String sql = "DELETE FROM payment WHERE PaymentID=?";
                     PreparedStatement stm = myConn.prepareStatement(sql);
                     stm.setInt(1,Integer.parseInt(ticketIdTextfield.getText()));
 
