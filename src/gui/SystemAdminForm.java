@@ -77,7 +77,8 @@ public class SystemAdminForm extends JFrame {
         JTable users = new JTable();
         userModel = new DefaultTableModel();
         userModel.addColumn("staff_id");
-        userModel.addColumn("name");
+        userModel.addColumn("forename");
+        userModel.addColumn("surname");
         userModel.addColumn("address");
         userModel.addColumn("telephone");
         userModel.addColumn("email");
@@ -159,7 +160,7 @@ public class SystemAdminForm extends JFrame {
         JButton restoreDatabaseButton = new JButton("restoreDatabase");
         JButton addUserButton = new JButton("Add user");
         JButton updateUserButton = new JButton("Update user");
-        JButton removeUserButton = new JButton("Remove entities.User");
+        JButton removeUserButton = new JButton("Remove user");
         JButton viewUserButton = new JButton("View users");
         JButton viewStockButton = new JButton("View stock");
         JButton viewCommission = new JButton("view Commission");
@@ -226,7 +227,8 @@ public class SystemAdminForm extends JFrame {
         JLabel idLabel = new JLabel("iD");
         JLabel usernameLabel = new JLabel("Username");
         JLabel passwordLabel = new JLabel("Password");
-        JLabel nameLabel = new JLabel("Name");
+        JLabel forenameLabel = new JLabel("Forename");
+        JLabel surnameLabel = new JLabel("Surname");
         JLabel addressLabel = new JLabel("Address");
         JLabel telephoneLabel = new JLabel("Telephone");
         JLabel emailLabel = new JLabel("Email");
@@ -238,8 +240,10 @@ public class SystemAdminForm extends JFrame {
         usernameTextfield.setPlaceholder("username");
         PlaceholderTextField passwordTextfield = new PlaceholderTextField();
         passwordTextfield.setPlaceholder("password");
-        PlaceholderTextField nameTextfield = new PlaceholderTextField();
-        nameTextfield.setPlaceholder("name");
+        PlaceholderTextField forenameTextfield = new PlaceholderTextField();
+        forenameTextfield.setPlaceholder("forename");
+        PlaceholderTextField surnameTextfield = new PlaceholderTextField();
+        surnameTextfield.setPlaceholder("surname");
         PlaceholderTextField addressTextfield = new PlaceholderTextField();
         addressTextfield.setPlaceholder("address");
         PlaceholderTextField telephoneTextfield = new PlaceholderTextField();
@@ -404,9 +408,13 @@ public class SystemAdminForm extends JFrame {
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(passwordTextfield);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
-        updateTravelAdvisorPanel.add(nameLabel);
+        updateTravelAdvisorPanel.add(forenameLabel);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
-        updateTravelAdvisorPanel.add(nameTextfield);
+        updateTravelAdvisorPanel.add(forenameTextfield);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        updateTravelAdvisorPanel.add(surnameLabel);
+        updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        updateTravelAdvisorPanel.add(surnameTextfield);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
         updateTravelAdvisorPanel.add(addressLabel);
         updateTravelAdvisorPanel.add(Box.createRigidArea(new Dimension(0,5)));
@@ -473,9 +481,9 @@ public class SystemAdminForm extends JFrame {
                 con = db.getConnection();
 
                 //2. create a statement
-                String sql = "UPDATE blank "
-                        + " SET Staffstaff_id=?"
-                        + " WHERE blank_id=?";
+                String sql = "UPDATE stock "
+                        + " SET StaffID=?"
+                        + " WHERE BlankID=?";
                 PreparedStatement stm = con.prepareStatement(sql);
 
                 stm.setInt(1, Integer.parseInt(assignBlankPanel.idStaffTextfield.getText()));
@@ -495,8 +503,8 @@ public class SystemAdminForm extends JFrame {
                 con = db.getConnection();
 
                 //2. create a statement
-                String sql = "INSERT INTO blank "
-                        + " (blankType)"
+                String sql = "INSERT INTO stock "
+                        + " (Type)"
                         + "VALUES ( ?)";
                 stm = con.prepareStatement(sql);
 
@@ -526,7 +534,7 @@ public class SystemAdminForm extends JFrame {
                 con = db.getConnection();
 
                 // 2. create a statement
-                String sql = "DELETE FROM blank WHERE blank_id=?";
+                String sql = "DELETE FROM stock WHERE BlankID=?";
                 PreparedStatement stm = con.prepareStatement(sql);
 
                 int[] rows = stock.getSelectedRows();
@@ -679,21 +687,22 @@ public class SystemAdminForm extends JFrame {
         addUserButton.addActionListener(e -> {
             try {
                 // 1. get a connection
-                con = getConnection();
+                con = db.getConnection();
 
                 //2. create a statement
                 String sql = "INSERT INTO staff "
-                        + " (name, address, telephone, email, username, password, staffType)"
-                        + "VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+                        + " (Forename,Surname, address, telephone, email, username, password, Type)"
+                        + "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
                 stm = con.prepareStatement(sql);
 
-                stm.setString(1, nameTextfield.getText());
-                stm.setString(2, addressTextfield.getText());
-                stm.setInt(3, Integer.parseInt(telephoneTextfield.getText()));
-                stm.setString(4, emailTextfield.getText());
-                stm.setString(5, usernameTextfield.getText());
-                stm.setString(6, passwordTextfield.getText());
-                stm.setString(7,staffType.getSelectedItem().toString());
+                stm.setString(1, forenameTextfield.getText());
+                stm.setString(2, surnameTextfield.getText());
+                stm.setString(3, addressTextfield.getText());
+                stm.setString(4, telephoneTextfield.getText());
+                stm.setString(5, emailTextfield.getText());
+                stm.setString(6, usernameTextfield.getText());
+                stm.setString(7, passwordTextfield.getText());
+                stm.setString(8,staffType.getSelectedItem().toString());
 
                 //3. execute sql query
                 stm.executeUpdate();
@@ -708,23 +717,24 @@ public class SystemAdminForm extends JFrame {
         updateUserButton.addActionListener(e -> {
             try {
                 // 1. get a connection
-                con = getConnection();
+                con = db.getConnection();
 
                 //2. create a statement
                 String sql = "UPDATE staff "
-                        + " SET name=?, address=?, telephone=?, email=?, username=?, password=?,staffType=?"
-                        + " WHERE staff_id=?";
+                        + " SET forename=?,surname=? , address=?, telephone=?, email=?, username=?, password=?,Type=?"
+                        + " WHERE ID=?";
 
                 stm = con.prepareStatement(sql);
 
-                stm.setString(1,usernameTextfield.getText());
-                stm.setString(2,addressTextfield.getText());
-                stm.setInt(3,Integer.parseInt(telephoneTextfield.getText()));
-                stm.setString(4,emailTextfield.getText());
-                stm.setString(5,usernameTextfield.getText());
-                stm.setString(6,passwordTextfield.getText());
-                stm.setString(7,staffType.getSelectedItem().toString());
-                stm.setInt(8,Integer.parseInt(idTextfield.getText()));
+                stm.setString(1,forenameTextfield.getText());
+                stm.setString(2,surnameTextfield.getText());
+                stm.setString(3,addressTextfield.getText());
+                stm.setString(4,telephoneTextfield.getText());
+                stm.setString(5,emailTextfield.getText());
+                stm.setString(6,usernameTextfield.getText());
+                stm.setString(7,passwordTextfield.getText());
+                stm.setString(8,staffType.getSelectedItem().toString());
+                stm.setInt(9,Integer.parseInt(idTextfield.getText()));
 
 
 
@@ -739,11 +749,11 @@ public class SystemAdminForm extends JFrame {
         removeUserButton.addActionListener(e -> {
             try {
                 // 1. get a connection
-                con = getConnection();
+                con = db.getConnection();
 
                 //2. create a statement
 
-                String sql = "DELETE FROM staff WHERE staff_id=?";
+                String sql = "DELETE FROM staff WHERE ID=?";
                 stm = con.prepareStatement(sql);
 
                 stm.setInt(1, Integer.parseInt(idTextfield.getText()));
@@ -764,8 +774,8 @@ public class SystemAdminForm extends JFrame {
                 con = db.getConnection();
 
                 //2. create a statement
-                String sql = "INSERT INTO exchangerate "
-                        + " (currency,exchangeRate)"
+                String sql = "INSERT INTO exchange_rate "
+                        + " (CurrencyCode,Rate)"
                         + "VALUES ( ?, ?)";
                 stm = con.prepareStatement(sql);
 
@@ -786,9 +796,9 @@ public class SystemAdminForm extends JFrame {
                 con = db.getConnection();
 
                 //2. create a statement
-                String sql = "UPDATE exchangerate "
-                        + " SET exchangeRate=? "
-                        + "WHERE exchangeRate_id=?";
+                String sql = "UPDATE exchange_rate "
+                        + " SET Rate=? "
+                        + "WHERE RateID=?";
                 stm = con.prepareStatement(sql);
 
                 stm.setFloat(1, Float.parseFloat(rate2Textfield.getText()));
@@ -808,7 +818,7 @@ public class SystemAdminForm extends JFrame {
                 con = db.getConnection();
 
                 //2. create a statement
-                String sql = "DELETE FROM exchangeRate WHERE exchangeRate_id=?";
+                String sql = "DELETE FROM exchange_rate WHERE RateID=?";
                 stm = con.prepareStatement(sql);
 
                 stm.setInt(1, Integer.parseInt(rateID2Textfield.getText()));
@@ -827,7 +837,7 @@ public class SystemAdminForm extends JFrame {
 
                 //2. create a statement
                 String sql = "INSERT INTO commission "
-                        + " (commission_rate)"
+                        + " (CommissionRate)"
                         + "VALUES (?)";
                 stm = con.prepareStatement(sql);
 
@@ -847,8 +857,8 @@ public class SystemAdminForm extends JFrame {
 
                     int[] rows = commission.getSelectedRows();
                     String sql = "UPDATE commission "
-                            + " SET commission_rate=?,active=0"
-                            + " WHERE commission_id=?";
+                            + " SET CommissionRate=?,IsActive=0"
+                            + " WHERE CommissionID=?";
                     PreparedStatement stm = con.prepareStatement(sql);
 
                     stm.setFloat(1, Float.parseFloat(commissionRateTextfield2.getText()));
@@ -870,7 +880,7 @@ public class SystemAdminForm extends JFrame {
 
                     String sql2 =  "UPDATE commission"
                             + " SET active=1 "
-                            + " WHERE commission_id=? ";
+                            + " WHERE CommissionID=? ";
                     stm = con.prepareStatement(sql2);
                     stm.setInt(1,cell);
                     stm.executeUpdate();
@@ -887,7 +897,7 @@ public class SystemAdminForm extends JFrame {
                 int[] rows = commission.getSelectedRows();
 
                 String sql = "DELETE FROM commission "
-                        + " WHERE commission_id=? ";
+                        + " WHERE CommissionID=? ";
 
                 PreparedStatement stm = con.prepareStatement(sql);
                 for (int i = 0; i <rows.length ; i++) {
@@ -908,19 +918,6 @@ public class SystemAdminForm extends JFrame {
     public int getID(){
         return id;
     }
-    public Connection getConnection(){
-        try{
-            con = DriverManager.getConnection(url,name,password);
-
-
-        }catch (SQLException s){
-            s.printStackTrace();
-        }
-        finally {
-            return con;
-        }
-
-    }
     public void viewUser(){
         List<User> userList = new ArrayList<>();
         try{
@@ -932,11 +929,12 @@ public class SystemAdminForm extends JFrame {
                 userList.add(new User(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getInt(4),
+                        rs.getString(4),
                         rs.getString(5),
                         rs.getString(6),
                         rs.getString(7),
-                        rs.getString(8)));
+                        rs.getString(8),
+                        rs.getString(9)));
             }
             User u;
 
@@ -954,13 +952,13 @@ public class SystemAdminForm extends JFrame {
         try {
             con = db.getConnection();
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT * FROM blank");
+            ResultSet rs = stm.executeQuery("SELECT * FROM stock");
 
             while(rs.next()){
                 stockList.add(new Blank(rs.getInt(1),
                         rs.getInt(2),
                         rs.getInt(3),
-                        rs.getBoolean(4),
+                        rs.getString(4),
                         rs.getDate(5)));
 
             }
@@ -980,7 +978,7 @@ public class SystemAdminForm extends JFrame {
         try {
             con = db.getConnection();
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT * FROM exchangerate");
+            ResultSet rs = stm.executeQuery("SELECT * FROM exchange_rate");
 
             while(rs.next()){
                 rateList.add(new Rate(rs.getInt(1),

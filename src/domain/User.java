@@ -2,17 +2,19 @@ package domain;
 
 public class User {
     private int staff_id;
-    private String name;
+    private String forname;
+    private String surname;
     private String address;
-    private int telephone;
+    private String telephone;
     private String email;
     private String username;
     private String password;
     private String staffType;
 
-    public User(int staff_id, String name, String address, int telephone, String email, String username, String password, String staffType) {
+    public User(int staff_id,String forname ,String surname , String address, String telephone, String email, String username, String password, String staffType) {
         this.staff_id = staff_id;
-        this.name = name;
+        this.forname = forname;
+        this.surname = surname;
         this.address = address;
         this.telephone = telephone;
         this.email = email;
@@ -24,16 +26,17 @@ public class User {
     public int getStaff_id() {
         return staff_id;
     }
-
-    public String getName() {
-        return name;
+    public String getForname(){
+        return forname;
     }
-
+    public String getSurname(){
+        return surname;
+    }
     public String getAddress() {
         return address;
     }
 
-    public int getTelephone() {
+    public String getTelephone() {
         return telephone;
     }
 
@@ -54,7 +57,8 @@ public class User {
     }
     public Object[] rowArray(){
         return new Object[] {getStaff_id(),
-                getName(),
+                getForname(),
+                getSurname(),
                 getAddress(),
                 getTelephone(),
                 getEmail(),

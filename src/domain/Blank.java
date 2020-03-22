@@ -6,13 +6,13 @@ public class Blank {
     private int blank_id;
     private int Staffstaff_id;
     private int blankType;
-    private boolean used;
+    private String status;
     private Date created_on;
-    public Blank(int blank_id, int Staffstaff_id, int blankType, Boolean used,Date created_on){
+    public Blank(int blank_id, int Staffstaff_id, int blankType, String  status,Date DateAdded){
         this.blank_id = blank_id;
         this.Staffstaff_id = Staffstaff_id;
         this.blankType = blankType;
-        this.used = used;
+        this.status = status;
         this.created_on = created_on;
     }
     public int getBlank_id(){
@@ -27,8 +27,8 @@ public class Blank {
         return blankType;
     }
 
-    public Boolean getUsed(){
-        return used;
+    public String getStatus(){
+        return status;
     }
     public Date getCreated_on(){
         return created_on;
@@ -40,6 +40,6 @@ public class Blank {
                 + " type: " + getBlankType();
     }
     public Object[] rowArray(){
-        return new Object[] {getBlank_id(),getStaffstaff_id(),getBlankType(),getUsed(),getCreated_on()};
+        return new Object[] {getBlank_id(),getStaffstaff_id(),getBlankType(),getStatus(),getCreated_on()};
     }
 }
