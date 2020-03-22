@@ -195,6 +195,40 @@ public class TravelAdvisorForm extends JFrame {
             manageCustomerPanel.setVisible(true);
             updateCustomerPanel.setVisible(false);
         });
+        manageDiscountsPanel.setDiscount.addActionListener(e -> {
+            manageCustomerPanel.setVisible(false);
+            manageDiscountsPanel.setVisible(true);
+            discountPanel.setVisible(true);
+            customerPanel.setVisible(false);
+            transactionPanel.setVisible(false);
+            updateCustomerPanel.setVisible(false);
+            reportPanel.setVisible(false);
+            stockPanel.setVisible(false);
+            cancelTicketPanel.setVisible(false);
+
+            try{
+                // 1. get a connection
+                con = db.getConnection();
+
+                //2. create a statement
+                String sql = "UPDATE customer "
+                        + "SET discount=?, discountType=?"
+                        + "WHERE Type= 'valued'";
+
+                PreparedStatement stm = con.prepareStatement(sql);
+
+                stm.setInt(1, Integer.parseInt(manageDiscountsPanel.discountTextField.getText()));
+                stm.setString(2, manageDiscountsPanel.typeBox.getSelectedItem().toString());
+
+                //3. execute sql query
+                stm.executeUpdate();
+
+
+
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        });
         manageCustomerPanel.manageDiscountButton.addActionListener(e -> {
             manageCustomerPanel.setVisible(false);
             manageDiscountsPanel.setVisible(true);
@@ -211,22 +245,26 @@ public class TravelAdvisorForm extends JFrame {
             try {
                 con = db.getConnection();
                 Statement stm = con.createStatement();
-                ResultSet rs = stm.executeQuery("SELECT customerAccount_id, name, customerType, discount" +
-                        " FROM customeraccount WHERE customerType= 'valued'");
+                ResultSet rs = stm.executeQuery("SELECT customerid, forename, surname, Type, discount, discountType" +
+                        " FROM customer WHERE Type= 'valued'");
 
 
                 while(rs.next()) {
                     discounts.add(new Discount(rs.getInt(1),
                             rs.getString(2),
                             rs.getString(3),
-                            rs.getString(4)));
+                            rs.getString(4),
+                            rs.getInt(5),
+                            rs.getString(6)));
                 }
                 Discount b;
                 DefaultTableModel model =new DefaultTableModel();
                 model.addColumn("customer ID: ");
-                model.addColumn("name: ");
+                model.addColumn("forename: ");
+                model.addColumn("surname: ");
                 model.addColumn("customer type: ");
                 model.addColumn("discount: ");
+                model.addColumn("discount type: ");
                 discount.setModel(model);
 
                 for (int i = 0; i < discounts.size(); i++) {
@@ -247,20 +285,19 @@ public class TravelAdvisorForm extends JFrame {
                 con = db.getConnection();
 
                 //2. create a statement
-                String sql = "UPDATE customeraccount "
-                        + "SET name=?,dateOfBirth=?,address=?,postalCode=?,telephone=?,email=?, customerType=?"
-                        + "WHERE customerAccount_id=?";
+                String sql = "UPDATE customer "
+                        + "SET forename=?, surname=?, dateOfBirth=?,telephone=?,email=?, Type=?"
+                        + "WHERE customerid=?";
 
                 PreparedStatement stm = con.prepareStatement(sql);
 
-                stm.setString(1, updateCustomerPanel.nameTextField.getText());
-                stm.setDate(2,Date.valueOf(updateCustomerPanel.dateOfBirthTextField.getText()));
-                stm.setString(3, updateCustomerPanel.addressTextField.getText());
-                stm.setString(4, updateCustomerPanel.postalCodeTextField.getText());
-                stm.setInt(5, Integer.parseInt(updateCustomerPanel.telephoneTextField.getText()));
-                stm.setString(6, updateCustomerPanel.emailTextField.getText());
-                stm.setString(7, updateCustomerPanel.typeBox.getSelectedItem().toString());
-                stm.setInt(8,Integer.parseInt(updateCustomerPanel.IDField.getText()));
+                stm.setString(1, updateCustomerPanel.forenameTextField.getText());
+                stm.setString(2, updateCustomerPanel.surnameTextField.getText());
+                stm.setDate(3,Date.valueOf(updateCustomerPanel.dateOfBirthTextField.getText()));
+                stm.setInt(4, Integer.parseInt(updateCustomerPanel.telephoneTextField.getText()));
+                stm.setString(5, updateCustomerPanel.emailTextField.getText());
+                stm.setString(6, updateCustomerPanel.typeBox.getSelectedItem().toString());
+                stm.setInt(7,Integer.parseInt(updateCustomerPanel.IDField.getText()));
 
                 //3. execute sql query
                 stm.executeUpdate();
@@ -288,17 +325,17 @@ public class TravelAdvisorForm extends JFrame {
                 try {
                     con = db.getConnection();
                     Statement stm = con.createStatement();
-                    ResultSet rs = stm.executeQuery("SELECT * FROM customeraccount");
+                    ResultSet rs = stm.executeQuery("SELECT * FROM customer");
 
                     while(rs.next()){
                         customers.add(new Customer(rs.getInt(1),
                                 rs.getString(2),
-                                rs.getDate(3),
-                                rs.getString(4),
-                                rs.getString(5),
-                                rs.getInt(6),
+                                rs.getString(3),
+                                rs.getDate(4),
+                                rs.getInt(5),
+                                rs.getString(6),
                                 rs.getString(7),
-                                rs.getString(8),
+                                rs.getInt(8),
                                 rs.getString(9)));
                     }
                     Customer b;
@@ -306,12 +343,11 @@ public class TravelAdvisorForm extends JFrame {
                     model.addColumn("customer ID: ");
                     model.addColumn("name: ");
                     model.addColumn("date of birth ");
-                    model.addColumn("address: ");
-                    model.addColumn("postal code: ");
                     model.addColumn("telephone: ");
                     model.addColumn("email: ");
                     model.addColumn("customer type: ");
                     model.addColumn("discount: ");
+                    model.addColumn("discount type: ");
                     customer.setModel(model);
 
                     for (int i = 0; i < customers.size(); i++) {
@@ -377,7 +413,7 @@ public class TravelAdvisorForm extends JFrame {
                 con = db.getConnection();
 
                 // 2. create a statement
-                String sql = "DELETE FROM payment WHERE payment_id=?";
+                String sql = "DELETE FROM payment WHERE paymentid=?";
                 PreparedStatement stm = con.prepareStatement(sql);
                 stm.setInt(1,Integer.parseInt(cancelTicketPanel.ticketIdTextfield.getText()));
 
@@ -425,19 +461,20 @@ public class TravelAdvisorForm extends JFrame {
                     con = db.getConnection();
 
                     //2. create a statement
-                    String sql = "INSERT INTO customeraccount"
-                            + " (name, dateOfBirth, address, postalCode, telephone, email)"
-                            + "VALUES ( ?, ?, ?, ?, ?, ?)";
+                    String sql = "INSERT INTO customer"
+                            + " (customerID,forename, surname, dateOfBirth, telephone, email, Type)"
+                            + "VALUES ( ?, ?, ?, ?, ?, ?, ?)";
 
 
                     PreparedStatement stm = con.prepareStatement(sql);
 
-                    stm.setString(1, updateCustomerPanel.nameTextField.getText());
-                    stm.setDate(2, Date.valueOf(updateCustomerPanel.dateOfBirthTextField.getText()));
-                    stm.setString(3, updateCustomerPanel.addressTextField.getText());
-                    stm.setString(4, updateCustomerPanel.postalCodeTextField.getText());
+                    stm.setString(1, updateCustomerPanel.IDField.getText());
+                    stm.setString(2, updateCustomerPanel.forenameTextField.getText());
+                    stm.setString(3, updateCustomerPanel.surnameTextField.getText());
+                    stm.setDate(4, Date.valueOf(updateCustomerPanel.dateOfBirthTextField.getText()));
                     stm.setInt(5, Integer.parseInt(updateCustomerPanel.telephoneTextField.getText()));
                     stm.setString(6, updateCustomerPanel.emailTextField.getText());
+                    stm.setString(7, updateCustomerPanel.typeBox.getSelectedItem().toString());
 
 
                     //3. execute sql query
@@ -460,7 +497,7 @@ public class TravelAdvisorForm extends JFrame {
                         con = db.getConnection();
                         //2. create a statement
                         String sql = "INSERT INTO payment"
-                                + " (paymentType, amount)"
+                                + " (Type, amount)"
                                 +"VALUES ( ?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
@@ -480,7 +517,7 @@ public class TravelAdvisorForm extends JFrame {
 
                         //2. create a statement
                         String sql = "INSERT INTO payment "
-                                + " (paymentType, amount, CustomerAccountcustomerAccount_id)"
+                                + " (paymentType, amount, customerid)"
                                 + "VALUES ( ?,?,?)";
 
                         PreparedStatement stm = con.prepareStatement(sql);
