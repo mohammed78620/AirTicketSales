@@ -14,11 +14,9 @@ import container.AddBlankPanel;
 import container.AssignBlankPanel;
 import container.RemoveBlankPanel;
 import container.UpdateStockPanel;
+import database.Database;
 import database.DatabaseHelper;
-import domain.Blank;
-import domain.Commission;
-import domain.Rate;
-import domain.User;
+import domain.*;
 
 
 public class SystemAdminForm extends JFrame {
@@ -41,6 +39,7 @@ public class SystemAdminForm extends JFrame {
     private DefaultTableModel stockModel;
     private DefaultTableModel rateModel;
     private DefaultTableModel commissionModel;
+    private DefaultTableModel backupModel;
 
     public SystemAdminForm(int id){
         super("System Administrator page");
@@ -105,12 +104,17 @@ public class SystemAdminForm extends JFrame {
         stockPanel.add(jScrollPane12,BorderLayout.CENTER);
         stockPanel.setBounds(0,0,400,600);
 
-        String[] s3 = {"database: 1","database: 2","database: 3","database: 4","database: 5"};
+
         databasePanel.setLayout(new BorderLayout());
-        JList databases = new JList(s3);
-        JScrollPane jScrollPane13 = new JScrollPane(databases);
+        JTable backup = new JTable();
+        backupModel = new DefaultTableModel();
+        backupModel.addColumn("backup id");
+        backupModel.addColumn("date added");
+        backup.setModel(backupModel);
+        JScrollPane jScrollPane13 = new JScrollPane(backup);
+        viewBackup();
         databasePanel.add(jScrollPane13,BorderLayout.CENTER);
-        databasePanel.setBounds(0,0,600,600);
+        databasePanel.setBounds(0,0,400,600);
 
 
         ratesPanel.setLayout(new BorderLayout());
@@ -143,6 +147,8 @@ public class SystemAdminForm extends JFrame {
         centerPane.add("databases",databasePanel);
         centerPane.add("rates",ratesPanel);
         centerPane.add("commission",commissionPanel);
+        centerPane.add("backup",databasePanel);
+
 
 
         //sets up bottom of borderLayout
@@ -602,6 +608,9 @@ public class SystemAdminForm extends JFrame {
             ratesPanel.setVisible(false);
             ratesUpdatePanel.setVisible(false);
             updateRatePanel.setVisible(false);
+            backupModel.setRowCount(0);
+            viewBackup();
+
 
         });
         viewExchangeRates.addActionListener(e -> {
@@ -909,6 +918,13 @@ public class SystemAdminForm extends JFrame {
                 ex.printStackTrace();
             }
         });
+        backupDatabaseButton.addActionListener(e -> {
+            Database.backupDatabase();
+        });
+        restoreDatabaseButton.addActionListener(e -> {
+            int cell = Integer.parseInt(backup.getValueAt(backup.getSelectedRow(),0).toString());
+            Database.restoreDatabase(cell);
+        });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
@@ -1018,6 +1034,28 @@ public class SystemAdminForm extends JFrame {
 
             }
         }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+    public void viewBackup(){
+        List<Backup> backupList = new ArrayList<>();
+        try{
+            con = db.getConnection();
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT * FROM backups");
+
+            while(rs.next()){
+                backupList.add(new Backup(rs.getInt(1),
+                        rs.getDate(2)));
+            }
+            Backup b;
+
+            for (int i = 0; i <backupList.size() ; i++) {
+                b = backupList.get(i);
+                backupModel.addRow(b.rowArray());
+            }
+
+        }catch (SQLException ex){
             ex.printStackTrace();
         }
     }
