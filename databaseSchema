@@ -122,3 +122,14 @@ CREATE TABLE `refund` (
   `amount` INT NOT NULL,
   PRIMARY KEY (`refund_id`)
   )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+  CREATE TABLE `report` (
+    `reportID` int NOT NULL AUTO_INCREMENT,
+    `dateAdded` date DEFAULT NULL,
+    `Type` varchar(255) DEFAULT NULL,
+    `staffID` int DEFAULT NULL,
+    `reportFile` text NOT NULL,
+    PRIMARY KEY (`reportID`),
+    KEY `staffID_idx` (`staffID`),
+    CONSTRAINT `staffID` FOREIGN KEY (`staffID`) REFERENCES `staff` (`ID`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
