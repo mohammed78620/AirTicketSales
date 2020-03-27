@@ -15,8 +15,7 @@ public class CancelTicketPanel extends JPanel {
     public JLabel typeLabel = new JLabel("refund type: ");
     public JLabel IDLabel = new JLabel("customer ID: ");
     public PlaceholderTextField IDTextField = new PlaceholderTextField();
-    public JLabel dateLabel = new JLabel("date: ");
-    public PlaceholderTextField dateTextField = new PlaceholderTextField();
+
 
 public CancelTicketPanel(){
     setVisible(false);
@@ -24,11 +23,6 @@ public CancelTicketPanel(){
     typeBox = new JComboBox();
     typeBox.addItem("credit card");
     typeBox.addItem("cash");
-    add(dateLabel);
-    add(Box.createRigidArea(new Dimension(0,5)));
-    add(dateTextField);
-    dateTextField.setPlaceholder("date");
-    add(Box.createRigidArea(new Dimension(0,5)));
     add(cancelTicketLabel);
     add(Box.createRigidArea(new Dimension(0,5)));
     add(ticketIdTextfield);
