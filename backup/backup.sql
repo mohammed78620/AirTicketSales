@@ -1,0 +1,289 @@
+-- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+--
+-- Host: localhost    Database: airticketsales
+-- ------------------------------------------------------
+-- Server version	8.0.19
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `card_details`
+--
+
+DROP TABLE IF EXISTS `card_details`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `card_details` (
+  `Number` int NOT NULL,
+  `Code` int DEFAULT NULL,
+  `ExpDate` int DEFAULT NULL,
+  `Address` varchar(128) DEFAULT NULL,
+  `Name` varchar(45) DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  PRIMARY KEY (`Number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `card_details`
+--
+
+LOCK TABLES `card_details` WRITE;
+/*!40000 ALTER TABLE `card_details` DISABLE KEYS */;
+/*!40000 ALTER TABLE `card_details` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `commission`
+--
+
+DROP TABLE IF EXISTS `commission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `commission` (
+  `CommissionID` int NOT NULL AUTO_INCREMENT,
+  `CommissionRate` float DEFAULT NULL,
+  `IsActive` tinyint DEFAULT '0',
+  PRIMARY KEY (`CommissionID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `commission`
+--
+
+LOCK TABLES `commission` WRITE;
+/*!40000 ALTER TABLE `commission` DISABLE KEYS */;
+INSERT INTO `commission` VALUES (4,2.4,0);
+/*!40000 ALTER TABLE `commission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer`
+--
+
+DROP TABLE IF EXISTS `customer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customer` (
+  `CustomerID` int NOT NULL AUTO_INCREMENT,
+  `Forename` varchar(45) DEFAULT NULL,
+  `Surname` varchar(45) DEFAULT NULL,
+  `DateOfBirth` date DEFAULT NULL,
+  `Telephone` int DEFAULT NULL,
+  `Email` varchar(45) DEFAULT NULL,
+  `Type` varchar(45) DEFAULT NULL,
+  `Discount` int DEFAULT NULL,
+  PRIMARY KEY (`CustomerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer`
+--
+
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `exchange_rate`
+--
+
+DROP TABLE IF EXISTS `exchange_rate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `exchange_rate` (
+  `RateID` int NOT NULL AUTO_INCREMENT,
+  `CurrencyCode` varchar(45) NOT NULL,
+  `Rate` float DEFAULT NULL,
+  PRIMARY KEY (`RateID`,`CurrencyCode`),
+  UNIQUE KEY `currency_UNIQUE` (`CurrencyCode`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `exchange_rate`
+--
+
+LOCK TABLES `exchange_rate` WRITE;
+/*!40000 ALTER TABLE `exchange_rate` DISABLE KEYS */;
+INSERT INTO `exchange_rate` VALUES (3,'GBP/CAD',1.5);
+/*!40000 ALTER TABLE `exchange_rate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `payment`
+--
+
+DROP TABLE IF EXISTS `payment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payment` (
+  `PaymentID` int NOT NULL,
+  `Type` varchar(45) DEFAULT NULL,
+  `Amount` float DEFAULT NULL,
+  `TotalPaid` float DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  `RateID` int DEFAULT NULL,
+  `RateCurrency` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`PaymentID`),
+  KEY `CustomerAccountcustomerAccount_id_idx` (`CustomerID`),
+  KEY `ExchangeRateexchangeRate_id_idx` (`RateID`),
+  KEY `ExchangeRatecurrency_idx` (`RateCurrency`),
+  KEY `RateID_idx` (`RateID`,`RateCurrency`),
+  CONSTRAINT `CustomerAccountcustomerAccount_id` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`CustomerID`),
+  CONSTRAINT `FKPayment660359` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`CustomerID`),
+  CONSTRAINT `RateID` FOREIGN KEY (`RateID`, `RateCurrency`) REFERENCES `exchange_rate` (`RateID`, `CurrencyCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payment`
+--
+
+LOCK TABLES `payment` WRITE;
+/*!40000 ALTER TABLE `payment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `payment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sale`
+--
+
+DROP TABLE IF EXISTS `sale`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sale` (
+  `sale_id` int NOT NULL,
+  `salesDate` datetime DEFAULT NULL,
+  `tax` int DEFAULT NULL,
+  `subTotal` int DEFAULT NULL,
+  `grandTotal` int DEFAULT NULL,
+  `salesNote` int DEFAULT NULL,
+  `CustomerAccountcustomerAccount_id` int DEFAULT NULL,
+  `Paymentpayment_id` int DEFAULT NULL,
+  `Commisioncommision_id` int DEFAULT NULL,
+  `Staffstaff_id` int DEFAULT NULL,
+  PRIMARY KEY (`sale_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sale`
+--
+
+LOCK TABLES `sale` WRITE;
+/*!40000 ALTER TABLE `sale` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sale` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sold_tickets`
+--
+
+DROP TABLE IF EXISTS `sold_tickets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sold_tickets` (
+  `TicketID` int NOT NULL AUTO_INCREMENT,
+  `Date` date NOT NULL,
+  `Price` int NOT NULL,
+  `Destination` varchar(15) DEFAULT NULL,
+  `BlankID` int DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  PRIMARY KEY (`TicketID`),
+  KEY `BlankID_idx` (`BlankID`),
+  CONSTRAINT `BlankID` FOREIGN KEY (`BlankID`) REFERENCES `stock` (`BlankID`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sold_tickets`
+--
+
+LOCK TABLES `sold_tickets` WRITE;
+/*!40000 ALTER TABLE `sold_tickets` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sold_tickets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `staff`
+--
+
+DROP TABLE IF EXISTS `staff`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `staff` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `Forename` varchar(45) DEFAULT NULL,
+  `Surname` varchar(45) DEFAULT NULL,
+  `Address` varchar(45) DEFAULT NULL,
+  `Telephone` varchar(45) DEFAULT NULL,
+  `Email` varchar(45) DEFAULT NULL,
+  `Username` varchar(45) DEFAULT NULL,
+  `Password` varchar(45) DEFAULT NULL,
+  `Type` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `staff`
+--
+
+LOCK TABLES `staff` WRITE;
+/*!40000 ALTER TABLE `staff` DISABLE KEYS */;
+INSERT INTO `staff` VALUES (1,'akmal','miah','dfjsdf','55234','sadad','ak','a','sa'),(2,'bilal','dw','sada','532452','ersdfsd','bi','b','om'),(3,'kamal','fsdf','dfsdf','34243','asfs','ka','k','ta'),(7,'dfgdfg','dfgdgdfgfg','dfg','dfgdfgdf','ta','rdfgdfsgdfg','dfgdfg','sa'),(8,'lolololol','','','jfkgbdjgdfg','','','dsfsdfsd','sa'),(9,'dfbfdsbdfsb','fdbbfdbfd','dsfbdfb','bfdfb','bfd','fdgvdfsbv','fdgbdfb','sa'),(10,'dvdsvsdv','vsdsvvsd','vsdvvvsd','vsdvsdvvsd','vsddd','dsfvsdv','sdvsdv','sa'),(11,'dfgfgdfg','dfgdf','dfgdfgd','fgdfg','dfgdf','dfgfdsgdfsgdfg','fddfggdfgdfg','sa');
+/*!40000 ALTER TABLE `staff` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `stock`
+--
+
+DROP TABLE IF EXISTS `stock`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stock` (
+  `BlankID` int NOT NULL AUTO_INCREMENT,
+  `StaffID` int DEFAULT NULL,
+  `Type` int DEFAULT NULL,
+  `Status` varchar(10) DEFAULT NULL,
+  `DateAdded` date DEFAULT NULL,
+  PRIMARY KEY (`BlankID`),
+  KEY `Staffstaff_id_idx` (`StaffID`),
+  CONSTRAINT `Staffstaff_id` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `stock`
+--
+
+LOCK TABLES `stock` WRITE;
+/*!40000 ALTER TABLE `stock` DISABLE KEYS */;
+INSERT INTO `stock` VALUES (1,1,444,NULL,'2020-03-22'),(8,NULL,420,NULL,NULL),(9,NULL,420,NULL,NULL),(10,NULL,201,NULL,NULL);
+/*!40000 ALTER TABLE `stock` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-03-23 20:53:30
