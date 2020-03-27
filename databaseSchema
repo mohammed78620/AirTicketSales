@@ -115,13 +115,16 @@ CREATE TABLE `stock` (
   CONSTRAINT `Staffstaff_id` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `refund` (
-  `refund_id` INT NOT NULL AUTO_INCREMENT,
-  `refundType` varchar(45) DEFAULT NULL,
-  `description` VARCHAR(45) NOT NULL,
-  `amount` INT NOT NULL,
-  PRIMARY KEY (`refund_id`)
-  )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CREATE TABLE `refund` (
+    `refundID` int NOT NULL AUTO_INCREMENT,
+    `ticketID` int DEFAULT NULL,
+    `customerID` int DEFAULT NULL,
+    `refundType` varchar(45) DEFAULT NULL,
+    `amount` int DEFAULT NULL,
+    `dateCancelled` date DEFAULT NULL,
+    PRIMARY KEY (`refundID`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
   CREATE TABLE `report` (
     `reportID` int NOT NULL AUTO_INCREMENT,
