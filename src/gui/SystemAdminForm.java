@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,9 +100,10 @@ public class SystemAdminForm extends JFrame {
         stockModel.addColumn("staff id");
         stockModel.addColumn("blank type");
         stockModel.addColumn("used");
-        stockModel.addColumn("received");
+        stockModel.addColumn("DateAdded");
         stock.setModel(stockModel);
         JScrollPane jScrollPane12 = new JScrollPane(stock);
+        viewStock();
         stockPanel.add(jScrollPane12,BorderLayout.CENTER);
         stockPanel.setBounds(0,0,400,600);
 
@@ -134,7 +137,7 @@ public class SystemAdminForm extends JFrame {
         commissionModel = new DefaultTableModel();
         commissionModel.addColumn("id");
         commissionModel.addColumn("commission rate");
-        commissionModel.addColumn("active");
+        commissionModel.addColumn("type");
         commission.setModel(commissionModel);
         JScrollPane jScrollPane5 = new JScrollPane(commission);
         viewCommission();
@@ -312,15 +315,19 @@ public class SystemAdminForm extends JFrame {
 
         JLabel commissionRateLabel1 = new JLabel("commission rate");
         JLabel commissionRateLabel2 = new JLabel("commission rate");
-        JLabel isActiveLabel = new JLabel("is active");
+        JLabel typeLabel = new JLabel("type");
 
         PlaceholderTextField commissionRateTextfield1 = new PlaceholderTextField();
         commissionRateTextfield1.setPlaceholder("rate");
         PlaceholderTextField commissionRateTextfield2 = new PlaceholderTextField();
         commissionRateTextfield2.setPlaceholder("rate");
-        JComboBox isActiveBox = new JComboBox();
-        isActiveBox.addItem("no");
-        isActiveBox.addItem("yes");
+        JComboBox typeBox = new JComboBox();
+        typeBox.addItem("444");
+        typeBox.addItem("440");
+        typeBox.addItem("420");
+        typeBox.addItem("201");
+        typeBox.addItem("101");
+
 
 
         JButton addCommissionButton = new JButton("add");
@@ -338,9 +345,9 @@ public class SystemAdminForm extends JFrame {
         updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
         updateCommissionPanel.add(commissionRateTextfield2);
         updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        updateCommissionPanel.add(isActiveLabel);
+        updateCommissionPanel.add(typeLabel);
         updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
-        updateCommissionPanel.add(isActiveBox);
+        updateCommissionPanel.add(typeBox);
         updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
         updateCommissionPanel.add(Box.createRigidArea(new Dimension(0,15)));
         updateCommissionPanel.add(updateCommissionButton);
@@ -443,7 +450,6 @@ public class SystemAdminForm extends JFrame {
 
 
 
-
         //adds to leftPanel stock pane
 
 
@@ -510,15 +516,16 @@ public class SystemAdminForm extends JFrame {
 
                 //2. create a statement
                 String sql = "INSERT INTO stock "
-                        + " (Type)"
-                        + "VALUES ( ?)";
+                        + " (Type,DateAdded)"
+                        + "VALUES ( ?,?)";
                 stm = con.prepareStatement(sql);
 
                 int amount = Integer.parseInt(addBlankPanel.amountTextfield.getText());
-
+                Long milli = System.currentTimeMillis();
+                Timestamp ts = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
                 for(int i = 0; i < amount; i++) {
                     stm.setInt(1, Integer.parseInt(addBlankPanel.typeBox.getSelectedItem().toString()));
-
+                    stm.setTimestamp(2,ts);
                     //3. execute sql query
                     stm.executeUpdate();
 
@@ -862,40 +869,21 @@ public class SystemAdminForm extends JFrame {
         updateCommissionButton.addActionListener(e -> {
             try {
                 con = db.getConnection();
-                if (isActiveBox.getSelectedItem().toString().equals("no")) {
 
-                    int[] rows = commission.getSelectedRows();
+                    int row = commission.getSelectedRow();
                     String sql = "UPDATE commission "
-                            + " SET CommissionRate=?,IsActive=0"
+                            + " SET CommissionRate=?,Type=?"
                             + " WHERE CommissionID=?";
                     PreparedStatement stm = con.prepareStatement(sql);
 
                     stm.setFloat(1, Float.parseFloat(commissionRateTextfield2.getText()));
-
-                    for (int i = 0; i <rows.length ; i++) {
-                        System.out.println(commission.getValueAt(rows[i],0).toString());
-                        stm.setInt(2, Integer.parseInt(commission.getValueAt(rows[i],0).toString()));
-                        stm.executeUpdate();
-                    }
-
-
-                }else {
-                    int cell = Integer.parseInt(commission.getValueAt(commission.getSelectedRow(),0).toString());
-                    String sql = "UPDATE commission "
-                            + " SET active=0";
-
-                    PreparedStatement stm = con.prepareStatement(sql);
-                    stm.executeUpdate();
-
-                    String sql2 =  "UPDATE commission"
-                            + " SET active=1 "
-                            + " WHERE CommissionID=? ";
-                    stm = con.prepareStatement(sql2);
-                    stm.setInt(1,cell);
+                    stm.setInt(2, Integer.parseInt(typeBox.getSelectedItem().toString()));
+                    stm.setInt(3, Integer.parseInt(commission.getValueAt(row,0).toString()));
                     stm.executeUpdate();
 
 
-                }
+
+
             }catch (SQLException ex){
                 ex.printStackTrace();
             }
@@ -975,7 +963,7 @@ public class SystemAdminForm extends JFrame {
                         rs.getInt(2),
                         rs.getInt(3),
                         rs.getString(4),
-                        rs.getDate(5)));
+                        rs.getTimestamp(5)));
 
             }
             Blank b;
@@ -1023,7 +1011,7 @@ public class SystemAdminForm extends JFrame {
             while(rs.next()){
                 commissionList.add(new Commission(rs.getInt(1),
                         rs.getFloat(2),
-                        rs.getBoolean(3)));
+                        rs.getInt(3)));
 
             }
             Commission c;
@@ -1059,6 +1047,10 @@ public class SystemAdminForm extends JFrame {
             ex.printStackTrace();
         }
     }
+    public void setVisibleFalse(){
+
+    }
+
 
 
 }
