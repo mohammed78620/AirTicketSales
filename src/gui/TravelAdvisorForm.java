@@ -5,10 +5,12 @@ import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.io.File;
 import container.*;
 import component.PlaceholderTextField;
 import database.DatabaseHelper;
@@ -61,7 +63,6 @@ public class TravelAdvisorForm extends JFrame {
         panel1.add(bottomPanel,BorderLayout.PAGE_END);
         centerPanel.add(layeredPane,BorderLayout.CENTER);
         layeredPane.setBounds(0,0,600,600);
-
 
 //        sets up center BorderLayout
         customerPanel.setLayout(new BorderLayout());
@@ -135,6 +136,7 @@ public class TravelAdvisorForm extends JFrame {
         JButton viewIndividualReport = new JButton("view reports");
         JButton viewIndividualStock = new JButton("view stock");
         JButton viewCancelTicketButton = new JButton("cancel ticket");
+        JButton refundLogButton = new JButton("refund log file");
 
         //adds to right container
         rightPanel.add(viewCustomers);
@@ -146,6 +148,8 @@ public class TravelAdvisorForm extends JFrame {
         rightPanel.add(createAccountButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(viewIndividualReport);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        rightPanel.add(refundLogButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(viewIndividualStock);
         rightPanel.add(Box.createRigidArea(new Dimension(0,260)));
@@ -343,6 +347,7 @@ public class TravelAdvisorForm extends JFrame {
                 generateReportPanel.setVisible(false);
             }
         });
+
         JFrame sellFrame = new JFrame("Sell ticket");
         JPanel sellPanel = new JPanel();
         sellPanel.setBackground(Color.WHITE);
@@ -547,6 +552,7 @@ public class TravelAdvisorForm extends JFrame {
         sellTicketButton.addActionListener(e -> {
             sellFrame.setVisible(true);
         });
+
         viewIndividualStock.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -635,12 +641,15 @@ public class TravelAdvisorForm extends JFrame {
 
                 // 2. create a statement
                 String sql = "INSERT INTO refund"
-                        + " (description, amount, refundType)"
-                        + "VALUES ( ?, ?, ?)";
+                        + " (customerID, ticketID, amount, refundType, dateCancelled)"
+                        + "VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement stm = con.prepareStatement(sql);
-                stm.setString(1,cancelTicketPanel.descriptionTextfield.getText());
-                stm.setInt(2,Integer.parseInt(cancelTicketPanel.amountTextfield.getText()));
-                stm.setString(3, cancelTicketPanel.typeBox.getSelectedItem().toString());
+                stm.setInt(1,Integer.parseInt(cancelTicketPanel.IDTextField.getText()));
+                stm.setInt(2,Integer.parseInt(cancelTicketPanel.ticketIdTextfield.getText()));
+                stm.setInt(3,Integer.parseInt(cancelTicketPanel.amountTextfield.getText()));
+                stm.setString(4, cancelTicketPanel.typeBox.getSelectedItem().toString());
+                stm.setDate(5, Date.valueOf(cancelTicketPanel.dateTextField.getText()));
+
 
                 // 3. execute sql statement
                 stm.executeUpdate();
@@ -649,6 +658,37 @@ public class TravelAdvisorForm extends JFrame {
             }
         });
 
+        refundLogButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    con = db.getConnection();
+                    Statement mySmt = con.createStatement();
+                    String sql = "SELECT ticketID, customerID, refundType, amount, dateCancelled FROM refund";
+                    ResultSet rs = mySmt.executeQuery(sql);
+                    File theFile = new File("refund.txt");
+                    FileWriter fw = new FileWriter(theFile);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    String line;
+                    while(rs.next()){
+                        line = "["+rs.getDate(5)+"]"+
+                                " Ticket " + rs.getInt(1)+" has been refunded to Customer "
+                                +rs.getInt(2)+" via "
+                                +rs.getString(3)+", amount refunded is "
+                                +rs.getInt(4)+".";
+                        bw.write(line);
+                        bw.newLine();
+                    }
+                    bw.close();
+                    fw.close();
+
+                    Desktop.getDesktop().open(theFile);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+    });
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
