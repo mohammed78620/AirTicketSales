@@ -4,43 +4,35 @@ import java.util.*;
 
 public class Discount {
     private int customerAccount_id;
-    private String forename;
-    private String surname;
+    private String name;
     private String customerType;
-    private int discount;
-    private String discountType;
+    private String discount;
 
-    public Discount(int customerAccount_id, String forename, String surname,
-                    String customerType, int discount, String discountType) {
+    public Discount(int customerAccount_id, String string, String name,
+                    String customerType, int anInt, String discount) {
         this.customerAccount_id = customerAccount_id;
-        this.forename = forename;
-        this.surname = surname;
+        this.name = name;
         this.customerType = customerType;
         this.discount = discount;
-        this.discountType = discountType;
     }
 
     public int getCustomerAccount_id() {
         return customerAccount_id;
     }
 
-    public String getForename() {
-        return forename;
+    public String getName() {
+        return name;
     }
-
-    public String getSurname() { return surname; }
 
     public String getCustomerType() {
         return customerType;
     }
 
-    public int getDiscount() {
+    public String getDiscount() {
         return discount;
     }
 
-    public String getDiscountType() {return discountType; }
-
     public Object[] rowArray(){
-        return new Object[] {getCustomerAccount_id(),getForename(), getSurname(), getCustomerType(), getDiscount(), getDiscountType()};
+        return new Object[] {getCustomerAccount_id(),getName(),getCustomerType(), getDiscount()};
     }
 }

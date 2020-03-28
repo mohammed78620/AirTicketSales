@@ -22,6 +22,8 @@ public class UpdateCustomerPanel extends JPanel {
     public PlaceholderTextField surnameTextField = new PlaceholderTextField();
     public PlaceholderTextField telephoneTextField = new PlaceholderTextField();
     public PlaceholderTextField emailTextField = new PlaceholderTextField();
+    public AbstractButton forenameTextField;
+
     public UpdateCustomerPanel(){
         setVisible(false);
         setBounds(0,0,150,400);

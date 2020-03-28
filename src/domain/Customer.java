@@ -4,41 +4,49 @@ import java.util.*;
 
 public class Customer {
     private int customerAccount_id;
-    private String forename;
-    private String surname;
+    private String name;
     private Date dateOfBirth;
+    private String address;
+    private String postalCode;
     private int telephone;
     private String email;
     private String customerType;
-    private int discount;
-    private String discountType;
+    private String discount;
 
-    public Customer(int customerAccount_id, String forename, String surname, Date dateOfBirth,
-                   int telephone, String email,
-                    String customerType, int discount, String discountType) {
+    public Customer(int customerAccount_id, String name, String dateOfBirth,
+                    java.sql.Date address, int postalCode, String telephone, String email,
+                    int customerType, String discount) {
         this.customerAccount_id = customerAccount_id;
-        this.forename = forename;
-        this.surname = surname;
+        this.name = name;
+        /*
         this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.postalCode = postalCode;
         this.telephone = telephone;
         this.email = email;
         this.customerType = customerType;
         this.discount = discount;
-        this.discountType = discountType;
+         */
     }
 
     public int getCustomerAccount_id() {
         return customerAccount_id;
     }
 
-    public String getForename() {
-        return forename;
+    public String getName() {
+        return name;
     }
-
-    public String getSurname() { return surname; }
 
     public Date getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
     }
 
     public int getTelephone() {
@@ -53,14 +61,12 @@ public class Customer {
         return customerType;
     }
 
-    public int getDiscount() {
+    public String getDiscount() {
         return discount;
     }
 
-    public String getDiscountType() { return discountType; }
-
     public Object[] rowArray(){
-        return new Object[] {getCustomerAccount_id(),getForename(), getSurname(), getDateOfBirth(),
-                getTelephone(), getEmail(), getCustomerType(), getDiscount(), getDiscountType()};
+        return new Object[] {getCustomerAccount_id(),getName(),getDateOfBirth(),getAddress(), getPostalCode(),
+                getTelephone(), getEmail(), getCustomerType(), getDiscount()};
     }
 }
