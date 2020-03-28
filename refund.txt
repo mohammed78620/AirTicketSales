@@ -1,0 +1,4 @@
+[2020-03-27 00:00:00.0] Ticket 2 has been refunded to Customer 5 via credit card, amount refunded is 52.
+[2020-02-22 00:00:00.0] Ticket 3 has been refunded to Customer 6 via credit card, amount refunded is 34.
+[1998-10-15 01:00:00.0] Ticket 5 has been refunded to Customer 5 via credit card, amount refunded is 55.
+[2020-03-27 17:15:30.0] Ticket 10 has been refunded to Customer 15 via credit card, amount refunded is 25.
