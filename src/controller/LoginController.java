@@ -41,8 +41,8 @@ public class LoginController {
                             officeManagerForm.setVisible(true);
                             break;
                         case "ta":
-                            TravelAdvisorForm travelAdvisorForm = new TravelAdvisorForm(rs.getInt(4));
-                            travelAdvisorForm.setVisible(true);
+                            //TravelAdvisorForm travelAdvisorForm = new TravelAdvisorForm(rs.getInt(4));
+                            //travelAdvisorForm.setVisible(true);
                             break;
                         default:
                             return false;

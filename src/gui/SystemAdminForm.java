@@ -954,7 +954,7 @@ public class SystemAdminForm extends JFrame {
         try {
             con = db.getConnection();
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT * FROM blank");
+            ResultSet rs = stm.executeQuery("SELECT * FROM stock");
 
             while(rs.next()){
                 stockList.add(new Blank(rs.getInt(1),
@@ -980,7 +980,7 @@ public class SystemAdminForm extends JFrame {
         try {
             con = db.getConnection();
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("SELECT * FROM exchangerate");
+            ResultSet rs = stm.executeQuery("SELECT * FROM exchange_rate");
 
             while(rs.next()){
                 rateList.add(new Rate(rs.getInt(1),

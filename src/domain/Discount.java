@@ -8,8 +8,8 @@ public class Discount {
     private String customerType;
     private String discount;
 
-    public Discount(int customerAccount_id, String name,
-                    String customerType, String discount) {
+    public Discount(int customerAccount_id, String string, String name,
+                    String customerType, int anInt, String discount) {
         this.customerAccount_id = customerAccount_id;
         this.name = name;
         this.customerType = customerType;

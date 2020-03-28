@@ -13,11 +13,12 @@ public class Customer {
     private String customerType;
     private String discount;
 
-    public Customer(int customerAccount_id, String name, Date dateOfBirth,
-                    String address, String postalCode, int telephone, String email,
-                    String customerType, String discount) {
+    public Customer(int customerAccount_id, String name, String dateOfBirth,
+                    java.sql.Date address, int postalCode, String telephone, String email,
+                    int customerType, String discount) {
         this.customerAccount_id = customerAccount_id;
         this.name = name;
+        /*
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.postalCode = postalCode;
@@ -25,6 +26,7 @@ public class Customer {
         this.email = email;
         this.customerType = customerType;
         this.discount = discount;
+         */
     }
 
     public int getCustomerAccount_id() {
