@@ -52,7 +52,7 @@ public class TravelAdvisorForm extends JFrame {
         JPanel discountPanel = new JPanel(new GridLayout(8,4,5,40));
         JPanel soldTicketsPanel = new JPanel(new GridLayout(8,9,5,40));
         JPanel reportPanel = new JPanel(new BorderLayout());
-        JPanel stockPanel = new JPanel(new BorderLayout());
+        JPanel stockPanel =  new JPanel(new GridLayout(8,4,5,40));
         add(panel1);
 
         //sets Panel Layout
@@ -691,6 +691,7 @@ public class TravelAdvisorForm extends JFrame {
                 updateCustomerPanel.setVisible(false);
                 discountPanel.setVisible(false);
                 soldTicketsPanel.setVisible(false);
+                leftPanel.setVisible(true);
             }
         });
         cancelTicketPanel.cancelButton.addActionListener(e -> {
