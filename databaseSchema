@@ -1,3 +1,4 @@
+
 CREATE TABLE `blank_status` (
   `StatusID` int NOT NULL AUTO_INCREMENT,
   `Status` varchar(10) DEFAULT NULL,
@@ -113,14 +114,25 @@ CREATE TABLE `stock` (
   KEY `Staffstaff_id_idx` (`StaffID`),
   CONSTRAINT `Staffstaff_id` FOREIGN KEY (`StaffID`) REFERENCES `staff` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-=======
-CREATE TABLE `blank` (
-  `blank_id` int NOT NULL AUTO_INCREMENT,
-  `Staffstaff_id` int DEFAULT NULL,
-  `blankType` int DEFAULT NULL,
-  `flightType` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`blank_id`),
-  KEY `Staffstaff_id_idx` (`Staffstaff_id`),
-  CONSTRAINT `Staffstaff_id` FOREIGN KEY (`Staffstaff_id`) REFERENCES `staff` (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+  CREATE TABLE `refund` (
+    `refundID` int NOT NULL AUTO_INCREMENT,
+    `ticketID` int DEFAULT NULL,
+    `customerID` int DEFAULT NULL,
+    `refundType` varchar(45) DEFAULT NULL,
+    `amount` int DEFAULT NULL,
+    `dateCancelled` date DEFAULT NULL,
+    PRIMARY KEY (`refundID`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+  CREATE TABLE `report` (
+    `reportID` int NOT NULL AUTO_INCREMENT,
+    `dateAdded` date DEFAULT NULL,
+    `Type` varchar(255) DEFAULT NULL,
+    `staffID` int DEFAULT NULL,
+    `reportFile` text NOT NULL,
+    PRIMARY KEY (`reportID`),
+    KEY `staffID_idx` (`staffID`),
+    CONSTRAINT `staffID` FOREIGN KEY (`staffID`) REFERENCES `staff` (`ID`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

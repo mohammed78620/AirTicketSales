@@ -12,9 +12,10 @@ public class CancelTicketPanel extends JPanel {
     public JLabel amountLabel = new JLabel("amount: ");
     public PlaceholderTextField amountTextfield = new PlaceholderTextField();
     public PlaceholderTextField ticketIdTextfield = new PlaceholderTextField();
-    public JLabel descriptionLabel = new JLabel("description: ");
-    public PlaceholderTextField descriptionTextfield = new PlaceholderTextField();
     public JLabel typeLabel = new JLabel("refund type: ");
+    public JLabel IDLabel = new JLabel("customer ID: ");
+    public PlaceholderTextField IDTextField = new PlaceholderTextField();
+
 
 public CancelTicketPanel(){
     setVisible(false);
@@ -23,25 +24,28 @@ public CancelTicketPanel(){
     typeBox.addItem("credit card");
     typeBox.addItem("cash");
     add(cancelTicketLabel);
-    add(Box.createRigidArea(new Dimension(0,15)));
+    add(Box.createRigidArea(new Dimension(0,5)));
     add(ticketIdTextfield);
-    add(Box.createRigidArea(new Dimension(0,15)));
+    ticketIdTextfield.setPlaceholder("ticket ID");
+    add(Box.createRigidArea(new Dimension(0,5)));
     add(cancelButton);
-    add(Box.createRigidArea(new Dimension(0,15)));
-    add(descriptionLabel);
-    add(Box.createRigidArea(new Dimension(0,15)));
-    add(descriptionTextfield);
-    add(Box.createRigidArea(new Dimension(0,15)));
+    add(Box.createRigidArea(new Dimension(0,5)));
+    add(IDLabel);
+    add(Box.createRigidArea(new Dimension(0,5)));
+    add(IDTextField);
+    IDTextField.setPlaceholder("customer ID");
+    add(Box.createRigidArea(new Dimension(0,5)));
     add(amountLabel);
-    add(Box.createRigidArea(new Dimension(0,15)));
+    add(Box.createRigidArea(new Dimension(0,5)));
     add(amountTextfield);
-    add(Box.createRigidArea(new Dimension(0,15)));
+    amountTextfield.setPlaceholder("amount");
+    add(Box.createRigidArea(new Dimension(0,5)));
     add(typeLabel);
-    add(Box.createRigidArea(new Dimension(0,15)));
+    add(Box.createRigidArea(new Dimension(0,5)));
     add(typeBox);
-    add(Box.createRigidArea(new Dimension(0,15)));
+    add(Box.createRigidArea(new Dimension(0,5)));
     add(refundButton);
-    add(Box.createRigidArea(new Dimension(0,15)));
+    add(Box.createRigidArea(new Dimension(0,5)));
 }
 
 }
