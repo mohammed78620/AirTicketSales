@@ -15,9 +15,9 @@ import component.PlaceholderTextField;
 import database.DatabaseHelper;
 import domain.Customer;
 import domain.Discount;
+import domain.SoldTicket;
 import domain.Stock;
-
-
+import java.time.LocalDateTime;
 
 public class TravelAdvisorForm extends JFrame {
     private int id;
@@ -48,8 +48,9 @@ public class TravelAdvisorForm extends JFrame {
         leftLayeredPane.setPreferredSize(new Dimension(150,150));
         JPanel customerPanel = new JPanel(new GridLayout(8,8,5,40));
         JPanel discountPanel = new JPanel(new GridLayout(8,4,5,40));
+        JPanel soldTicketsPanel = new JPanel(new GridLayout(8,9,5,40));
         JPanel reportPanel = new JPanel(new BorderLayout());
-        JPanel stockPanel = new JPanel(new BorderLayout());
+        JPanel stockPanel =  new JPanel(new GridLayout(8,4,5,40));
         add(panel1);
 
         //sets Panel Layout
@@ -69,6 +70,12 @@ public class TravelAdvisorForm extends JFrame {
         JScrollPane jScrollPane1 = new JScrollPane(customer);
         customerPanel.add(jScrollPane1,BorderLayout.CENTER);
         customerPanel.setBounds(0,0,600,600);
+
+        soldTicketsPanel.setLayout(new BorderLayout());
+        JTable soldTickets = new JTable();
+        JScrollPane jScrollPane4 = new JScrollPane(soldTickets);
+        soldTicketsPanel.add(jScrollPane4,BorderLayout.CENTER);
+        soldTicketsPanel.setBounds(0,0,800,600);
 
         discountPanel.setLayout(new BorderLayout());
         JTable discount = new JTable();
@@ -103,6 +110,7 @@ public class TravelAdvisorForm extends JFrame {
         layeredPane.add(cancelTicketPanel);
         layeredPane.add(discountPanel);
         layeredPane.add(generateReportPanel);
+        layeredPane.add(soldTicketsPanel);
 
         //sets up main left BorderLayout
         container.ManageCustomerPanel manageCustomerPanel = new container.ManageCustomerPanel();
@@ -136,9 +144,12 @@ public class TravelAdvisorForm extends JFrame {
         JButton viewIndividualStock = new JButton("view stock");
         JButton viewCancelTicketButton = new JButton("cancel ticket");
         JButton refundLogButton = new JButton("refund log file");
+        JButton viewSoldTicketsButton = new JButton("view tickets sold");
 
         //adds to right container
         rightPanel.add(viewCustomers);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        rightPanel.add(viewSoldTicketsButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
         rightPanel.add(sellTicketButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,15)));
@@ -179,6 +190,7 @@ public class TravelAdvisorForm extends JFrame {
             stockPanel.setVisible(false);
             cancelTicketPanel.setVisible(false);
             generateReportPanel.setVisible(false);
+            soldTicketsPanel.setVisible(false);
 
             try{
                 // 1. get a connection
@@ -213,6 +225,7 @@ public class TravelAdvisorForm extends JFrame {
             stockPanel.setVisible(false);
             cancelTicketPanel.setVisible(false);
             generateReportPanel.setVisible(false);
+            soldTicketsPanel.setVisible(false);
 
 
             List<Discount> discounts = new ArrayList<>();
@@ -282,7 +295,66 @@ public class TravelAdvisorForm extends JFrame {
                 ex.printStackTrace();
             }
         });
+        viewSoldTicketsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                customerPanel.setVisible(false);
+                manageCustomerPanel.setVisible(false);
+                reportPanel.setVisible(false);
+                stockPanel.setVisible(false);
+                cancelTicketPanel.setVisible(false);
+                discountPanel.setVisible(false);
+                manageDiscountsPanel.setVisible(false);
+                generateReportPanel.setVisible(false);
+                updateCustomerPanel.setVisible(false);
+                soldTicketsPanel.setVisible(true);
+                leftPanel.setVisible(false);
 
+                List<SoldTicket> ticketsSold = new ArrayList<>();
+                try {
+                    con = db.getConnection();
+
+                    String sql ="SELECT sale_id, salesDate, tax," +
+                            "subTotal, grandTotal, salesNote, customeraccountcustomeraccount_id," +
+                            "paymentpayment_id, commisioncommision_id FROM sale WHERE staffstaff_id =? ";
+                    PreparedStatement stm = con.prepareStatement(sql);
+                    stm.setInt(1, getID());
+                    ResultSet rs = stm.executeQuery();
+
+                    while(rs.next()){
+                        ticketsSold.add(new SoldTicket(rs.getInt(1),
+                                rs.getTimestamp(2),
+                                rs.getInt(3),
+                                rs.getInt(4),
+                                rs.getInt(5),
+                                rs.getInt(6),
+                                rs.getInt(7),
+                                rs.getInt(8),
+                                rs.getInt(9)));
+                    }
+                    SoldTicket b;
+                    DefaultTableModel model =new DefaultTableModel();
+                    model.addColumn("Sales ID: ");
+                    model.addColumn("sales date: ");
+                    model.addColumn("tax: ");
+                    model.addColumn("sub total ");
+                    model.addColumn("grand total: ");
+                    model.addColumn("sales note: ");
+                    model.addColumn("customer ID: ");
+                    model.addColumn("payment ID: ");
+                    model.addColumn("commission ID: ");
+                    soldTickets.setModel(model);
+
+                    for (int i = 0; i < ticketsSold.size(); i++) {
+                        b = ticketsSold.get(i);
+                        model.addRow(b.rowArray());
+
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
         viewCustomers.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -294,6 +366,7 @@ public class TravelAdvisorForm extends JFrame {
                 discountPanel.setVisible(false);
                 manageDiscountsPanel.setVisible(false);
                 generateReportPanel.setVisible(false);
+                soldTicketsPanel.setVisible(false);
 
                 List<Customer> customers = new ArrayList<>();
                 try {
@@ -317,7 +390,7 @@ public class TravelAdvisorForm extends JFrame {
                     model.addColumn("customer ID: ");
                     model.addColumn("forename: ");
                     model.addColumn("surname: ");
-                    model.addColumn("date of birth ");
+                    model.addColumn("date of birth: ");
                     model.addColumn("telephone: ");
                     model.addColumn("email: ");
                     model.addColumn("customer type: ");
@@ -344,6 +417,7 @@ public class TravelAdvisorForm extends JFrame {
                 manageCustomerPanel.setVisible(false);
                 cancelTicketPanel.setVisible(false);
                 generateReportPanel.setVisible(false);
+                soldTicketsPanel.setVisible(false);
             }
         });
 
@@ -564,6 +638,7 @@ public class TravelAdvisorForm extends JFrame {
                 stockPanel.setVisible(true);
                 cancelTicketPanel.setVisible(false);
                 generateReportPanel.setVisible(false);
+                soldTicketsPanel.setVisible(false);
 
                 List<Stock> stocks = new ArrayList<>();
                 try {
@@ -579,7 +654,7 @@ public class TravelAdvisorForm extends JFrame {
                         stocks.add(new Stock(rs.getInt(1),
                                 rs.getInt(2),
                                 rs.getString(3),
-                                rs.getDate(4)));
+                                rs.getTimestamp(4)));
                     }
                     Stock b;
                     DefaultTableModel model = new DefaultTableModel();
@@ -613,6 +688,8 @@ public class TravelAdvisorForm extends JFrame {
                 generateReportPanel.setVisible(false);
                 updateCustomerPanel.setVisible(false);
                 discountPanel.setVisible(false);
+                soldTicketsPanel.setVisible(false);
+                leftPanel.setVisible(true);
             }
         });
         cancelTicketPanel.cancelButton.addActionListener(e -> {
@@ -642,12 +719,16 @@ public class TravelAdvisorForm extends JFrame {
                 String sql = "INSERT INTO refund"
                         + " (customerID, ticketID, amount, refundType, dateCancelled)"
                         + "VALUES (?, ?, ?, ?, ?)";
+
                 PreparedStatement stm = con.prepareStatement(sql);
+                LocalDateTime localDateTime = LocalDateTime.now();
+                Timestamp timestamp = Timestamp.valueOf(localDateTime);
+
                 stm.setInt(1,Integer.parseInt(cancelTicketPanel.IDTextField.getText()));
                 stm.setInt(2,Integer.parseInt(cancelTicketPanel.ticketIdTextfield.getText()));
                 stm.setInt(3,Integer.parseInt(cancelTicketPanel.amountTextfield.getText()));
                 stm.setString(4, cancelTicketPanel.typeBox.getSelectedItem().toString());
-                stm.setDate(5, Date.valueOf(cancelTicketPanel.dateTextField.getText()));
+                stm.setTimestamp(5, timestamp);
 
 
                 // 3. execute sql statement
@@ -671,7 +752,7 @@ public class TravelAdvisorForm extends JFrame {
                     BufferedWriter bw = new BufferedWriter(fw);
                     String line;
                     while(rs.next()){
-                        line = "["+rs.getDate(5)+"]"+
+                        line = "["+rs.getTimestamp(5)+"]"+
                                 " Ticket " + rs.getInt(1)+" has been refunded to Customer "
                                 +rs.getInt(2)+" via "
                                 +rs.getString(3)+", amount refunded is "
@@ -687,7 +768,7 @@ public class TravelAdvisorForm extends JFrame {
                     ex.printStackTrace();
                 }
             }
-    });
+        });
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
@@ -767,30 +848,31 @@ public class TravelAdvisorForm extends JFrame {
                 manageCustomerPanel.setVisible(false);
                 discountPanel.setVisible(false);
                 manageDiscountsPanel.setVisible(false);
+                soldTicketsPanel.setVisible(false);
             }
         });
         generateReportPanel.generateButton.addActionListener(e -> {
             try {
-                    // 1. get a connection
-                    con = db.getConnection();
+                // 1. get a connection
+                con = db.getConnection();
 
-                    // 2. create a statement
-                    //report needs to be added to database with more data fields
-                    String sql = "INSERT INTO report "
-                            + " (staffid, reportID, dateAdded, Type,reportFile)"
-                            + "VALUES ( ?,?,?,?,?)";
-                    PreparedStatement stm = con.prepareStatement(sql);
+                // 2. create a statement
+                //report needs to be added to database with more data fields
+                String sql = "INSERT INTO report "
+                        + " (staffid, reportID, dateAdded, Type,reportFile)"
+                        + "VALUES ( ?,?,?,?,?)";
+                PreparedStatement stm = con.prepareStatement(sql);
                 stm.setInt(1, Integer.parseInt(generateReportPanel.staffIDTextfield.getText()));
                 stm.setInt(2, Integer.parseInt(generateReportPanel.reportIDTextfield.getText()));
                 stm.setDate(3,Date.valueOf(generateReportPanel.dateAddedTextField.getText()));
                 stm.setString(4, generateReportPanel.typeBox.getSelectedItem().toString());
                 stm.setString(5, generateReportPanel.reportFileTextField.getText());
 
-                    // 3. execute sql statement
-                    stm.executeUpdate();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                // 3. execute sql statement
+                stm.executeUpdate();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -814,4 +896,3 @@ public class TravelAdvisorForm extends JFrame {
         }
     }
 }
-
