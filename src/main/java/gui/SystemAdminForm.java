@@ -3,8 +3,7 @@ package gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,7 +17,9 @@ import container.RemoveBlankPanel;
 import container.UpdateStockPanel;
 import database.Database;
 import database.DatabaseHelper;
-import domain.*;
+import domain.Backup;
+import domain.Blank;
+import main.java.domain.*;
 
 
 public class SystemAdminForm extends JFrame {
@@ -42,6 +43,7 @@ public class SystemAdminForm extends JFrame {
     private DefaultTableModel rateModel;
     private DefaultTableModel commissionModel;
     private DefaultTableModel backupModel;
+    private DefaultTableModel reportModel;
 
     public SystemAdminForm(int id){
         super("System Administrator page");
@@ -69,6 +71,7 @@ public class SystemAdminForm extends JFrame {
         JPanel databasePanel = new JPanel();
         JPanel ratesPanel = new JPanel();
         JPanel commissionPanel = new JPanel();
+        JPanel reportPanel = new JPanel();
         centerPanel.add(centerPane,BorderLayout.CENTER);
 
 
@@ -144,6 +147,19 @@ public class SystemAdminForm extends JFrame {
         commissionPanel.add(jScrollPane5,BorderLayout.CENTER);
         commissionPanel.setBounds(0,0,600,600);
 
+        reportPanel.setLayout(new BorderLayout());
+        JTable report = new JTable();
+        reportModel = new DefaultTableModel();
+        reportModel.addColumn("id");
+        reportModel.addColumn("date added");
+        reportModel.addColumn("Type");
+        reportModel.addColumn("staff id");
+        report.setModel(reportModel);
+        JScrollPane jScrollPane6 = new JScrollPane(report);
+        viewReport();
+        reportPanel.add(jScrollPane6,BorderLayout.CENTER);
+        reportPanel.setBounds(0,0,600,600);
+
 
         centerPane.add("users",userPanel);
         centerPane.add("stock",stockPanel);
@@ -151,6 +167,7 @@ public class SystemAdminForm extends JFrame {
         centerPane.add("rates",ratesPanel);
         centerPane.add("commission",commissionPanel);
         centerPane.add("backup",databasePanel);
+        centerPane.add("report",reportPanel);
 
 
 
@@ -174,6 +191,7 @@ public class SystemAdminForm extends JFrame {
         JButton viewStockButton = new JButton("View stock");
         JButton viewCommission = new JButton("view Commission");
         JButton viewExchangeRates = new JButton("view rates");
+        JButton viewReport = new JButton("view report");
         rightPanel.add(viewBackupButton);
         rightPanel.add(Box.createRigidArea(new Dimension(0,10)));
         rightPanel.add(backupDatabaseButton);
@@ -193,6 +211,8 @@ public class SystemAdminForm extends JFrame {
         rightPanel.add(viewExchangeRates);
         rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
         rightPanel.add(viewCommission);
+        rightPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        rightPanel.add(viewReport);
         rightPanel.add(Box.createRigidArea(new Dimension(0,105)));
 
 
@@ -494,14 +514,16 @@ public class SystemAdminForm extends JFrame {
 
                 //2. create a statement
                 String sql = "UPDATE stock "
-                        + " SET StaffID=?"
+                        + " SET StaffID=?,DateAssigned=?,Status=?"
                         + " WHERE BlankID=?";
                 PreparedStatement stm = con.prepareStatement(sql);
-
+                Timestamp ts = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
                 stm.setInt(1, Integer.parseInt(assignBlankPanel.idStaffTextfield.getText()));
                 for (int i = 0; i < rows.length; i++) {
 
-                    stm.setInt(2, Integer.parseInt(stock.getValueAt(rows[i],0).toString()));
+                    stm.setTimestamp(2,ts);
+                    stm.setString(3,"Assigned");
+                    stm.setLong(4, Long.parseLong(stock.getValueAt(rows[i],0).toString()));
                     //3. execute sql query
                     stm.executeUpdate();
                 }
@@ -516,20 +538,24 @@ public class SystemAdminForm extends JFrame {
 
                 //2. create a statement
                 String sql = "INSERT INTO stock "
-                        + " (Type,DateAdded)"
-                        + "VALUES ( ?,?)";
+                        + " (Type,DateAdded,Status)"
+                        + "VALUES ( ?,?,?)";
                 stm = con.prepareStatement(sql);
 
                 int amount = Integer.parseInt(addBlankPanel.amountTextfield.getText());
-                Long milli = System.currentTimeMillis();
                 Timestamp ts = Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC")));
                 for(int i = 0; i < amount; i++) {
                     stm.setInt(1, Integer.parseInt(addBlankPanel.typeBox.getSelectedItem().toString()));
                     stm.setTimestamp(2,ts);
+                    stm.setString(3,"unassigned");
                     //3. execute sql query
                     stm.executeUpdate();
 
                 }
+//                sql = "UPDATE stock "
+//                        +  " SET BlankNumber=CONCAT(`Type`,`BlankID`)";
+//                stm = con.prepareStatement(sql);
+//                stm.execute();
 
 
             }catch (Exception ex){
@@ -553,7 +579,7 @@ public class SystemAdminForm extends JFrame {
                 int[] rows = stock.getSelectedRows();
 
                 for (int i = 0; i <rows.length ; i++) {
-                    stm.setInt(1,Integer.parseInt(stock.getValueAt(rows[i],0).toString()));
+                    stm.setLong(1,Long.parseLong(stock.getValueAt(rows[i],0).toString()));
                     // 3. execute sql statement
                     stm.executeUpdate();
                 }
@@ -647,6 +673,10 @@ public class SystemAdminForm extends JFrame {
             commissionModel.setRowCount(0);
             viewCommission();
         });
+        viewReport.addActionListener(e -> {
+            reportModel.setRowCount(0);
+            viewReport();
+        });
         viewAddRateButton.addActionListener(e -> {
             addRatePanel.setVisible(true);
             ratesUpdatePanel.setVisible(false);
@@ -692,7 +722,7 @@ public class SystemAdminForm extends JFrame {
             ratesUpdatePanel.setVisible(true);
         });
         logoutButton.addActionListener(e -> {
-            LoginForm loginForm = new LoginForm();
+            gui.LoginForm loginForm = new gui.LoginForm();
             dispose();
             try {
                 con.close();
@@ -913,6 +943,18 @@ public class SystemAdminForm extends JFrame {
             int cell = Integer.parseInt(backup.getValueAt(backup.getSelectedRow(),0).toString());
             Database.restoreDatabase(cell);
         });
+        generateTurnoverReportButton.addActionListener(e -> {
+            generateReport.StockTurnOverReportGenerator.generateTurnOverReport(getID());
+        });
+        report.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount() == 2){
+                    int cell = Integer.parseInt(report.getValueAt(report.getSelectedRow(),0).toString());
+                    generateReport.StockTurnOverReportGenerator.viewReport(cell);
+                }
+            }
+        });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750,500);
@@ -923,14 +965,14 @@ public class SystemAdminForm extends JFrame {
         return id;
     }
     public void viewUser(){
-        List<User> userList = new ArrayList<>();
+        List<domain.User> userList = new ArrayList<>();
         try{
             con = db.getConnection();
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT * FROM staff");
 
             while(rs.next()){
-                userList.add(new User(rs.getInt(1),
+                userList.add(new domain.User(rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getString(4),
@@ -940,7 +982,7 @@ public class SystemAdminForm extends JFrame {
                         rs.getString(8),
                         rs.getString(9)));
             }
-            User u;
+            domain.User u;
 
             for (int i = 0; i < userList.size() ; i++) {
                 u = userList.get(i);
@@ -952,21 +994,21 @@ public class SystemAdminForm extends JFrame {
         }
     }
     public void viewStock(){
-        List<Blank> stockList = new ArrayList<>();
+        List<domain.Blank> stockList = new ArrayList<>();
         try {
             con = db.getConnection();
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT * FROM stock");
 
             while(rs.next()){
-                stockList.add(new Blank(rs.getInt(1),
+                stockList.add(new domain.Blank(rs.getLong(1),
                         rs.getInt(2),
                         rs.getInt(3),
                         rs.getString(4),
                         rs.getTimestamp(5)));
 
             }
-            Blank b;
+            domain.Blank b;
 
             for (int i = 0; i < stockList.size(); i++) {
                 b = stockList.get(i);
@@ -978,19 +1020,19 @@ public class SystemAdminForm extends JFrame {
         }
     }
     public void viewRate(){
-        List<Rate> rateList = new ArrayList<>();
+        List<domain.Rate> rateList = new ArrayList<>();
         try {
             con = db.getConnection();
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT * FROM exchange_rate");
 
             while(rs.next()){
-                rateList.add(new Rate(rs.getInt(1),
+                rateList.add(new domain.Rate(rs.getInt(1),
                         rs.getString(2),
                         rs.getFloat(3)));
 
             }
-            Rate r;
+            domain.Rate r;
 
             for (int i = 0; i < rateList.size(); i++) {
                 r = rateList.get(i);
@@ -1002,19 +1044,19 @@ public class SystemAdminForm extends JFrame {
         }
     }
     public void viewCommission(){
-        List<Commission> commissionList = new ArrayList<>();
+        List<domain.Commission> commissionList = new ArrayList<>();
         try {
             con = db.getConnection();
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT * FROM commission");
 
             while(rs.next()){
-                commissionList.add(new Commission(rs.getInt(1),
+                commissionList.add(new domain.Commission(rs.getInt(1),
                         rs.getFloat(2),
                         rs.getInt(3)));
 
             }
-            Commission c;
+            domain.Commission c;
 
             for (int i = 0; i < commissionList.size(); i++) {
                 c = commissionList.get(i);
@@ -1031,13 +1073,12 @@ public class SystemAdminForm extends JFrame {
             con = db.getConnection();
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("SELECT * FROM backups");
-
             while(rs.next()){
                 backupList.add(new Backup(rs.getInt(1),
                         rs.getDate(2)));
             }
-            Backup b;
 
+            Backup b;
             for (int i = 0; i <backupList.size() ; i++) {
                 b = backupList.get(i);
                 backupModel.addRow(b.rowArray());
@@ -1047,9 +1088,29 @@ public class SystemAdminForm extends JFrame {
             ex.printStackTrace();
         }
     }
-    public void setVisibleFalse(){
-
+    public void viewReport(){
+        List<Report> reportList = new ArrayList<>();
+        try{
+            con = db.getConnection();
+            Statement stm = con.createStatement();
+            ResultSet rs = stm.executeQuery("SELECT reportID,dateAdded,Type,staffID FROM report" +
+                    " WHERE Type='tst'");
+            while(rs.next()){
+                reportList.add(new Report(rs.getInt(1),
+                        rs.getDate(2),
+                        rs.getString(3),
+                        rs.getInt(4)));
+            }
+            Report r;
+            for (int i = 0; i <reportList.size() ; i++) {
+                r = reportList.get(i);
+                reportModel.addRow(r.rowArray());
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
     }
+
 
 
 

@@ -79,6 +79,10 @@ public class LoginForm extends JFrame {
         });
         loginButton.setMnemonic(KeyEvent.VK_ENTER);
 
+        usernameText.setText("ak");
+        passwordText.setText("a");
+        loginButton.doClick();
+
         panel.setBackground(Color.WHITE);
         panel.setVisible(true);
         this.setVisible(true);
