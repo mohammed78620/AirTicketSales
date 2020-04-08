@@ -127,8 +127,8 @@ public class SystemAdminForm extends JFrame {
         JTable rate = new JTable();
         rateModel = new DefaultTableModel();
         rateModel.addColumn("id");
-        rateModel.addColumn("currency");
-        rateModel.addColumn("rate");
+        rateModel.addColumn("currency code");
+        rateModel.addColumn("USDRate");
         rate.setModel(rateModel);
         JScrollPane jScrollPane14 = new JScrollPane(rate);
         viewRate();
@@ -821,7 +821,7 @@ public class SystemAdminForm extends JFrame {
 
                 //2. create a statement
                 String sql = "INSERT INTO exchange_rate "
-                        + " (CurrencyCode,Rate)"
+                        + " (CurrencyCode,USDRate)"
                         + "VALUES ( ?, ?)";
                 stm = con.prepareStatement(sql);
 
