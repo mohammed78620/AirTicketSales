@@ -71,6 +71,19 @@ public class Payment {
     public Long getBlankID(){
         return blankID;
     }
+    public String print(){
+        return getPaymentID()
+                + getType()
+                + getAmount()
+                + getAmountAfterTax()
+                + getCommissionID()
+                + getCustomerID()
+                + getRateID()
+                + getStaffID()
+                + getPaymentID()
+                + getTicketType()
+                +getBlankID();
+    }
     public Object[] rowArray(){
         return new Object[] {getPaymentID(),
         getType(),

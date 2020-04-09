@@ -10,9 +10,10 @@ import domain.Commission;
 import domain.Rate;
 import main.java.domain.Payment;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -58,6 +59,7 @@ public class GenerateIndividualGlobalSalesReport {
             cashTable2 = new PdfPTable(2);
             PdfPTable cardTable = new PdfPTable(1);
             cardTable.addCell(new Paragraph("Forms of Payments"));
+            cardTable.addCell(new Paragraph("Credit Card"));
             cardTable2 = new PdfPTable(4);
             PdfPTable totalAmountPaidTable = new PdfPTable(1);
             totalAmountPaidTable.addCell(new Paragraph("Forms of Payment"));
@@ -110,15 +112,19 @@ public class GenerateIndividualGlobalSalesReport {
                     + " "
                     + rs.getString("Surname")
                     + " "
-                    + staffID));
+                    + staffID
+                    + "\n"
+                    + rate.getCurrency() + " = " + rate.getExchangeRate()));
             document.add(new Phrase("\n"));
             document.add(documentsTable);
             document.add(new Phrase("\n"));
             document.add(cashCardTable);
             document.add(new Phrase("\n"));
             document.add(commissionTable);
+            document.add(new Phrase("\n"));
             document.add(new Paragraph("Total nett amount for bank remmittence to air via  " + netAmount));
             document.close();
+            addToReport(staffID,ticketType);
         }catch (SQLException | DocumentException | IOException ex){
             ex.printStackTrace();
         }
@@ -148,6 +154,8 @@ public class GenerateIndividualGlobalSalesReport {
             }else if(ticketType.equals("global")){
                 //office manager and travel advisor
                 sql = "SELECT * FROM payment ";
+                stm = con.prepareStatement(sql);
+                rs = stm.executeQuery();
 
             }
 
@@ -185,30 +193,34 @@ public class GenerateIndividualGlobalSalesReport {
 
 
         for (int i = 0; i <paymentList.size() ; i++) {
-            Payment p = paymentList.get(i);
-            documentsTable2.addCell(new Paragraph(p.getPaymentID()));
             ticketNum++;
-            documentsTable2.addCell(new Paragraph(p.getBlankID()));
+            Payment p = paymentList.get(i);
+            documentsTable2.addCell(new Paragraph(String.valueOf(p.getPaymentID())));
+            documentsTable2.addCell(new Paragraph(String.valueOf(p.getBlankID())));
             //convert to USD
             Float usdRate = getUsdRate(p);
-            documentsTable2.addCell(new Paragraph(p.getAmountAfterTax()*usdRate));
+            documentsTable2.addCell(new Paragraph(String.valueOf(p.getAmountAfterTax()*usdRate)));
             usdSum += p.getAmountAfterTax()*usdRate;
-            documentsTable2.addCell(new Paragraph(rate.getExchangeRate()));
-            documentsTable2.addCell(new Paragraph(p.getAmountAfterTax()*usdRate/rate.getExchangeRate()));
+            documentsTable2.addCell(new Paragraph(String.valueOf(rate.getExchangeRate())));
+            documentsTable2.addCell(new Paragraph(String.valueOf(p.getAmountAfterTax()*usdRate/rate.getExchangeRate())));
             currencyCodeSum += p.getAmountAfterTax()*usdRate/rate.getExchangeRate();
-            documentsTable2.addCell(new Paragraph((p.getAmount()-p.getAmountAfterTax())*usdRate/rate.getExchangeRate()));
+            documentsTable2.addCell(new Paragraph(String.valueOf((p.getAmount()-p.getAmountAfterTax())*usdRate/rate.getExchangeRate())));
             taxSum += (p.getAmount()-p.getAmountAfterTax())*usdRate/rate.getExchangeRate();
-            documentsTable2.addCell(new Paragraph(p.getAmount()*usdRate/rate.getExchangeRate()));
+            documentsTable2.addCell(new Paragraph(String.valueOf(p.getAmount()*usdRate/rate.getExchangeRate())));
             totalSum += p.getAmount()*usdRate/rate.getExchangeRate();
-            documentsTable2.addCell(new Paragraph(ticketNum));
-            documentsTable2.addCell(new Paragraph(" "));
-            documentsTable2.addCell(new Paragraph(usdSum));
-            documentsTable2.addCell(new Paragraph(" "));
-            documentsTable2.addCell(new Paragraph(currencyCodeSum));
-            documentsTable2.addCell(new Paragraph(taxSum));
-            documentsTable2.addCell(new Paragraph(totalSum));
+
+
+            System.out.println(p.print());
+
 
         }
+        documentsTable2.addCell(new Paragraph(String.valueOf("number of tickets: " +ticketNum)));
+        documentsTable2.addCell(new Paragraph(" "));
+        documentsTable2.addCell(new Paragraph(String.valueOf("Total: " + usdSum)));
+        documentsTable2.addCell(new Paragraph(" "));
+        documentsTable2.addCell(new Paragraph(String.valueOf("Total: " + currencyCodeSum)));
+        documentsTable2.addCell(new Paragraph(String.valueOf("Total: " + taxSum)));
+        documentsTable2.addCell(new Paragraph(String.valueOf("Total: " + totalSum)));
     }
     public static void addToCashAndCardTable(){
         Float cashTotalSum = 0F;
@@ -219,31 +231,32 @@ public class GenerateIndividualGlobalSalesReport {
         for (int i = 0; i <paymentList.size() ; i++) {
             Payment p = paymentList.get(i);
             Float usdRate = getUsdRate(p);
-            if (p.getType().equals("cash")){
-                cashTable2.addCell(new Paragraph(p.getPaymentID()));
-                cashTable2.addCell(new Paragraph(p.getAmount()*usdRate/rate.getExchangeRate()));
+            if (p.getType().equals("Cash")){
+                cashTable2.addCell(new Paragraph(String.valueOf(p.getPaymentID())));
+                cashTable2.addCell(new Paragraph(String.valueOf(p.getAmount()*usdRate/rate.getExchangeRate())));
                 cashTotalSum += p.getAmount()*usdRate/rate.getExchangeRate();
-                totalAmountPaidTable2.addCell(new Paragraph(p.getAmount()*usdRate/rate.getExchangeRate()));
+                totalAmountPaidTable2.addCell(new Paragraph(String.valueOf(p.getAmount()*usdRate/rate.getExchangeRate())));
 
-            }else {
-                cardTable2.addCell(new Paragraph(p.getPaymentID()));
+            }else if(p.getType().equals("Card")){
+                cardTable2.addCell(new Paragraph(String.valueOf(p.getPaymentID())));
                 //card details primary key is cc number
                 Long cardNumber = getCardNumber(p);
-                cardTable2.addCell(new Paragraph(cardNumber));
-                cardTable2.addCell(new Paragraph(p.getAmount()*usdRate));
+                cardTable2.addCell(new Paragraph(String.valueOf(cardNumber)));
+                cardTable2.addCell(new Paragraph(String.valueOf(p.getAmount()*usdRate)));
                 usdSum += p.getAmount()*usdRate;
-                cardTable2.addCell(new Paragraph(p.getAmount()*usdRate/rate.getExchangeRate()));
+                cardTable2.addCell(new Paragraph(String.valueOf(p.getAmount()*usdRate/rate.getExchangeRate())));
                 currencySum += p.getAmount()*usdRate/rate.getExchangeRate();
-                totalAmountPaidTable2.addCell(new Paragraph(p.getAmount()*usdRate/rate.getExchangeRate()));
-
+                totalAmountPaidTable2.addCell(new Paragraph(String.valueOf(p.getAmount()*usdRate/rate.getExchangeRate())));
+                cashCardTotal += p.getAmount()*usdRate/rate.getExchangeRate();
             }
         }
         cashTable2.addCell(new Paragraph(" "));
-        cashTable2.addCell(new Paragraph(cashTotalSum));
+        cashTable2.addCell(new Paragraph(String.valueOf("Total: " + cashTotalSum)));
         cardTable2.addCell(new Paragraph(" "));
-        cardTable2.addCell(new Paragraph(usdSum));
-        cardTable2.addCell(new Paragraph(currencySum));
-        cardTable2.addCell(new Paragraph(cashTotalSum + currencySum));
+        cardTable2.addCell(new Paragraph(String.valueOf("Total: " + usdSum)));
+        cardTable2.addCell(new Paragraph(String.valueOf("Total" + currencySum)));
+        cardTable2.addCell(new Paragraph(String.valueOf("Total: " + cashTotalSum + currencySum)));
+        totalAmountPaidTable2.addCell(new Paragraph(String.valueOf("Total:" + cashCardTotal )));
 
     }
     public static String addToCommissionTable(String ticketType){
@@ -275,33 +288,40 @@ public class GenerateIndividualGlobalSalesReport {
             Float commissionSum = 0F;
             while(it.hasNext()){
                 Commission c = it.next();
-                PdfPTable singleCommissionTable = new PdfPTable(1);
+                PdfPTable singleCommissionTable = new PdfPTable(2);
+                singleCommissionTable.addCell(new Paragraph("N"));
                 singleCommissionTable.addCell(new Paragraph(String.valueOf(c.getCommission_rate() + "%")));
-                List<String> strings = new ArrayList<>();
+
                 Float afterTaxSum = 0F;
                 Float commissionTotal = 0F;
                 for (int i = 0; i < paymentList.size(); i++) {
                     Payment p = paymentList.get(i);
                     if(p.getCommissionID() == c.getCommission_id()){
-                        strings.add(String.valueOf(p.getAmountAfterTax()));
+                        singleCommissionTable.addCell(new Paragraph(String.valueOf(p.getPaymentID())));
+                        singleCommissionTable.addCell(String.valueOf(p.getAmountAfterTax()));
                         afterTaxSum += p.getAmountAfterTax();
                     }
                 }
-                singleCommissionTable.addCell(new Paragraph(commissionStringbuilder(strings)));
-                singleCommissionTable.addCell(new Paragraph(afterTaxSum));
+
+                singleCommissionTable.addCell(new Paragraph(" "));
+                singleCommissionTable.addCell(new Paragraph(String.valueOf("Total: " + afterTaxSum)));
                 commissionTotal = (afterTaxSum/100F)*c.getCommission_rate();
-                singleCommissionTable.addCell(new Paragraph(commissionTotal));
-                singleCommissionTable.addCell(new Paragraph(afterTaxSum-commissionTotal));
+                singleCommissionTable.addCell(new Paragraph(" "));
+                singleCommissionTable.addCell(new Paragraph(String.valueOf("Total commission Amount: " + commissionTotal)));
+                singleCommissionTable.addCell(new Paragraph(" "));
+                singleCommissionTable.addCell(new Paragraph(String.valueOf("Net amount for agent's debit: " + (afterTaxSum-commissionTotal))));
                 commissionSum += commissionTotal;
-                strings.clear();
                 commissionTable2.addCell(singleCommissionTable);
             }
 
             Float beforeTaxSum = 0F;
             for (int i = 0; i <paymentList.size() ; i++) {
                 Payment p = paymentList.get(i);
-                Float usdRate = getUsdRate(p);
-                beforeTaxSum += p.getAmount()*usdRate/rate.getExchangeRate();
+                if(p.getType().equals("Cash") || p.getType().equals("Card")){
+                    Float usdRate = getUsdRate(p);
+                    beforeTaxSum += p.getAmount()*usdRate/rate.getExchangeRate();
+                }
+
             }
 
             return String.valueOf(beforeTaxSum - commissionSum);
@@ -318,7 +338,10 @@ public class GenerateIndividualGlobalSalesReport {
             PreparedStatement stm = con.prepareStatement(sql);
             stm.setInt(1,p.getRateID());
             ResultSet rs = stm.executeQuery();
-            usdRate = rs.getFloat("USDRate");
+            while(rs.next()){
+                usdRate = rs.getFloat("USDRate");
+            }
+
             return usdRate;
         }catch (SQLException ex){
             ex.printStackTrace();
@@ -333,7 +356,9 @@ public class GenerateIndividualGlobalSalesReport {
             PreparedStatement stm = con.prepareStatement(sql);
             stm.setInt(1,p.getCustomerID());
             ResultSet rs = stm.executeQuery();
-            cardNumber = rs.getLong("Number");
+            while(rs.next()){
+                cardNumber = rs.getLong("Number");
+            }
             return cardNumber;
         }catch (SQLException ex){
             ex.printStackTrace();
@@ -350,9 +375,61 @@ public class GenerateIndividualGlobalSalesReport {
         }
         return stringBuilder.toString();
     }
+    public static void addToReport(int staffID,String ticketType) {
+        try {
+            LocalDate localDate = LocalDate.now();
+            Date dateAdded = Date.valueOf(localDate);
+
+            File file = new File("report/report.pdf");
+            FileInputStream fis = new FileInputStream(file);
+
+            sql = "INSERT INTO report"
+                    + " (dateAdded,Type,staffID,reportFile)"
+                    + " VALUES (?,?,?,?)";
+            PreparedStatement stm = con.prepareStatement(sql);
+            stm.setDate(1, dateAdded);
+            if (ticketType.equals("interline")) {
+                stm.setString(2, "isa");
+            } else if (ticketType.equals("domestic")) {
+                stm.setString(2, "dsa");
+            }
+            stm.setInt(3, staffID);
+            stm.setBlob(4, fis);
+            stm.execute();
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public static void viewReport(int reportID){
+        try {
+            Connection con = db.getConnection();
+            String sql = "SELECT reportFile FROM report"
+                    + " WHERE reportID=?";
+            PreparedStatement stm = con.prepareStatement(sql);
+            stm.setInt(1,reportID);
+            ResultSet rs = stm.executeQuery();
+            File file = new File("report/report.pdf");
+            FileOutputStream output = new FileOutputStream(file);
+
+            while (rs.next()){
+                InputStream input = rs.getBinaryStream("reportFile");
+
+                byte[] buffer = new byte[1024];
+                while(input.read(buffer) > 0){
+                    output.write(buffer);
+                }
+            }
+            Desktop.getDesktop().open(file);
+
+        }catch (SQLException | IOException ex){
+            ex.printStackTrace();
+        }
+
+    }
     public static void main(String[] args) {
 
-        GenerateIndividualGlobalSalesReport.generateIndividualReport("domestic",3,"CAD");
+        GenerateIndividualGlobalSalesReport.generateIndividualReport("global",3,"CAD");
+
 
     }
 }
